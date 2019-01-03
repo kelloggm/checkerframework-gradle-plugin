@@ -18,7 +18,7 @@ import java.util.Arrays;
 /**
  * An Extension is a way to define a DSL for a plugin.
  *
- * The Checker Framework's DSL allows users to specify,
+ * <p>The Checker Framework's DSL allows users to specify,
  * in their build script, things like which checkers to
  * run and on what JavaCompile tasks.
  */
@@ -27,14 +27,14 @@ public class CheckerFrameworkPluginExtension {
     private static final Logger LOGGER = Logging.getLogger(CheckerFrameworkPluginExtension.class);
 
     /*
-     * The typecheckers to execute. The CF plugin won't do anything unless
-     * this property is set to a non-empty value.
+     * The typecheckers to execute, separated by commas. The CF plugin
+     * won't do anything unless this property is set to a non-empty
+     * value.
      */
     final Property<String> checkers;
 
     /*
-     * The tasks to modify so that they run the CF, expressed as
-     * Strings.
+     * The tasks to modify so that they run the CF.
      */
     final ListProperty<String> tasks;
 
@@ -51,9 +51,9 @@ public class CheckerFrameworkPluginExtension {
      * Adds a task to the list of tasks that the Checker Framework
      * will be executed as part of. If this list is empty when the
      * Checker Framework is executed, the plugin will automatically
-     * apply the CF to the all tasks with the JavaCompile type.
+     * apply the CF to all the tasks with the JavaCompile type.
      *
-     * You can call this method repeatedly to add multiple tasks.
+     * <p>You can call this method repeatedly to add multiple tasks.
      *
      * @param taskName the name of the task to modify
      */
@@ -64,7 +64,7 @@ public class CheckerFrameworkPluginExtension {
     /**
      * Add a new typechecker to the list of checkers that should be executed.
      *
-     * You can call this method repeatedly to add multiple typecheckers.
+     * <p>You can call this method repeatedly to add multiple typecheckers.
      *
      * @param newChecker the fully-qualified name of the new typechecker,
      *                   e.g. "org.extension.checker.index.IndexChecker".
