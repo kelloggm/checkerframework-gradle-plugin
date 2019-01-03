@@ -20,7 +20,7 @@ import java.util.Arrays;
  *
  * The Checker Framework's DSL allows users to specify,
  * in their build script, things like which checkers to
- * run and what additional options to pass to the typechecker.
+ * run and on what JavaCompile tasks.
  */
 public class CheckerFrameworkPluginExtension {
 
@@ -40,7 +40,10 @@ public class CheckerFrameworkPluginExtension {
 
     public CheckerFrameworkPluginExtension(final Project project) {
         checkers = project.getObjects().property(String.class);
+
+        // Must set to empty String to avoid NPE later.
         checkers.set("");
+
         tasks = project.getObjects().listProperty(String.class);
     }
 

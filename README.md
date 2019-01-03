@@ -8,8 +8,8 @@ to run custom typecheckers during their build process.
 The plugin works by modifying the arguments to `JavaCompile`
 tasks in the Gradle build so that the typechecker is run
 as part of the compilation process. By default, this plugin
-adds any typecheckers you specify to the `:compileJava` task
-that the `'java'` plugin provides.
+adds the typecheckers you specify to all `JavaCompile` tasks
+in your project.
 
 ### Adding dependencies
 
@@ -36,6 +36,11 @@ dependencies {
     annotationProcessor 'org.checkerframework:jdk8:2.+'
 }
 ```
+
+You can use a local version of the Checker Framework by
+declaring a local dependency instead of a dependency on
+the Maven artifact. See
+https://docs.gradle.org/current/userguide/declaring_dependencies.html.
 
 ### Specifying a checker
 
@@ -64,3 +69,16 @@ checkerframework.addTask('myCustomCompileTask')
 
 You can specify one or more tasks this way. If you do,
 the checkers you specify will only be run on those tasks.
+
+### Passing arguments to a typechecker
+
+Typecheckers run as part of the standard invocation of `javac`,
+not as a separate step. You can therefore pass arguments to the
+typechecker by adding them to the compile options of the
+appropriate tasks. See the documentation for the `JavaCompile`
+task (https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.JavaCompile.html)
+and for the `CompileOptions` object
+(https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.CompileOptions.html).
+
+In a future release, passing arguments only to tasks during
+which the typechecker is run will be supported.
