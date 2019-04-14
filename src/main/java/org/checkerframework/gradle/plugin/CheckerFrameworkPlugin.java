@@ -2,7 +2,6 @@ package org.checkerframework.gradle.plugin;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.api.tasks.TaskCollection;
 import org.gradle.api.tasks.compile.JavaCompile;
 
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.List;
 public class CheckerFrameworkPlugin implements Plugin<Project> {
 
     public void apply(final Project project) {
-        CheckerFrameworkPluginExtension extension =
+        final CheckerFrameworkPluginExtension extension =
                 project.getExtensions().create("checkerframework", CheckerFrameworkPluginExtension.class, project);
 
         applyToTasks(project, extension);
@@ -28,14 +27,14 @@ public class CheckerFrameworkPlugin implements Plugin<Project> {
      * @param extension the extension to apply the CF with
      */
     private void applyToTasks(final Project project, final CheckerFrameworkPluginExtension extension) {
-        List<String> taskNames = extension.tasks.getOrNull();
-        TaskCollection<JavaCompile> tasks = project.getTasks().withType(JavaCompile.class);
-
-        if (taskNames != null) {
-            tasks.removeIf(task -> !taskNames.contains(task.getName()));
+        final List<String> taskNameList = extension.tasks.get();
+        if (taskNameList.isEmpty()) {
+            project.getTasks().withType(JavaCompile.class).configureEach(task -> extension.applyTo(task));
         }
-
-        tasks.configureEach(task -> extension.applyTo(task));
+        else {
+            for (final String taskName : taskNameList) {
+                extension.applyTo((JavaCompile) project.getTasks().getByName(taskName));
+            }
+        }
     }
 }
-
