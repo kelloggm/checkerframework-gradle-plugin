@@ -15,6 +15,8 @@ import org.gradle.process.CommandLineArgumentProvider;
 
 import java.util.Arrays;
 
+import static java.util.Collections.emptyList;
+
 /**
  * An Extension is a way to define a DSL for a plugin.
  *
@@ -132,8 +134,16 @@ public class CheckerFrameworkPluginExtension {
         @Override
         public Iterable<String> asArguments() {
             // TODO: jdk, other CF options
-            return Arrays.asList("-processor", extension.checkers.get(),
-                    "-Xbootclasspath/p:${configurations.annotationProcessor.asPath}");
+            final String checkers = extension.checkers.get();
+            return
+                checkers.isEmpty()
+                    ? emptyList()
+                    : Arrays.asList(
+                        "-processor",
+                        checkers,
+                        "-Xbootclasspath/p:${configurations.annotationProcessor.asPath}"
+                    )
+            ;
         }
 
         @Override
