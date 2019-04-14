@@ -78,6 +78,86 @@ public class CheckerFrameworkPluginExtension {
         }
     }
 
+    public void addCompilerMessagesChecker() {
+        addChecker("org.checkerframework.checker.compilermsgs.CompilerMessagesChecker");
+    }
+
+    public void addFenumChecker() {
+        addChecker("org.checkerframework.checker.fenum.FenumChecker");
+    }
+
+    public void addFormatterChecker() {
+        addChecker("org.checkerframework.checker.formatter.FormatterChecker");
+    }
+
+    public void addGuiEffectChecker() {
+        addChecker("org.checkerframework.checker.guieffect.GuiEffectChecker");
+    }
+
+    public void addI18nChecker() {
+        addChecker("org.checkerframework.checker.i18n.I18nChecker");
+    }
+
+    public void addI18nFormatterChecker() {
+        addChecker("org.checkerframework.checker.i18nformatter.I18nFormatterChecker");
+    }
+
+    public void addIndexChecker() {
+        addChecker("org.checkerframework.checker.index.IndexChecker");
+    }
+
+    public void addInitializationChecker() {
+        addChecker("org.checkerframework.checker.initialization.InitializationChecker");
+    }
+
+    public void addInterningChecker() {
+        addChecker("org.checkerframework.checker.interning.InterningChecker");
+    }
+
+    public void addLocalizableKeyChecker() {
+        addChecker("org.checkerframework.checker.i18n.LocalizableKeyChecker");
+    }
+
+    public void addLockChecker() {
+        addChecker("org.checkerframework.checker.lock.LockChecker");
+    }
+
+    public void addNullnessChecker() {
+        addChecker("org.checkerframework.checker.nullness.NullnessChecker");
+    }
+
+    public void addNullnessRawnessChecker() {
+        addChecker("org.checkerframework.checker.nullness.NullnessRawnessChecker");
+    }
+
+    public void addOptionalChecker() {
+        addChecker("org.checkerframework.checker.optional.OptionalChecker");
+    }
+
+    public void addPropertyKeyChecker() {
+        addChecker("org.checkerframework.checker.propkey.PropertyKeyChecker");
+    }
+
+    public void addRegexChecker() {
+        addChecker("org.checkerframework.checker.regex.RegexChecker");
+    }
+
+    public void addSignatureChecker() {
+        addChecker("org.checkerframework.checker.signature.SignatureChecker");
+    }
+
+    public void addSignednessChecker() {
+        addChecker("org.checkerframework.checker.signedness.SignednessChecker");
+    }
+
+    public void addTaintingChecker() {
+        addChecker("org.checkerframework.checker.tainting.TaintingChecker");
+    }
+
+    public void addUnitsChecker() {
+        addChecker("org.checkerframework.checker.units.UnitsChecker");
+    }
+
     /**
      * Automatically add dependencies on the CF.
      */
