@@ -78,6 +78,14 @@ public class CheckerFrameworkPluginExtension {
         }
     }
 
+    public void addAliasingChecker() {
+        addChecker("org.checkerframework.common.aliasing.AliasingChecker");
+    }
+
+    public void addClassValChecker() {
+        addChecker("org.checkerframework.common.reflection.ClassValChecker");
+    }
+
     public void addCompilerMessagesChecker() {
         addChecker("org.checkerframework.checker.compilermsgs.CompilerMessagesChecker");
     }
@@ -114,12 +122,24 @@ public class CheckerFrameworkPluginExtension {
         addChecker("org.checkerframework.checker.interning.InterningChecker");
     }
 
+    public void addLessThanChecker() {
+        addChecker("org.checkerframework.checker.index.inequality.LessThanChecker");
+    }
+
     public void addLocalizableKeyChecker() {
         addChecker("org.checkerframework.checker.i18n.LocalizableKeyChecker");
     }
 
     public void addLockChecker() {
         addChecker("org.checkerframework.checker.lock.LockChecker");
+    }
+
+    public void addLowerBoundChecker() {
+        addChecker("org.checkerframework.checker.index.lowerbound.LowerBoundChecker");
+    }
+
+    public void addMethodValChecker() {
+        addChecker("org.checkerframework.common.reflection.MethodValChecker");
     }
 
     public void addNullnessChecker() {
@@ -138,8 +158,24 @@ public class CheckerFrameworkPluginExtension {
         addChecker("org.checkerframework.checker.propkey.PropertyKeyChecker");
     }
 
+    public void addPurityChecker() {
+        addChecker("org.checkerframework.framework.util.PurityChecker");
+    }
+
     public void addRegexChecker() {
         addChecker("org.checkerframework.checker.regex.RegexChecker");
+    }
+
+    public void addReportChecker() {
+        addChecker("org.checkerframework.common.util.report.ReportChecker");
+    }
+
+    public void addSameLenChecker() {
+        addChecker("org.checkerframework.checker.index.samelen.SameLenChecker");
+    }
+
+    public void addSearchIndexChecker() {
+        addChecker("org.checkerframework.checker.index.searchindex.SearchIndexChecker");
     }
 
     public void addSignatureChecker() {
@@ -150,12 +186,32 @@ public class CheckerFrameworkPluginExtension {
         addChecker("org.checkerframework.checker.signedness.SignednessChecker");
     }
 
+    public void addSubstringIndexChecker() {
+        addChecker("org.checkerframework.checker.index.substringindex.SubstringIndexChecker");
+    }
+
+    public void addSubtypingChecker() {
+        addChecker("org.checkerframework.common.subtyping.SubtypingChecker");
+    }
+
     public void addTaintingChecker() {
         addChecker("org.checkerframework.checker.tainting.TaintingChecker");
     }
 
+    public void addTypeOutputtingChecker() {
+        addChecker("org.checkerframework.common.util.debug.TypeOutputtingChecker");
+    }
+
     public void addUnitsChecker() {
         addChecker("org.checkerframework.checker.units.UnitsChecker");
+    }
+
+    public void addUpperBoundChecker() {
+        addChecker("org.checkerframework.checker.index.upperbound.UpperBoundChecker");
+    }
+
+    public void addValueChecker() {
+        addChecker("org.checkerframework.common.value.ValueChecker");
     }
 
     /**
