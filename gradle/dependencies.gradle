@@ -1,0 +1,14 @@
+ext.versions = [
+  'java': '1.8'
+]
+
+ext.deps = [
+  'android': [
+    'tools': [
+      'build': [
+        'gradle': 'com.android.tools.build:gradle:3.2.1',
+      ]
+    ]
+  ],
+  'spock'  : 'org.spockframework:spock-core:1.1-groovy-2.4',
+]
