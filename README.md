@@ -92,6 +92,36 @@ dependencies {
 }
 ```
 
+### Specifying a Checker Framework version
+
+This plugin uses Checker Framework version 2.8.1 by default.
+Anytime you upgrade to a newer version of this plugin,
+it might use a different version of the Checker Framework.
+
+If you wish to use a specific Checker Framework
+[version](https://github.com/typetools/checker-framework/releases),
+add text like the following to `build.gradle`:
+
+```groovy
+dependencies {
+  checkerFramework 'org.checkerframework:checker-qual:2.8.0'
+  checkerFramework 'org.checkerframework:checker:2.8.0'
+  checkerFramework 'org.checkerframework:jdk8:2.8.0'
+}
+```
+
+You can also use a locally-built version of the Checker Framework:
+
+```groovy
+cfHome = String.valueOf(System.getenv("CHECKERFRAMEWORK"))
+dependencies {
+  checkerFramework files(cfHome + "/checker/dist/checker.jar")
+  checkerFramework files(cfHome + "/checker/dist/checker-qual.jar")
+  checkerFramework files(cfHome + "/checker/dist/jdk8.jar")
+}
+```
+
+
 ### Other options
 
 By default, the plugin applies the selected checkers to all `JavaCompile` targets.
