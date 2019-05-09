@@ -94,20 +94,19 @@ dependencies {
 
 ### Specifying a Checker Framework version
 
-To change the version of the Checker Framework used by the plugin (by default 2.8.1),
-you should add `checkerFramework` entries to your `dependencies` block. 
-We recommend **explicitly** specifying the latest Checker Framework version, and updating
-often. If you do not do so, you will have to wait for this plugin's dependencies to be updated,
-and then you will need a new version of the plugin anyway.
-You can find the list of Checker Framework releases
-[here](https://github.com/typetools/checker-framework/releases).
-For example, to use version 2.8.1 of the Checker Framework:
+This plugin uses Checker Framework version 2.8.1 by default.
+Anytime you upgrade to a newer version of this plugin,
+it might use a different version of the Checker Framework.
+
+If you wish to use a specific Checker Framework
+[version](https://github.com/typetools/checker-framework/releases),
+add text like the following to `build.gradle`:
 
 ```groovy
 dependencies {
-  checkerFramework 'org.checkerframework:checker-qual:2.8.1'
-  checkerFramework 'org.checkerframework:checker:2.8.1'
-  checkerFramework 'org.checkerframework:jdk8:2.8.1'
+  checkerFramework 'org.checkerframework:checker-qual:2.8.0'
+  checkerFramework 'org.checkerframework:checker:2.8.0'
+  checkerFramework 'org.checkerframework:jdk8:2.8.0'
 }
 ```
 

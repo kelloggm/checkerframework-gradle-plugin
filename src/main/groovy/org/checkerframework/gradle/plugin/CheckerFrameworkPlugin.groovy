@@ -17,7 +17,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     "com.android.test"]
   // Checker Framework configurations and dependencies
 
-  // Whenever this line is changed, you need to change the corresponding line in the README.
+  // Whenever this line is changed, you need to change the corresponding text in README.md.
   private final static def LIBRARY_VERSION = "2.8.1"
 
   private final static def ANNOTATED_JDK_NAME_JDK8 = "jdk8"
