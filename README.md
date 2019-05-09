@@ -2,10 +2,8 @@
 
 [![License](https://img.shields.io/badge/license-apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Build Status](https://travis-ci.org/kelloggm/gradle-checker-framework-plugin.svg?branch=master)](https://travis-ci.org/jaredsburrows/gradle-checker-framework-plugin)
-[![Twitter Follow](https://img.shields.io/twitter/follow/jaredsburrows.svg?style=social)](https://twitter.com/jaredsburrows)
 
 This plugin configures `JavaCompile` tasks to use the [Checker Framework](https://checkerframework.org).
-It is a fork of the original plugin built by [jaredsburrows](https://github.com/jaredsburrows/gradle-checker-framework-plugin).
 
 ## Download
 
@@ -108,6 +106,14 @@ checkerFramework {
 
 The check for test targets is entirely syntactic: this option will not apply the checkers
 to any task whose name includes "test", ignoring case. The default value is `false`.
+
+
+## Credits
+
+This project started as a fork of [a plugin built by jaredsburrows](https://github.com/jaredsburrows/gradle-checker-framework-plugin).
+
+[![Twitter Follow](https://img.shields.io/twitter/follow/jaredsburrows.svg?style=social)](https://twitter.com/jaredsburrows)
+
 
 ## License
 
