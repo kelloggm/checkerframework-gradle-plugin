@@ -111,7 +111,6 @@ to any task whose name includes "test", ignoring case. The default value is `fal
 ## Credits
 
 This project started as a fork of [a plugin built by jaredsburrows](https://github.com/jaredsburrows/gradle-checker-framework-plugin).
-
 [![Twitter Follow](https://img.shields.io/twitter/follow/jaredsburrows.svg?style=social)](https://twitter.com/jaredsburrows)
 
 
