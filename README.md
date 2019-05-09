@@ -14,7 +14,7 @@ block):
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.2.0'
+    id 'org.checkerframework' version '0.3.0'
 }
 
 apply plugin: 'org.checkerframework'
@@ -37,7 +37,7 @@ buildscript {
   }
   
   dependencies {
-    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.2.0-SNAPSHOT'
+    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.0-SNAPSHOT'
   }
 }
 
