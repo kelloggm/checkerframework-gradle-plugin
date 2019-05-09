@@ -1,7 +1,7 @@
 # Gradle Checker Framework Plugin
 
 [![License](https://img.shields.io/badge/license-apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
-[![Build Status](https://travis-ci.org/kelloggm/checkerframework-gradle-plugin.svg?branch=master)](https://travis-ci.org/kelloggm/checkerframework-gradle-plugin)
+[![Build Status](https://travis-ci.com/kelloggm/checkerframework-gradle-plugin.svg?branch=master)](https://travis-ci.com/kelloggm/checkerframework-gradle-plugin)
 
 This plugin configures `JavaCompile` tasks to use the [Checker Framework](https://checkerframework.org).
 
