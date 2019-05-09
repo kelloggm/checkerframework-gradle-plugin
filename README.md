@@ -15,14 +15,14 @@ block):
 **Release:**
 ```groovy
 plugins {
-    // Checker Framework build logic
+    // Checker Framework pluggable type-checking
     id 'org.checkerframework' version '0.2.0'
 }
 
 apply plugin: 'org.checkerframework'
 ```
 
-## Using a locally-built plugin
+**Using a locally-built plugin:**
 
 To build the plugin from source, run `./gradlew build`.
 
