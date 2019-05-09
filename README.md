@@ -12,7 +12,7 @@ It is a fork of the original plugin built by [jaredsburrows](https://github.com/
 Add the following to your `build.gradle` file (you will probably need to modify the `plugins`
 block):
 
-**Release:**
+**Using a released version:**
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
