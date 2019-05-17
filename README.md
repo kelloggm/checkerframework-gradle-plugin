@@ -7,38 +7,12 @@ This plugin configures `JavaCompile` tasks to use the [Checker Framework](https:
 
 ## Download
 
-Add the following to your `build.gradle` file (you will probably need to modify the `plugins`
-block):
+Add the following to your `build.gradle` file:
 
-**Using a released version:**
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
     id 'org.checkerframework' version '0.3.0'
-}
-
-apply plugin: 'org.checkerframework'
-```
-
-**Using a locally-built plugin:**
-
-To build the plugin from source, run `./gradlew build`.
-
-If you want to use a locally-built version of the plugin, you can publish the plugin to your
-local Maven repository by running `./gradlew publish`. In the `build.gradle` file for each
-project for which you want to use the locally-built plugin, make sure that `mavenLocal()`
-is the first entry in the `repositories` block within the `buildscript` block. A full example
-will look like this:
-
-```groovy
-buildscript {
-  repositories {
-    mavenLocal()
-  }
-  
-  dependencies {
-    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.0-SNAPSHOT'
-  }
 }
 
 apply plugin: 'org.checkerframework'
@@ -137,6 +111,32 @@ checkerFramework {
 The check for test targets is entirely syntactic: this option will not apply the checkers
 to any task whose name includes "test", ignoring case. The default value is `false`.
 
+
+## Using a locally-built plugin:
+
+You can build the plugin locally rather than downloading it from Maven Central.
+
+To build the plugin from source, run `./gradlew build`.
+
+If you want to use a locally-built version of the plugin, you can publish the plugin to your
+local Maven repository by running `./gradlew publish`. In the `build.gradle` file for each
+project for which you want to use the locally-built plugin, make sure that `mavenLocal()`
+is the first entry in the `repositories` block within the `buildscript` block. A full example
+will look like this:
+
+```groovy
+buildscript {
+  repositories {
+    mavenLocal()
+  }
+
+  dependencies {
+    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.0-SNAPSHOT'
+  }
+}
+
+apply plugin: 'org.checkerframework'
+```
 
 ## Credits
 
