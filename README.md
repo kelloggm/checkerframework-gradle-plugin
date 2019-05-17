@@ -112,7 +112,7 @@ The check for test targets is entirely syntactic: this option will not apply the
 to any task whose name includes "test", ignoring case. The default value is `false`.
 
 
-## Using a locally-built plugin:
+## Using a locally-built plugin
 
 You can build the plugin locally rather than downloading it from Maven Central.
 
