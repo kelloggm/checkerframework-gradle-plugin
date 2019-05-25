@@ -74,7 +74,7 @@ it might use a different version of the Checker Framework.
 
 If you wish to use a specific Checker Framework
 [version](https://github.com/typetools/checker-framework/releases),
-add text like the following to `build.gradle`:
+add text like the following to `build.gradle`, after `apply plugin: 'org.checkerframework'`::
 
 ```groovy
 dependencies {
@@ -87,7 +87,7 @@ dependencies {
 You can also use a locally-built version of the Checker Framework:
 
 ```groovy
-cfHome = String.valueOf(System.getenv("CHECKERFRAMEWORK"))
+def cfHome = String.valueOf(System.getenv("CHECKERFRAMEWORK"))
 dependencies {
   checkerFramework files(cfHome + "/checker/dist/checker.jar")
   checkerFramework files(cfHome + "/checker/dist/checker-qual.jar")
