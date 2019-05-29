@@ -158,7 +158,7 @@ dependencies {
 if ("true".equals(project.ext.useCheckerFramework)) {
   checkerFramework {
     checkers = [
-      'org.checkerframework.checker.nullness.InterningChecker',
+      'org.checkerframework.checker.interning.InterningChecker',
       'org.checkerframework.checker.signature.SignatureChecker'
     ]
   }
