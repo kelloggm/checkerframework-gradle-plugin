@@ -112,6 +112,71 @@ The check for test targets is entirely syntactic: this option will not apply the
 to any task whose name includes "test", ignoring case. The default value is `false`.
 
 
+### Incompatibility with Error Prone
+
+[Error Prone](https://errorprone.info/)
+uses the Checker Framework's dataflow analysis library.
+Unfortunately, Error Prone uses an old version of the library, so you
+cannot use both Error Prone and the current Checker Framework (because each
+one depends on a different version of the library).
+
+You can resolve this via a switch that causes your build to use either
+Error Prone or the Checker Framework, but not both.
+Here is how do change the above instructions:
+
+
+```
+plugins {
+  id "net.ltgt.errorprone-base" version "0.0.16" apply false
+  // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
+  // ./gradlew compileJava -PuseCheckerFramework=true
+  id 'org.checkerframework' version '0.3.0' apply false
+}
+
+if (!project.hasProperty("useCheckerFramework")) {
+    ext.useCheckerFramework = "false"
+}
+if ("true".equals(project.ext.useCheckerFramework)) {
+  apply plugin: 'org.checkerframework'
+} else {
+  apply plugin: 'net.ltgt.errorprone-base'
+}
+
+
+def checkerFrameworkVersion = "2.8.1"
+
+dependencies {
+  if ("true".equals(project.ext.useCheckerFramework)) {
+    checkerFramework 'org.checkerframework:checker:' + checkerFrameworkVersion
+    checkerFramework 'org.checkerframework:jdk8:' + checkerFrameworkVersion
+    checkerFramework 'org.checkerframework:checker-qual:' + checkerFrameworkVersion
+  } else {
+    errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: '2.3.3'
+  }
+}
+
+if ("true".equals(project.ext.useCheckerFramework)) {
+  checkerFramework {
+    checkers = [
+      'org.checkerframework.checker.nullness.InterningChecker',
+      'org.checkerframework.checker.signature.SignatureChecker'
+    ]
+  }
+} else {
+  // Configuration for the Error Prone linter.
+  tasks.withType(JavaCompile).each { t ->
+    if (!t.name.equals("compileTestInputJava") && !t.name.startsWith("checkTypes")) {
+      t.toolChain ErrorProneToolChain.create(project)
+      t.options.compilerArgs += [
+        '-Xep:StringSplitter:OFF',
+        '-Xep:ReferenceEquality:OFF' // use Interning Checker instead
+      ]
+    }
+  }
+}
+```
+
+
 ## Using a locally-built plugin
 
 You can build the plugin locally rather than downloading it from Maven Central.
