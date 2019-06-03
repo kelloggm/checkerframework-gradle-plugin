@@ -74,7 +74,7 @@ it might use a different version of the Checker Framework.
 
 If you wish to use a specific Checker Framework
 [version](https://github.com/typetools/checker-framework/releases),
-add text like the following to `build.gradle`, after `apply plugin: 'org.checkerframework'`::
+add text like the following to `build.gradle`, after `apply plugin: 'org.checkerframework'`:
 
 ```groovy
 dependencies {
