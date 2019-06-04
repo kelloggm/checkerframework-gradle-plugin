@@ -111,6 +111,19 @@ checkerFramework {
 The check for test targets is entirely syntactic: this option will not apply the checkers
 to any task whose name includes "test", ignoring case. The default value is `false`.
 
+You can also choose different versions of the annotations for the source and
+test compilation targets. To do so, do not use the `compile` dependency
+configuration. Instead, use the `compileOnly` configuration for source
+code, and the `testCompile` configuration for test code. For example, to
+use version `2.8.1` of `checker-qual` in the source code, but version `2.8.2`
+in the test code, use these dependencies:
+
+```groovy
+dependencies {
+  compileOnly 'org.checkerframework:checker-qual:2.8.1'
+  testCompile 'org.checkerframework:checker-qual:2.8.2'
+}
+```
 
 ### Incompatibility with Error Prone
 
