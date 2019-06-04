@@ -78,8 +78,17 @@ add text like the following to `build.gradle`, after `apply plugin: 'org.checker
 
 ```groovy
 dependencies {
-  compile 'org.checkerframework:checker-qual:2.8.0'
+  // Annotations must be available at compile-time, but shouldn't leak onto
+  // run-time classpath.
+  compileOnly 'org.checkerframework:checker-qual:2.8.0'
+
+  // Note that this is only needed if annotations are present in test code
+  testCompileOnly 'org.checkerframework:checker-qual:2.8.0'
+
+  // The version of the framework's checkers to use
   checkerFramework 'org.checkerframework:checker:2.8.0'
+
+  // The version of the annotated JDK to use
   checkerFrameworkAnnotatedJDK 'org.checkerframework:jdk8:2.8.0'
 }
 ```
@@ -110,20 +119,6 @@ checkerFramework {
 
 The check for test targets is entirely syntactic: this option will not apply the checkers
 to any task whose name includes "test", ignoring case. The default value is `false`.
-
-You can also choose different versions of the annotations for the source and
-test compilation targets. To do so, do not use the `compile` dependency
-configuration. Instead, use the `compileOnly` configuration for source
-code, and the `testCompile` configuration for test code. For example, to
-use version `2.8.1` of `checker-qual` in the source code, but version `2.8.2`
-in the test code, use these dependencies:
-
-```groovy
-dependencies {
-  compileOnly 'org.checkerframework:checker-qual:2.8.1'
-  testCompile 'org.checkerframework:checker-qual:2.8.2'
-}
-```
 
 ### Incompatibility with Error Prone
 

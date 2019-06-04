@@ -26,7 +26,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
   private final static def CONFIGURATION = "checkerFramework"
   private final static def CONFIGURATION_DESCRIPTION = "The Checker Framework: custom pluggable types for Java."
   private final static def JAVA_COMPILE_CONFIGURATION = "compileOnly"
-  private final static def TEST_COMPILE_CONFIGURATION = "testCompile"
+  private final static def TEST_COMPILE_CONFIGURATION = "testCompileOnly"
   private final static def CHECKER_DEPENDENCY = "org.checkerframework:checker:${LIBRARY_VERSION}"
   private final static def CHECKER_QUAL_DEPENDENCY = "org.checkerframework:checker-qual:${LIBRARY_VERSION}"
 
