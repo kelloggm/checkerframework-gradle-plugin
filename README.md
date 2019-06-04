@@ -78,17 +78,9 @@ add text like the following to `build.gradle`, after `apply plugin: 'org.checker
 
 ```groovy
 dependencies {
-  // Annotations must be available at compile-time, but shouldn't leak onto
-  // run-time classpath.
   compileOnly 'org.checkerframework:checker-qual:2.8.0'
-
-  // Note that this is only needed if annotations are present in test code
   testCompileOnly 'org.checkerframework:checker-qual:2.8.0'
-
-  // The version of the framework's checkers to use
   checkerFramework 'org.checkerframework:checker:2.8.0'
-
-  // The version of the annotated JDK to use
   checkerFrameworkAnnotatedJDK 'org.checkerframework:jdk8:2.8.0'
 }
 ```
