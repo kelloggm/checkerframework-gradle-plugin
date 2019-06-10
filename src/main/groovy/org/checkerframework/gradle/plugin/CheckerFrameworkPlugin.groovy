@@ -25,7 +25,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
   private final static def ANNOTATED_JDK_CONFIGURATION_DESCRIPTION = "A copy of JDK classes with Checker Framework type qualifiers inserted."
   private final static def CONFIGURATION = "checkerFramework"
   private final static def CONFIGURATION_DESCRIPTION = "The Checker Framework: custom pluggable types for Java."
-  private final static def JAVA_COMPILE_CONFIGURATION = "compile"
+  private final static def JAVA_COMPILE_CONFIGURATION = "compileOnly"
+  private final static def TEST_COMPILE_CONFIGURATION = "testCompileOnly"
   private final static def CHECKER_DEPENDENCY = "org.checkerframework:checker:${LIBRARY_VERSION}"
   private final static def CHECKER_QUAL_DEPENDENCY = "org.checkerframework:checker-qual:${LIBRARY_VERSION}"
 
@@ -67,7 +68,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     def dependencyMap = [
       [name: "${ANNOTATED_JDK_CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]: "org.checkerframework:${jdkVersion}:${LIBRARY_VERSION}",
       [name: "${CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]              : "${CHECKER_DEPENDENCY}",
-      [name: "${JAVA_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}"
+      [name: "${JAVA_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}",
+      [name: "${TEST_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}"
     ]
 
     // Now, apply the dependencies to project

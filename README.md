@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.3.2'
+    id 'org.checkerframework' version '0.3.4'
 }
 
 apply plugin: 'org.checkerframework'
@@ -78,7 +78,8 @@ add text like the following to `build.gradle`, after `apply plugin: 'org.checker
 
 ```groovy
 dependencies {
-  compile 'org.checkerframework:checker-qual:2.8.0'
+  compileOnly 'org.checkerframework:checker-qual:2.8.0'
+  testCompileOnly 'org.checkerframework:checker-qual:2.8.0'
   checkerFramework 'org.checkerframework:checker:2.8.0'
   checkerFrameworkAnnotatedJDK 'org.checkerframework:jdk8:2.8.0'
 }
@@ -111,7 +112,6 @@ checkerFramework {
 The check for test targets is entirely syntactic: this option will not apply the checkers
 to any task whose name includes "test", ignoring case. The default value is `false`.
 
-
 ### Incompatibility with Error Prone
 
 [Error Prone](https://errorprone.info/)
@@ -130,7 +130,7 @@ plugins {
   id "net.ltgt.errorprone-base" version "0.0.16" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.3.2' apply false
+  id 'org.checkerframework' version '0.3.4' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -196,7 +196,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.2-SNAPSHOT'
+    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.4-SNAPSHOT'
   }
 }
 
