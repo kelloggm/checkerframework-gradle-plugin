@@ -90,8 +90,9 @@ You can also use a locally-built version of the Checker Framework:
 ```groovy
 def cfHome = String.valueOf(System.getenv("CHECKERFRAMEWORK"))
 dependencies {
-  compile files(cfHome + "/checker/dist/checker.jar")
-  checkerFramework files(cfHome + "/checker/dist/checker-qual.jar")
+  compileOnly files(cfHome + "/checker/dist/checker-qual.jar")
+  testCompileOnly files(cfHome + "/checker/dist/checker-qual.jar")
+  checkerFramework files(cfHome + "/checker/dist/checker.jar")
   checkerFrameworkAnnotatedJDK files(cfHome + "/checker/dist/jdk8.jar")
 }
 ```
