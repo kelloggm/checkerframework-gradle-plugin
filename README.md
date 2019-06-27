@@ -88,25 +88,8 @@ dependencies {
 You can also use a locally-built version of the Checker Framework:
 
 ```groovy
-def cfHome = String.valueOf(System.getenv("CHECKERFRAMEWORK"))
-dependencies {
-  compileOnly files(cfHome + "/checker/dist/checker-qual.jar")
-  testCompileOnly files(cfHome + "/checker/dist/checker-qual.jar")
-  checkerFramework files(cfHome + "/checker/dist/checker.jar")
-  checkerFrameworkAnnotatedJDK files(cfHome + "/checker/dist/jdk8.jar")
-}
-```
-
-If you want to be able to switch between a locally-built version
-of the Checker Framework and an arbitrary release version, you
-can do that by defining a property and then passing it when invoking
-your build. Your build file should include lines like these:
-
-```groovy
-if (!project.hasProperty("cfVersion")) {
-    ext.cfVersion = "2.8.2" // this is your default version
-}
-if ("local".equals(project.ext.cfVersion)) {
+// To use local Checker Framework, run gradle with "-PcfLocal"
+if (project.hasProperty("cfLocal")) {
   def cfHome = String.valueOf(System.getenv("CHECKERFRAMEWORK"))
   dependencies {
     compileOnly files(cfHome + "/checker/dist/checker-qual.jar")
@@ -114,24 +97,7 @@ if ("local".equals(project.ext.cfVersion)) {
     checkerFramework files(cfHome + "/checker/dist/checker.jar")
     checkerFrameworkAnnotatedJDK files(cfHome + "/checker/dist/jdk8.jar")
   }
-} else {
-  dependencies {
-    compileOnly 'org.checkerframework:checker-qual:' + project.ext.cfVersion
-    testCompileOnly 'org.checkerframework:checker-qual:' + project.ext.cfVersion
-    checkerFramework 'org.checkerframework:checker:' + project.ext.cfVersion
-    checkerFrameworkAnnotatedJDK 'org.checkerframework:jdk8:' + project.ext.cfVersion
-  }
 }
-```
-
-You would then invoke your gradle `build` target like this for a local Checker 
-Framework:
-```bash
-./gradlew build -PcfVersion=local
-```
-For a release version, you would invoke it like this instead:
-```bash
-./gradlew build -PcfVersion=2.8.2
 ```
 
 ### Other options
