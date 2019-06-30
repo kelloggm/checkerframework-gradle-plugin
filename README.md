@@ -47,6 +47,7 @@ For example, to use a stub file:
 ```groovy
 checkerFramework {
   extraJavacArgs = [
+    '-Werror',
     '-Astubs=/path/to/my/stub/file.astub'
   ]
 }
