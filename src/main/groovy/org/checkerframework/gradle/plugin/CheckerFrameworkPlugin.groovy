@@ -71,7 +71,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       [name: "${ANNOTATED_JDK_CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]: "org.checkerframework:${jdkVersion}:${LIBRARY_VERSION}",
       [name: "${CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]              : "${CHECKER_DEPENDENCY}",
       [name: "${JAVA_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}",
-      [name: "${TEST_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}"
+      [name: "${TEST_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}",
+      [name: "errorProneJavac", descripion: "the Error Prone Javac compiler"]                           : "com.google.errorprone:javac:9-dev-r3297-1"
     ]
 
     // Now, apply the dependencies to project
@@ -97,9 +98,10 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       project.tasks.withType(AbstractCompile).all { compile ->
         if (compile.hasProperty('options') && (!userConfig.excludeTests || !compile.name.toLowerCase().contains("test"))) {
           compile.options.annotationProcessorPath = project.configurations.checkerFramework
-          if (javaVersion.java8 && new JarFile(project.configurations.checkerFramework.asPath).getManifest().getMainAttributes().getValue('Implementation-Version') >= "3") {
+          if (javaVersion.java8 && new JarFile(project.configurations.checkerFramework.asPath)
+                          .getManifest().getMainAttributes().getValue('Implementation-Version') >= "3") {
             compile.options.forkOptions.jvmArgs += [
-              "-Xbootclasspath/p:/home/somebody/.gradle/caches/modules-2/files-2.1/com.google.errorprone/javac/9+181-r4173-1/bdf4c0aa7d540ee1f7bf14d47447aea4bbf450c5/javac-9+181-r4173-1.jar",
+              "-Xbootclasspath/p:${project.configurations.errorProneJavac.asPath}".toString()
             ]
           }
           compile.options.compilerArgs = [

@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.3.4'
+    id 'org.checkerframework' version '0.3.6'
 }
 
 apply plugin: 'org.checkerframework'
@@ -134,7 +134,7 @@ plugins {
   id "net.ltgt.errorprone-base" version "0.0.16" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.3.4' apply false
+  id 'org.checkerframework' version '0.3.6' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -180,6 +180,12 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 }
 ```
 
+## Java 9 compatibility
+
+When using a Checker Framework version above 3.0.0 that is compatible with Java 9,
+this plugin will automatically substitute a Checker Framework-compatible ErrorProne
+Javac compiler version (from
+[com.google.errorprone:javac](https://mvnrepository.com/artifact/com.google.errorprone/javac)).
 
 ## Using a locally-built plugin
 
@@ -200,7 +206,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.4-SNAPSHOT'
+    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.6-SNAPSHOT'
   }
 }
 
