@@ -119,7 +119,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       [name: "${CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]              : "${CHECKER_DEPENDENCY}",
       [name: "${JAVA_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}",
       [name: "${TEST_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}",
-      [name: "errorProneJavac", descripion: "the Error Prone Javac compiler"]                           : "com.google.errorprone:javac:9-dev-r3297-1"
+      [name: "errorProneJavac", descripion: "the Error Prone Javac compiler"]                           : "com.google.errorprone:javac:9+181-r4173-1"
     ]
 
     // Now, apply the dependencies to project
