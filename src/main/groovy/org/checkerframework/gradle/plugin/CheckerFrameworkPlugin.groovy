@@ -1,11 +1,14 @@
 package org.checkerframework.gradle.plugin
 
+import org.gradle.api.Action
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
 import org.gradle.api.logging.Logging
 import org.gradle.api.tasks.compile.AbstractCompile
+
+import io.freefair.gradle.plugins.lombok.LombokPlugin
 
 final class CheckerFrameworkPlugin implements Plugin<Project> {
   // Handles pre-3.0 and 3.0+, "com.android.base" was added in AGP 3.0
@@ -42,6 +45,50 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         if (!applied) applied = true
       }
     }
+
+    project.getPlugins().withType(io.freefair.gradle.plugins.lombok.LombokPlugin.class, new Action<LombokPlugin>() {
+      void execute(LombokPlugin lombokPlugin) {
+        project.gradle.projectsEvaluated {
+
+          def delombokTasks = project.getTasks().findAll { task ->
+            task.name.startsWith("delombok")
+          }
+
+          if (delombokTasks.size() != 0) {
+
+            // change every compile task so that it:
+            // 1. depends on delombok, and
+            // 2. uses the delombok'd source code as its source set
+
+            project.tasks.withType(AbstractCompile).all { compile ->
+
+              // find the right delombok task
+              def delombokTask = delombokTasks.find { task ->
+                if (task.name.equals("delombok")) {
+                  // special-case the main compile task because its just named "compileJava"
+                  // without anything else
+                  compile.name.equals("compileJava")
+                } else {
+                  // "delombok" is 8 characters.
+                  compile.name.contains(task.name.substring(8))
+                }
+              }
+
+              // the lombok plugin's default formatting is pretty-printing, without the @Generated annotations
+              // that we need to recognize lombok'd code
+              delombokTask.format.put('generated', 'generate')
+
+              compile.dependsOn(delombokTask)
+              compile.setSource(delombokTask.target.getAsFile().get())
+            }
+          }
+        }
+        // lombok-generated code will always causes these warnings, because their default formatting is wrong
+        // and can't be changed
+        userConfig.extraJavacArgs += "-AsuppressWarnings=type.anno.before.modifier"
+      }
+    })
+
     project.gradle.projectsEvaluated {
       if (!applied) LOG.warn('No android or java plugins found, checker compiler options will not be applied.')
     }
