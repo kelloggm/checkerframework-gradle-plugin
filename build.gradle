@@ -9,6 +9,11 @@ plugins {
 repositories {
     jcenter()
     google()
+
+    // The gradle plugin portal, so that we can depend on other plugins.
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
 }
 
 apply from: 'gradle/dependencies.gradle'
@@ -19,12 +24,15 @@ targetCompatibility = 1.8
 dependencies {
     implementation localGroovy()
 
+    // The Lombok Gradle plugin, so that we can delombok sources if lombok would be applied.
+    implementation 'io.freefair.gradle:lombok-plugin:3.7.5'
+
     testImplementation deps.android.tools.build.gradle
     testImplementation deps.spock, { exclude module: 'groovy-all' } // Use localGroovy()
 }
 
 group 'org.checkerframework'
-version '0.3.6'
+version '0.3.7'
 
 gradlePlugin {
     plugins {
