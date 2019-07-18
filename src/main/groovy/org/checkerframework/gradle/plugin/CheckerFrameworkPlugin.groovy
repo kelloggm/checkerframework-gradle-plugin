@@ -146,7 +146,10 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     project.gradle.projectsEvaluated {
       project.tasks.withType(AbstractCompile).all { compile ->
         if (compile.hasProperty('options') && (!userConfig.excludeTests || !compile.name.toLowerCase().contains("test"))) {
-          compile.options.annotationProcessorPath = project.configurations.checkerFramework
+          compile.options.annotationProcessorPath =
+                  compile.options.annotationProcessorPath == null ?
+                          project.configurations.checkerFramework :
+                          project.configurations.checkerFramework.plus(compile.options.annotationProcessorPath)
           compile.options.compilerArgs = [
             "-Xbootclasspath/p:${project.configurations.checkerFrameworkAnnotatedJDK.asPath}".toString()
           ]
