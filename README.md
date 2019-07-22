@@ -184,7 +184,7 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 
 When using a Checker Framework version above 3.0.0 that is compatible with Java 9
 and executing on a Java 8 JVM,
-this plugin will automatically substitute a Checker Framework-compatible ErrorProne
+this plugin will automatically substitute a Checker Framework-compatible Error Prone
 Java compiler version (from
 [com.google.errorprone:javac](https://mvnrepository.com/artifact/com.google.errorprone/javac)).
 This is necessary because Checker Framework versions starting at 3.0.0 build on the Java 9 compiler.

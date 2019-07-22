@@ -118,13 +118,17 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       jdkVersion = ANNOTATED_JDK_NAME_JDK8
     }
 
+    // Check whether to use the Error Prone javac
+    def needErrorProneJavac =
+      javaVersion.java8 && (${LIBRARY_VERSION}.tokenize(".")[0].toInteger() >= 3)
+
     // Create a map of the correct configurations with dependencies
     def dependencyMap = [
       [name: "${ANNOTATED_JDK_CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]: "org.checkerframework:${jdkVersion}:${LIBRARY_VERSION}",
       [name: "${CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]              : "${CHECKER_DEPENDENCY}",
       [name: "${JAVA_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}",
       [name: "${TEST_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}",
-      [name: "errorProneJavac", descripion: "the Error Prone Javac compiler"]                           : "com.google.errorprone:javac:9+181-r4173-1"
+      [name: "errorProneJavac", descripion: "the Error Prone Java compiler"]                            : "com.google.errorprone:javac:9+181-r4173-1"
     ]
 
     // Now, apply the dependencies to project
@@ -150,8 +154,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       project.tasks.withType(AbstractCompile).all { compile ->
         if (compile.hasProperty('options') && (!userConfig.excludeTests || !compile.name.toLowerCase().contains("test"))) {
           compile.options.annotationProcessorPath = project.configurations.checkerFramework
-          if (javaVersion.java8 && new JarFile(project.configurations.checkerFramework.asPath)
-                          .getManifest().getMainAttributes().getValue('Implementation-Version') >= "3") {
+          if (needErrorProneJavac) {
             compile.options.forkOptions.jvmArgs += [
               "-Xbootclasspath/p:${project.configurations.errorProneJavac.asPath}".toString()
             ]
