@@ -119,8 +119,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     }
 
     // Check whether to use the Error Prone javac
-    def needErrorProneJavac =
-      javaVersion.java8 && (${LIBRARY_VERSION}.tokenize(".")[0].toInteger() >= 3)
+    boolean needErrorProneJavac =
+      javaVersion.java8 && (LIBRARY_VERSION.tokenize(".")[0].toInteger() >= 3)
 
     // Create a map of the correct configurations with dependencies
     def dependencyMap = [
