@@ -50,6 +50,11 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
     project.getPlugins().withType(io.freefair.gradle.plugins.lombok.LombokPlugin.class, new Action<LombokPlugin>() {
       void execute(LombokPlugin lombokPlugin) {
+
+        // Ensure that the lombok config is set to emit @Generated annotations
+        lombokPlugin.configureForJacoco()
+        lombokPlugin.generateLombokConfig.get().generateLombokConfig()
+
         project.gradle.projectsEvaluated {
 
           def delombokTasks = project.getTasks().findAll { task ->
