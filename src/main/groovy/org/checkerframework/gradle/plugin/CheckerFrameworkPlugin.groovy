@@ -118,10 +118,6 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       jdkVersion = ANNOTATED_JDK_NAME_JDK8
     }
 
-    // Check whether to use the Error Prone javac
-    boolean needErrorProneJavac =
-      javaVersion.java8 && (LIBRARY_VERSION.tokenize(".")[0].toInteger() >= 3)
-
     // Create a map of the correct configurations with dependencies
     def dependencyMap = [
       [name: "${ANNOTATED_JDK_CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]: "org.checkerframework:${jdkVersion}:${LIBRARY_VERSION}",
@@ -151,8 +147,21 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
     // Apply checker to project
     project.gradle.projectsEvaluated {
+
+      // Decide whether to use ErrorProne Javac once configurations have been populated.
+      // The call to iterator.next() is safe because we added this dependency above if it
+      // wasn't specified by the user.
+      def actualCFDependency = project.configurations.checkerFramework.getAllDependencies()
+              .matching({dep ->
+        dep.getName().equals("checker") && dep.getGroup().equals("org.checkerframework")}).iterator().next()
+
+      // The array access is safe because all CF version strings have at least one . in them.
+      boolean needErrorProneJavac =
+              javaVersion.java8 && actualCFDependency.getVersion().tokenize(".")[0].toInteger() >= 3
+
       project.tasks.withType(AbstractCompile).all { compile ->
         if (compile.hasProperty('options') && (!userConfig.excludeTests || !compile.name.toLowerCase().contains("test"))) {
+          // Check whether to use the Error Prone javac
           compile.options.annotationProcessorPath = project.configurations.checkerFramework
           if (needErrorProneJavac) {
             compile.options.forkOptions.jvmArgs += [
