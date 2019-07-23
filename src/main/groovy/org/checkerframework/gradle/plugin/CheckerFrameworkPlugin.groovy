@@ -149,25 +149,23 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     project.gradle.projectsEvaluated {
 
       // Decide whether to use ErrorProne Javac once configurations have been populated.
-      // The call to iterator.next() is safe because we added this dependency above if it
-      // wasn't specified by the user.
-
       def actualCFDependencySet = project.configurations.checkerFramework.getAllDependencies()
               .matching({dep ->
         dep.getName().equals("checker") && dep.getGroup().equals("org.checkerframework")})
 
-
-      def isCFThreePlus
+      def CFVersionString
       if (actualCFDependencySet.size() == 0) {
-        isCFThreePlus = LIBRARY_VERSION.tokenize(".")[0].toInteger() >= 3
+        CFVersionString = LIBRARY_VERSION
       } else {
-        isCFThreePlus = actualCFDependencySet.iterator().next().getVersion()
-                .tokenize(".")[0].toInteger() >= 3
+        // The call to iterator.next() is safe because we added this dependency above if it
+        // wasn't specified by the user.
+        CFVersionString = actualCFDependencySet.iterator().next().getVersion()
       }
-
       // The array access is safe because all CF version strings have at least one . in them.
-      boolean needErrorProneJavac =
-              javaVersion.java8 && isCFThreePlus
+      def isCFThreePlus = CFVersionString.tokenize(".")[0].toInteger() >= 3
+
+      boolean needErrorProneJavac = javaVersion.java8 && isCFThreePlus
+
 
       project.tasks.withType(AbstractCompile).all { compile ->
         if (compile.hasProperty('options') && (!userConfig.excludeTests || !compile.name.toLowerCase().contains("test"))) {
