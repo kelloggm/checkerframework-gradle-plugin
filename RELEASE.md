@@ -15,7 +15,8 @@ in the `gradle.properties` file.
 ### Release process
 
 1. Choose a new version string. Please try to respect 
-[semantic versioning](https://semver.org/).
+[semantic versioning](https://semver.org/). Do not augment the major
+version without explicit approval from all the maintainers.
 2. Change the version of the plugin. Search for the current plugin version
 in the directory containing this file, and replace all instances of it
 with the new version string.
