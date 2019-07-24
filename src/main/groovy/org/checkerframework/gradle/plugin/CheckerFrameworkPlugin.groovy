@@ -155,7 +155,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
       def CFVersionString
       if (actualCFDependencySet.size() == 0) {
-        CFVersionString = LIBRARY_VERSION
+        CFVersionString = new JarFile(project.configurations.checkerFramework.asPath).getManifest().getMainAttributes().getValue('Implementation-Version')
       } else {
         // The call to iterator.next() is safe because we added this dependency above if it
         // wasn't specified by the user.
