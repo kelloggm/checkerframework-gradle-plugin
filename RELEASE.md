@@ -9,6 +9,11 @@ Gradle plugin, which this repository contains.
 The credentials are stored in the same place as the credentials used to make
 a Checker Framework release, in a `gradle.properties` file.
 To gain access to the credentials, contact one of the maintainers privately.
+* Ensure that you have checked out the `master` branch of the project. Do
+not make releases from other branches.
+* Ensure that the
+[Travis build](https://travis-ci.com/kelloggm/checkerframework-gradle-plugin/branches)
+is passing on the `master` branch before beginning the release process.
 
 ### Release process
 
