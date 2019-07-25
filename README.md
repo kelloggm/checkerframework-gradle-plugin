@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.3.9'
+    id 'org.checkerframework' version '0.3.13'
 }
 
 apply plugin: 'org.checkerframework'
@@ -103,7 +103,7 @@ if (project.hasProperty("cfLocal")) {
 
 ### Other options
 
-By default, the plugin applies the selected checkers to all `JavaCompile` targets.
+* By default, the plugin applies the selected checkers to all `JavaCompile` targets.
 The plugin includes a rudimentary option for preventing checkers from being applied
 to test targets. To use it, add the following to the `checkerFramework` block:
 
@@ -115,6 +115,17 @@ checkerFramework {
 
 The check for test targets is entirely syntactic: this option will not apply the checkers
 to any task whose name includes "test", ignoring case. The default value is `false`.
+
+* If you encounter errors of the form `zip file name too long` when configuring your
+Gradle project, you can use the following code to skip this plugin's version check,
+which reads the manifest file of the version of the Checker Framework you are actually
+using:
+
+```groovy
+checkerFramework {
+  skipVersionCheck = true
+}
+```
 
 ### Incompatibility with Error Prone
 
@@ -134,7 +145,7 @@ plugins {
   id "net.ltgt.errorprone-base" version "0.0.16" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.3.9' apply false
+  id 'org.checkerframework' version '0.3.13' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -180,6 +191,19 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 }
 ```
 
+## Java 9+ compatibility
+
+When using a Checker Framework version above 3.0.0 that is compatible with Java 9
+and executing on a Java 8 JVM,
+this plugin will automatically substitute a Checker Framework-compatible Error Prone
+Java compiler version (from
+[com.google.errorprone:javac](https://mvnrepository.com/artifact/com.google.errorprone/javac)).
+This is necessary because Checker Framework versions starting at 3.0.0 build on the Java 9 compiler.
+
+When using a Checker Framework version above 3.0.0 and executing on a Java 9+ JVM, the host
+Java compiler is used.
+
+
 ## Lombok compatibility
 
 This plugin automatically interacts with
@@ -206,7 +230,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.9-SNAPSHOT'
+    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.13-SNAPSHOT'
   }
 }
 

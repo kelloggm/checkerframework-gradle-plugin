@@ -1,5 +1,7 @@
 package org.checkerframework.gradle.plugin
 
+import java.util.jar.JarFile
+
 import org.gradle.api.Action
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
@@ -121,7 +123,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       [name: "${ANNOTATED_JDK_CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]: "org.checkerframework:${jdkVersion}:${LIBRARY_VERSION}",
       [name: "${CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]              : "${CHECKER_DEPENDENCY}",
       [name: "${JAVA_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}",
-      [name: "${TEST_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}"
+      [name: "${TEST_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}",
+      [name: "errorProneJavac", descripion: "the Error Prone Java compiler"]                            : "com.google.errorprone:javac:9+181-r4173-1"
     ]
 
     // Now, apply the dependencies to project
@@ -144,9 +147,40 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
     // Apply checker to project
     project.gradle.projectsEvaluated {
+
+      // Decide whether to use ErrorProne Javac once configurations have been populated.
+      def actualCFDependencySet = project.configurations.checkerFramework.getAllDependencies()
+              .matching({dep ->
+        dep.getName().equals("checker") && dep.getGroup().equals("org.checkerframework")})
+
+      def versionString
+
+      if (actualCFDependencySet.size() == 0) {
+        if (userConfig.skipVersionCheck) {
+          versionString = LIBRARY_VERSION
+        } else {
+          versionString = new JarFile(project.configurations.checkerFramework.asPath).getManifest().getMainAttributes().getValue('Implementation-Version')
+        }
+      } else {
+        // The call to iterator.next() is safe because we added this dependency above if it
+        // wasn't specified by the user.
+        versionString = actualCFDependencySet.iterator().next().getVersion()
+      }
+      // The array access is safe because all CF version strings have at least one . in them.
+      def isCFThreePlus = versionString.tokenize(".")[0].toInteger() >= 3
+
+      boolean needErrorProneJavac = javaVersion.java8 && isCFThreePlus
+
+
       project.tasks.withType(AbstractCompile).all { compile ->
         if (compile.hasProperty('options') && (!userConfig.excludeTests || !compile.name.toLowerCase().contains("test"))) {
+          // Check whether to use the Error Prone javac
           compile.options.annotationProcessorPath = project.configurations.checkerFramework
+          if (needErrorProneJavac) {
+            compile.options.forkOptions.jvmArgs += [
+              "-Xbootclasspath/p:${project.configurations.errorProneJavac.asPath}".toString()
+            ]
+          }
           compile.options.compilerArgs = [
             "-Xbootclasspath/p:${project.configurations.checkerFrameworkAnnotatedJDK.asPath}".toString()
           ]
