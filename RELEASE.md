@@ -19,5 +19,5 @@ version without explicit approval from all the maintainers.
 in the directory containing this file, and replace all instances of it
 with the new version string.
 3. Commit your changes: `git commit -m "Update version number to X.Y.Z"`
-3. Run `./gradlew publishPlugins` from the top-level project directory
+4. Run `./gradlew publishPlugins` from the top-level project directory
 (which should also contain this file).
