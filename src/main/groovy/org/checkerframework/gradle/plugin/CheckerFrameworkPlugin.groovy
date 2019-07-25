@@ -153,16 +153,21 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
               .matching({dep ->
         dep.getName().equals("checker") && dep.getGroup().equals("org.checkerframework")})
 
-      def CFVersionString
+      def versionString
+
       if (actualCFDependencySet.size() == 0) {
-        CFVersionString = new JarFile(project.configurations.checkerFramework.asPath).getManifest().getMainAttributes().getValue('Implementation-Version')
+        if (userConfig.skipVersionCheck) {
+          versionString = LIBRARY_VERSION
+        } else {
+          versionString = new JarFile(project.configurations.checkerFramework.asPath).getManifest().getMainAttributes().getValue('Implementation-Version')
+        }
       } else {
         // The call to iterator.next() is safe because we added this dependency above if it
         // wasn't specified by the user.
-        CFVersionString = actualCFDependencySet.iterator().next().getVersion()
+        versionString = actualCFDependencySet.iterator().next().getVersion()
       }
       // The array access is safe because all CF version strings have at least one . in them.
-      def isCFThreePlus = CFVersionString.tokenize(".")[0].toInteger() >= 3
+      def isCFThreePlus = versionString.tokenize(".")[0].toInteger() >= 3
 
       boolean needErrorProneJavac = javaVersion.java8 && isCFThreePlus
 
