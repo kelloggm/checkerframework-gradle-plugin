@@ -49,7 +49,7 @@ gradlePlugin {
 pluginBundle {
     website = 'https://checkerframework.org'
     vcsUrl = 'https://github.com/kelloggm/checkerframework-gradle-plugin'
-    tags = ['checkerframework', 'checker', 'typechecker', 'pluggable types']
+    tags = ['checkerframework', 'checker', 'typechecker', 'pluggable types', 'formal verification']
 }
 
 apply from: 'gradle/compile.gradle'
