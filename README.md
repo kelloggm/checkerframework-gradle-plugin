@@ -69,7 +69,7 @@ dependencies {
 
 ### Specifying a Checker Framework version
 
-This plugin uses Checker Framework version 2.8.2 by default.
+This plugin uses Checker Framework version 2.9.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -158,7 +158,7 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 }
 
 
-def checkerFrameworkVersion = "2.8.2"
+def checkerFrameworkVersion = "2.9.0"
 
 dependencies {
   if ("true".equals(project.ext.useCheckerFramework)) {
