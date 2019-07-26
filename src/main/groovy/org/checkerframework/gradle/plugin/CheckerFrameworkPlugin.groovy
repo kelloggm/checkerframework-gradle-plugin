@@ -1,7 +1,5 @@
 package org.checkerframework.gradle.plugin
 
-import org.gradle.api.Task
-
 import java.util.jar.JarFile
 
 import org.gradle.api.Action
