@@ -58,7 +58,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         project.gradle.projectsEvaluated {
 
           def delombokTasks = project.getTasks().findAll { task ->
-            task.name.startsWith("delombok")
+            task.name.contains("delombok")
           }
 
           if (delombokTasks.size() != 0) {
@@ -71,7 +71,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
               // find the right delombok task
               def delombokTask = delombokTasks.find { task ->
-                if (task.name.equals("delombok")) {
+
+                if (task.name.endsWith("delombok")) {
                   // special-case the main compile task because its just named "compileJava"
                   // without anything else
                   compile.name.equals("compileJava")
@@ -81,12 +82,16 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
                 }
               }
 
-              // the lombok plugin's default formatting is pretty-printing, without the @Generated annotations
-              // that we need to recognize lombok'd code
-              delombokTask.format.put('generated', 'generate')
+              // delombokTask can still be null; for example, if the code contains a compileScala task
+              if (delombokTask != null) {
 
-              compile.dependsOn(delombokTask)
-              compile.setSource(delombokTask.target.getAsFile().get())
+                // the lombok plugin's default formatting is pretty-printing, without the @Generated annotations
+                // that we need to recognize lombok'd code
+                delombokTask.format.put('generated', 'generate')
+
+                compile.dependsOn(delombokTask)
+                compile.setSource(delombokTask.target.getAsFile().get())
+              }
             }
           }
         }
