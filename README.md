@@ -89,7 +89,7 @@ dependencies {
 You can also use a locally-built version of the Checker Framework:
 
 ```groovy
-// To use a local-built Checker Framework, run gradle with "-PcfLocal".
+// To use a locally-built Checker Framework, run gradle with "-PcfLocal".
 if (project.hasProperty("cfLocal")) {
   def cfHome = String.valueOf(System.getenv("CHECKERFRAMEWORK"))
   dependencies {
@@ -121,11 +121,12 @@ Gradle project, you can use the following code to skip this plugin's version che
 which reads the manifest file of the version of the Checker Framework you are actually
 using:
 
-```groovy
-checkerFramework {
-  skipVersionCheck = true
-}
-```
+  ```groovy
+  checkerFramework {
+    skipVersionCheck = true
+  }
+  ```
+
 
 ### Multi-project builds
 
