@@ -134,7 +134,7 @@ By default, checkers are run on all subprojects of the project to which the plug
 is applied.
 
 In most projects with subprojects, the top-level project is not a Java
-project.  You should not configure such a non-Java block.  Instead, move
+project.  You should not configure such a non-Java project.  Instead, move
 all Checker Framework configuration (the `checkerFramework` block and any
 `dependencies`) into a `subprojects` block. For example:
 
@@ -150,7 +150,7 @@ subprojects { subproject ->
 }
 ```
 
-To not apply the plugin only to subprojects, set the `applyToSubprojects`
+To not apply the plugin to all subprojects, set the `applyToSubprojects`
 flag to `false`:
 
 ```groovy
