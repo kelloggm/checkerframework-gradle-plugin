@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.3.16'
+    id 'org.checkerframework' version '0.3.17'
 }
 
 apply plugin: 'org.checkerframework'
@@ -127,6 +127,36 @@ checkerFramework {
 }
 ```
 
+### Multi-project builds
+
+By default, checkers are run on all subprojects of the project to which the plugin
+is applied. If you wish to disable this behavior, set the `applyToSubprojects`
+flag to `false` (note that disabling this behavior will require you to configure
+each subproject by hand in an appropriate `build.gradle` file):
+
+```groovy
+checkerFramework {
+  applyToSubprojects = false
+}
+```
+
+In most projects with subprojects, you will still want to avoid attempting to configure
+the top-level project (which is usually not a Java project). We therefore recommend moving
+all Checker Framework configuration (the `checkerFramework` block and any `dependencies`)
+into a `subprojects` block. For example:
+
+```groovy
+subprojects { subproject ->
+  checkerFramework {
+    checkers = ['org.checkerframework.checker.index.IndexChecker']
+  }
+  dependencies {
+    checkerFramework 'org.checkerframework:checker:2.9.0'
+    implementation 'org.checkerframework:checker-qual:2.9.0'
+  }
+}
+```
+
 ### Incompatibility with Error Prone
 
 [Error Prone](https://errorprone.info/)
@@ -145,7 +175,7 @@ plugins {
   id "net.ltgt.errorprone-base" version "0.0.16" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.3.16' apply false
+  id 'org.checkerframework' version '0.3.17' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -230,7 +260,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.16-SNAPSHOT'
+    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.17-SNAPSHOT'
   }
 }
 

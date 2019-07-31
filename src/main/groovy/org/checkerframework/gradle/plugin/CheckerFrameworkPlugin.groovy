@@ -39,11 +39,12 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
   @Override void apply(Project project) {
     CheckerFrameworkExtension userConfig = project.extensions.create("checkerFramework", CheckerFrameworkExtension)
+    configureProject(project, userConfig)
     boolean applied = false
     (ANDROID_IDS + "java").each { id ->
       project.pluginManager.withPlugin(id) {
         LOG.info('Found plugin {}, applying checker compiler options.', id)
-        configureProject(project, userConfig)
+        applyToProject(project, userConfig)
         if (!applied) applied = true
       }
     }
@@ -101,35 +102,27 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       }
     })
 
+    // Also apply the checker to all subprojects
+    if (userConfig.applyToSubprojects) {
+      project.subprojects { subproject -> apply(subproject) }
+    }
+
     project.gradle.projectsEvaluated {
       if (!applied) LOG.warn('No android or java plugins found, checker compiler options will not be applied.')
     }
   }
 
   private static configureProject(Project project, CheckerFrameworkExtension userConfig) {
-    JavaVersion javaVersion =
-        project.extensions.findByName('android')?.compileOptions?.sourceCompatibility ?:
-        project.property('sourceCompatibility')
 
-    // Check Java version.
-    def jdkVersion
-    if (javaVersion.java7) {
-      throw new IllegalStateException("The Checker Framework does not support Java 7.")
-    } else if (javaVersion.java8) {
-      jdkVersion = ANNOTATED_JDK_NAME_JDK8
-    } else {
-      // Use Java 8, even if the user requested a newer version of Java.
-      // Undo this hack when newer annotated JDKs are released by the Checker Framework team.
-      jdkVersion = ANNOTATED_JDK_NAME_JDK8
-    }
+    def jdkVersion = ANNOTATED_JDK_NAME_JDK8
 
     // Create a map of the correct configurations with dependencies
     def dependencyMap = [
-      [name: "${ANNOTATED_JDK_CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]: "org.checkerframework:${jdkVersion}:${LIBRARY_VERSION}",
-      [name: "${CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]              : "${CHECKER_DEPENDENCY}",
-      [name: "${JAVA_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}",
-      [name: "${TEST_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}",
-      [name: "errorProneJavac", descripion: "the Error Prone Java compiler"]                            : "com.google.errorprone:javac:9+181-r4173-1"
+            [name: "${ANNOTATED_JDK_CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]: "org.checkerframework:${jdkVersion}:${LIBRARY_VERSION}",
+            [name: "${CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]              : "${CHECKER_DEPENDENCY}",
+            [name: "${JAVA_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}",
+            [name: "${TEST_COMPILE_CONFIGURATION}", descripion: "${CONFIGURATION_DESCRIPTION}"]               : "${CHECKER_QUAL_DEPENDENCY}",
+            [name: "errorProneJavac", descripion: "the Error Prone Java compiler"]                            : "com.google.errorprone:javac:9+181-r4173-1"
     ]
 
     // Now, apply the dependencies to project
@@ -137,7 +130,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       // User could have an existing configuration, the plugin will add to it
       if (project.configurations.find { it.name == "$configuration.name".toString() }) {
         project.configurations."$configuration.name".dependencies.add(
-          project.dependencies.create(dependency))
+                project.dependencies.create(dependency))
       } else {
         // If the user does not have the configuration, the plugin will create it
         project.configurations.create(configuration.name) { files ->
@@ -148,6 +141,18 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           }
         }
       }
+    }
+  }
+
+  private static applyToProject(Project project, CheckerFrameworkExtension userConfig) {
+
+    JavaVersion javaVersion =
+            project.extensions.findByName('android')?.compileOptions?.sourceCompatibility ?:
+                    project.property('sourceCompatibility')
+
+    // Check Java version.
+    if (javaVersion.java7) {
+      throw new IllegalStateException("The Checker Framework does not support Java 7.")
     }
 
     // Apply checker to project
