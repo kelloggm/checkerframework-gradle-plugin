@@ -130,16 +130,7 @@ checkerFramework {
 ### Multi-project builds
 
 By default, checkers are run on all subprojects of the project to which the plugin
-is applied. If you wish to disable this behavior, set the `applyToSubprojects`
-flag to `false` (note that disabling this behavior will require you to configure
-each subproject by hand in an appropriate `build.gradle` file):
-
-```groovy
-checkerFramework {
-  applyToSubprojects = false
-}
-```
-
+is applied.
 In most projects with subprojects, you will still want to avoid attempting to configure
 the top-level project (which is usually not a Java project). We therefore recommend moving
 all Checker Framework configuration (the `checkerFramework` block and any `dependencies`)
@@ -154,6 +145,19 @@ subprojects { subproject ->
     checkerFramework 'org.checkerframework:checker:2.9.0'
     implementation 'org.checkerframework:checker-qual:2.9.0'
   }
+}
+```
+
+If you want to apply the plugin only to projects for which it has been
+specifically request (for instance, if you
+wish to run a checker on a parent project and only some of its child projects),
+set the `applyToSubprojects`
+flag to `false` (note that disabling this behavior will require you to configure
+each subproject by hand in its `build.gradle` file by applying the plugin manually):
+
+```groovy
+checkerFramework {
+  applyToSubprojects = false
 }
 ```
 
