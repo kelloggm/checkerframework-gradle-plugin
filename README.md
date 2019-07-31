@@ -132,6 +132,7 @@ using:
 
 By default, checkers are run on all subprojects of the project to which the plugin
 is applied.
+
 In most projects with subprojects, you will still want to avoid attempting to configure
 the top-level project (which is usually not a Java project). We therefore recommend moving
 all Checker Framework configuration (the `checkerFramework` block and any `dependencies`)
