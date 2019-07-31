@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.3.16'
+    id 'org.checkerframework' version '0.3.17'
 }
 
 apply plugin: 'org.checkerframework'
@@ -127,6 +127,42 @@ using:
   }
   ```
 
+
+### Multi-project builds
+
+By default, checkers are run on all subprojects of the project to which the plugin
+is applied.
+
+In most projects with subprojects, the top-level project is not a Java
+project.  You should not configure such a non-Java project.  Instead, move
+all Checker Framework configuration (the `checkerFramework` block and any
+`dependencies`) into a `subprojects` block. For example:
+
+```groovy
+subprojects { subproject ->
+  checkerFramework {
+    checkers = ['org.checkerframework.checker.index.IndexChecker']
+  }
+  dependencies {
+    checkerFramework 'org.checkerframework:checker:2.9.0'
+    implementation 'org.checkerframework:checker-qual:2.9.0'
+  }
+}
+```
+
+To not apply the plugin to all subprojects, set the `applyToSubprojects`
+flag to `false`:
+
+```groovy
+checkerFramework {
+  applyToSubprojects = false
+}
+```
+
+Then, apply the plugin to the `build.gradle` in each subproject where you
+do want to run the checker.
+
+
 ### Incompatibility with Error Prone
 
 [Error Prone](https://errorprone.info/)
@@ -145,7 +181,7 @@ plugins {
   id "net.ltgt.errorprone-base" version "0.0.16" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.3.16' apply false
+  id 'org.checkerframework' version '0.3.17' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -230,7 +266,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.16-SNAPSHOT'
+    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.17-SNAPSHOT'
   }
 }
 
