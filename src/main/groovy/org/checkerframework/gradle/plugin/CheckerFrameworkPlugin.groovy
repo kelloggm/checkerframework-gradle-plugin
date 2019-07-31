@@ -190,7 +190,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
             ]
           }
           compile.options.compilerArgs = [
-                  "-Xbootclasspath/p:${project.configurations.checkerFrameworkAnnotatedJDK.asPath}".toString()
+            "-Xbootclasspath/p:${project.configurations.checkerFrameworkAnnotatedJDK.asPath}".toString()
           ]
           if (!userConfig.checkers.empty) {
             compile.options.compilerArgs << "-processor" << userConfig.checkers.join(",")
