@@ -104,28 +104,28 @@ if (project.hasProperty("cfLocal")) {
 ### Other options
 
 * By default, the plugin applies the selected checkers to all `JavaCompile` targets.
-The plugin includes a rudimentary option for preventing checkers from being applied
-to test targets. To use it, add the following to the `checkerFramework` block:
 
-```groovy
-checkerFramework {
-  excludeTests = true
-}
-```
+  Here is how to prevent checkers from being applied to test targets:
 
-The check for test targets is entirely syntactic: this option will not apply the checkers
-to any task whose name includes "test", ignoring case. The default value is `false`.
+  ```groovy
+  checkerFramework {
+    excludeTests = true
+  }
+  ```
+
+  The check for test targets is entirely syntactic: this option will not apply the checkers
+  to any task whose name includes "test", ignoring case.
 
 * If you encounter errors of the form `zip file name too long` when configuring your
 Gradle project, you can use the following code to skip this plugin's version check,
 which reads the manifest file of the version of the Checker Framework you are actually
 using:
 
-```groovy
-checkerFramework {
-  skipVersionCheck = true
-}
-```
+  ```groovy
+  checkerFramework {
+    skipVersionCheck = true
+  }
+  ```
 
 ### Incompatibility with Error Prone
 
