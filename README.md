@@ -89,7 +89,7 @@ dependencies {
 You can also use a locally-built version of the Checker Framework:
 
 ```groovy
-// To use a local-built Checker Framework, run gradle with "-PcfLocal".
+// To use a locally-built Checker Framework, run gradle with "-PcfLocal".
 if (project.hasProperty("cfLocal")) {
   def cfHome = String.valueOf(System.getenv("CHECKERFRAMEWORK"))
   dependencies {
