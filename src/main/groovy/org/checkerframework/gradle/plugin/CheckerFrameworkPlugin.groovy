@@ -189,6 +189,9 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
               "-Xbootclasspath/p:${project.configurations.errorProneJavac.asPath}".toString()
             ]
           }
+          compile.options.compilerArgs = [
+                  "-Xbootclasspath/p:${project.configurations.checkerFrameworkAnnotatedJDK.asPath}".toString()
+          ]
           if (!userConfig.checkers.empty) {
             compile.options.compilerArgs << "-processor" << userConfig.checkers.join(",")
           }
