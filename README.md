@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.3.10'
+    id 'org.checkerframework' version '0.3.17'
 }
 
 apply plugin: 'org.checkerframework'
@@ -69,7 +69,7 @@ dependencies {
 
 ### Specifying a Checker Framework version
 
-This plugin uses Checker Framework version 2.8.2 by default.
+This plugin uses Checker Framework version 2.9.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -89,7 +89,7 @@ dependencies {
 You can also use a locally-built version of the Checker Framework:
 
 ```groovy
-// To use a local-built Checker Framework, run gradle with "-PcfLocal".
+// To use a locally-built Checker Framework, run gradle with "-PcfLocal".
 if (project.hasProperty("cfLocal")) {
   def cfHome = String.valueOf(System.getenv("CHECKERFRAMEWORK"))
   dependencies {
@@ -103,18 +103,29 @@ if (project.hasProperty("cfLocal")) {
 
 ### Other options
 
-By default, the plugin applies the selected checkers to all `JavaCompile` targets.
-The plugin includes a rudimentary option for preventing checkers from being applied
-to test targets. To use it, add the following to the `checkerFramework` block:
+* By default, the plugin applies the selected checkers to all `JavaCompile` targets.
 
-```groovy
-checkerFramework {
-  excludeTests = true
-}
-```
+  Here is how to prevent checkers from being applied to test targets:
 
-The check for test targets is entirely syntactic: this option will not apply the checkers
-to any task whose name includes "test", ignoring case. The default value is `false`.
+  ```groovy
+  checkerFramework {
+    excludeTests = true
+  }
+  ```
+
+  The check for test targets is entirely syntactic: this option will not apply the checkers
+  to any task whose name includes "test", ignoring case.
+
+* If you encounter errors of the form `zip file name too long` when configuring your
+Gradle project, you can use the following code to skip this plugin's version check,
+which reads the manifest file of the version of the Checker Framework you are actually
+using:
+
+  ```groovy
+  checkerFramework {
+    skipVersionCheck = true
+  }
+  ```
 
 ### Incompatibility with Error Prone
 
@@ -134,7 +145,7 @@ plugins {
   id "net.ltgt.errorprone-base" version "0.0.16" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.3.10' apply false
+  id 'org.checkerframework' version '0.3.17' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -147,7 +158,7 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 }
 
 
-def checkerFrameworkVersion = "2.8.2"
+def checkerFrameworkVersion = "2.9.0"
 
 dependencies {
   if ("true".equals(project.ext.useCheckerFramework)) {
@@ -180,6 +191,19 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 }
 ```
 
+## Java 9+ compatibility
+
+When using a Checker Framework version above 3.0.0 that is compatible with Java 9
+and executing on a Java 8 JVM,
+this plugin will automatically substitute a Checker Framework-compatible Error Prone
+Java compiler version (from
+[com.google.errorprone:javac](https://mvnrepository.com/artifact/com.google.errorprone/javac)).
+This is necessary because Checker Framework versions starting at 3.0.0 build on the Java 9 compiler.
+
+When using a Checker Framework version above 3.0.0 and executing on a Java 9+ JVM, the host
+Java compiler is used.
+
+
 ## Lombok compatibility
 
 This plugin automatically interacts with
@@ -206,7 +230,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.10-SNAPSHOT'
+    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.17-SNAPSHOT'
   }
 }
 

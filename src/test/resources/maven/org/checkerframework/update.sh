@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# this script updates the version of the Checker Framework used in the tests to the version
-# listed in the first argument
+# This script updates the version of the Checker Framework used in the tests to the version
+# listed in the first argument.
 
 NEW_CF_VERSION=$1
 

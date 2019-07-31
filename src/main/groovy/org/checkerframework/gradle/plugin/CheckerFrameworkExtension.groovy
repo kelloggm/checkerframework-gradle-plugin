@@ -9,4 +9,8 @@ class CheckerFrameworkExtension {
   List<String> extraJavacArgs = []
 
   Boolean excludeTests = false
+
+  // If you encounter "zip file too large" errors, you can set this flag to avoid
+  // the standard version check which unzips a jar to look at its manifest.
+  Boolean skipVersionCheck = false
 }
