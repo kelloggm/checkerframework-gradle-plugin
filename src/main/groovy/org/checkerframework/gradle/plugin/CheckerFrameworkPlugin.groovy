@@ -182,9 +182,12 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
       project.tasks.withType(AbstractCompile).all { compile ->
         if (compile.hasProperty('options') && (!userConfig.excludeTests || !compile.name.toLowerCase().contains("test"))) {
-          // Check whether to use the Error Prone javac
-          compile.options.annotationProcessorPath = project.configurations.checkerFramework
-          if (needErrorProneJavac) {
+          compile.options.annotationProcessorPath =
+                  compile.options.annotationProcessorPath == null ?
+                          project.configurations.checkerFramework :
+                          project.configurations.checkerFramework.plus(compile.options.annotationProcessorPath)
+            // Check whether to use the Error Prone javac
+            if (needErrorProneJavac) {
             compile.options.forkOptions.jvmArgs += [
               "-Xbootclasspath/p:${project.configurations.errorProneJavac.asPath}".toString()
             ]
