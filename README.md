@@ -107,11 +107,11 @@ if (project.hasProperty("cfLocal")) {
 
   Here is how to prevent checkers from being applied to test targets:
 
-```groovy
-checkerFramework {
-  excludeTests = true
-}
-```
+  ```groovy
+  checkerFramework {
+    excludeTests = true
+  }
+  ```
 
   The check for test targets is entirely syntactic: this option will not apply the checkers
   to any task whose name includes "test", ignoring case.
