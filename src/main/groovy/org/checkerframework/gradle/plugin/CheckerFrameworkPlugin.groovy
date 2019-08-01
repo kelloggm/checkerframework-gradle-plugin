@@ -39,14 +39,20 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
   @Override void apply(Project project) {
     CheckerFrameworkExtension userConfig = project.extensions.create("checkerFramework", CheckerFrameworkExtension)
-    configureProject(project, userConfig)
     boolean applied = false
     (ANDROID_IDS + "java").each { id ->
       project.pluginManager.withPlugin(id) {
         LOG.info('Found plugin {}, applying checker compiler options.', id)
+        configureProject(project, userConfig)
         applyToProject(project, userConfig)
         if (!applied) applied = true
       }
+    }
+
+    if (!applied) {
+      // Ensure that dependencies and configurations are available, even if no Java/Android plugins were found,
+      // to support configuration in a super project with many Java/Android subprojects.
+      configureProject(project, userConfig)
     }
 
     project.getPlugins().withType(io.freefair.gradle.plugins.lombok.LombokPlugin.class, new Action<LombokPlugin>() {
@@ -108,12 +114,11 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     }
 
     project.gradle.projectsEvaluated {
-      if (!applied) LOG.warn('No android or java plugins found, checker compiler options will not be applied.')
+      if (!applied) LOG.warn('No android or java plugins found in the project {}, checker compiler options will not be applied.', project.name)
     }
   }
 
   private static configureProject(Project project, CheckerFrameworkExtension userConfig) {
-
     // Create a map of the correct configurations with dependencies
     def dependencyMap = [
             [name: "${ANNOTATED_JDK_CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]: "org.checkerframework:${ANNOTATED_JDK_NAME_JDK8}:${LIBRARY_VERSION}",
