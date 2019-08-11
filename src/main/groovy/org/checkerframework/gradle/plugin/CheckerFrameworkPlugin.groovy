@@ -79,11 +79,6 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
               // find the right delombok task
               def delombokTask = delombokTasks.find { task ->
 
-                // If we're skipping test tasks, don't bother delombok'ing.
-                if (userConfig.excludeTests && task.name.toLowerCase().contains("test")) {
-                  false
-                }
-
                 if (task.name.endsWith("delombok")) {
                   // special-case the main compile task because its just named "compileJava"
                   // without anything else
@@ -95,7 +90,9 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
               }
 
               // delombokTask can still be null; for example, if the code contains a compileScala task
-              if (delombokTask != null) {
+              // Also, if we're skipping test tasks, don't bother delombok'ing them.
+              if (delombokTask != null
+                      && !(userConfig.excludeTests && delombokTask.name.toLowerCase().contains("test"))) {
 
                 // The lombok plugin's default formatting is pretty-printing, without the @Generated annotations
                 // that we need to recognize lombok'd code.
