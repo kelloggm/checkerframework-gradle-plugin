@@ -91,7 +91,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
               // delombokTask can still be null; for example, if the code contains a compileScala task
               // Also, if we're skipping test tasks, don't bother delombok'ing them.
-              if (delombokTask != null
+              if (delombokTask != null && !compile.getSource().isEmpty()
                       && !(userConfig.excludeTests && delombokTask.name.toLowerCase().contains("test"))) {
 
                 // The lombok plugin's default formatting is pretty-printing, without the @Generated annotations
