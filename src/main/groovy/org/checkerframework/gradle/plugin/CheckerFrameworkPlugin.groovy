@@ -38,7 +38,9 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
   private final static Logger LOG = Logging.getLogger(CheckerFrameworkPlugin)
 
   @Override void apply(Project project) {
-    CheckerFrameworkExtension userConfig = project.extensions.create("checkerFramework", CheckerFrameworkExtension)
+    // Either get an existing CF config, or create a new one if none exists
+    CheckerFrameworkExtension userConfig = project.extensions.findByType(CheckerFrameworkExtension.class)?:
+            project.extensions.create("checkerFramework", CheckerFrameworkExtension)
     boolean applied = false
     (ANDROID_IDS + "java").each { id ->
       project.pluginManager.withPlugin(id) {
