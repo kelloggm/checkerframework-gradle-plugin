@@ -18,14 +18,13 @@ plugins {
 apply plugin: 'org.checkerframework'
 ```
 
-Note that for all of the features of the `org.checkerframework` plugin
-to work as expected, the plugin
-needs to be applied *after* whatever
+Note that the `org.checkerframework` plugin
+must be applied *after* whatever
 plugins introduce your Java compilation tasks (usually the `java` or `java-library`
-plugin for non-Android builds). If you apply that plugin later in your build
-lifecycle, you should delay applying the `org.checkerframework` plugin
-until afterward (by placing `apply plugin: 'org.checkerframework'` after
-wherever the other plugin is applied).
+plugin for non-Android builds). If you apply that plugin 
+manually (i.e. your `build.gradle` file contains a line like `apply plugin: 'java'`), 
+you should apply the `org.checkerframework` plugin
+afterward.
 
 ## Configuration
 
