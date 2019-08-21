@@ -186,8 +186,10 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         // wasn't specified by the user.
         versionString = actualCFDependencySet.iterator().next().getVersion()
       }
-      // The array access is safe because all CF version strings have at least one . in them.
-      def isCFThreePlus = versionString.tokenize(".")[0].toInteger() >= 3
+      // The array accesses are safe because all CF version strings have at least two . in them.
+      def majorVersion = versionString.tokenize(".")[0].toInteger()
+      def minorVersion = versionString.tokenize(".")[1].toInteger()
+      def isCFThreePlus = majorVersion >= 3 || (majorVersion == 2 && minorVersion >= 11)
 
       boolean needErrorProneJavac = javaVersion.java8 && isCFThreePlus
 
