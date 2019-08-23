@@ -12,15 +12,14 @@ To gain access to the credentials, contact one of the maintainers privately.
 
 ### Release process
 
-1. Ensure that you have checked out the `master` branch of the project. Do
-not make releases from other branches.
-2. Update the plugin to use the latest version of the Checker Framework. Search
-for the CF version number currently used in this repository and replace it by the
-[latest version](https://github.com/typetools/checker-framework/blob/master/changelog.txt).
-Also run: `(cd src/test/resources/maven/org/checkerframework && update.sh NEW_CF_VERSION_NUMBER)`
-3. Ensure that the
+1. Ensure that the
 [Travis build](https://travis-ci.com/kelloggm/checkerframework-gradle-plugin/branches)
 is passing on the `master` branch.
+2. Ensure that you have checked out the `master` branch of the project. Do
+not make releases from other branches.
+3. Update the plugin to use the [latest version](https://github.com/typetools/checker-framework/blob/master/changelog.txt) of the Checker Framework:
+  * Run: `(cd src/test/resources/maven/org/checkerframework && update.sh NEW_CF_VERSION_NUMBER)`
+  * Replace the old version number anywhere it still appears in this repository.a
 4. Choose a new version string. Please try to respect
 [semantic versioning](https://semver.org/). Do not augment the major
 version without explicit approval from all the maintainers.
