@@ -64,7 +64,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         lombokPlugin.configureForJacoco()
         lombokPlugin.generateLombokConfig.get().generateLombokConfig()
 
-        project.gradle.projectsEvaluated {
+        project.afterEvaluate {
 
           def delombokTasks = project.getTasks().findAll { task ->
             task.name.contains("delombok")
@@ -120,7 +120,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       project.subprojects { subproject -> apply(subproject) }
     }
 
-    project.gradle.projectsEvaluated {
+    project.afterEvaluate {
       if (!applied) LOG.warn('No android or java plugins found in the project {}, checker compiler options will not be applied.', project.name)
     }
   }
@@ -166,7 +166,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     }
 
     // Apply checker to project
-    project.gradle.projectsEvaluated {
+    project.afterEvaluate {
 
       // Decide whether to use ErrorProne Javac once configurations have been populated.
       def actualCFDependencySet = project.configurations.checkerFramework.getAllDependencies()
