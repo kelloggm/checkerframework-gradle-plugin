@@ -173,7 +173,7 @@ one depends on a different version of the library).
 
 You can resolve this via a switch that causes your build to use either
 Error Prone or the Checker Framework, but not both.
-Here is how do change the above instructions:
+Here is how to change the above instructions:
 
 
 ```
