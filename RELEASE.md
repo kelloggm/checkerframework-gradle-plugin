@@ -27,6 +27,7 @@ version without explicit approval from all the maintainers.
 5. Change the version of the plugin. Search for the current plugin version
 in the directory containing this file, and replace all instances of it
 with the new version string.
-6. Commit your changes: `git commit -m "Update version number to X.Y.Z"`
-7. Run `./gradlew publishPlugins` from the top-level project directory
+6. Stage the changes.
+7. Commit your changes: `git commit -m "Update version number to X.Y.Z"`
+8. Run `./gradlew publishPlugins` from the top-level project directory
 (which should also contain this file).
