@@ -189,9 +189,9 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       // The array accesses are safe because all CF version strings have at least two . in them.
       def majorVersion = versionString.tokenize(".")[0].toInteger()
       def minorVersion = versionString.tokenize(".")[1].toInteger()
-      def isCFThreePlus = majorVersion >= 3 || (majorVersion == 2 && minorVersion >= 11)
+      def isJavac9CF = majorVersion >= 3 || (majorVersion == 2 && minorVersion >= 11)
 
-      boolean needErrorProneJavac = javaVersion.java8 && isCFThreePlus
+      boolean needErrorProneJavac = javaVersion.java8 && isJavac9CF
 
 
       project.tasks.withType(AbstractCompile).all { compile ->
