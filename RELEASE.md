@@ -19,7 +19,7 @@ is passing on the `master` branch.
 not make releases from other branches.
 3. Update the plugin to use the [latest version](https://github.com/typetools/checker-framework/blob/master/changelog.txt) of the Checker Framework:
    * Run: `(cd src/test/resources/maven/org/checkerframework && update.sh NEW_CF_VERSION_NUMBER)`
-   * Replace the old version number anywhere it still appears in this repository.a
+   * Replace the old version number anywhere it still appears in this repository.
 
 4. Choose a new version string. Please try to respect
 [semantic versioning](https://semver.org/). Do not augment the major
@@ -27,6 +27,7 @@ version without explicit approval from all the maintainers.
 5. Change the version of the plugin. Search for the current plugin version
 in the directory containing this file, and replace all instances of it
 with the new version string.
-6. Commit your changes: `git commit -m "Update version number to X.Y.Z"`
-7. Run `./gradlew publishPlugins` from the top-level project directory
+6. Stage the changes.
+7. Commit your changes: `git commit -m "Update version number to X.Y.Z"`
+8. Run `./gradlew publishPlugins` from the top-level project directory
 (which should also contain this file).
