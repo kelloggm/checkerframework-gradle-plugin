@@ -4,6 +4,8 @@
 [![Build Status](https://travis-ci.com/kelloggm/checkerframework-gradle-plugin.svg?branch=master)](https://travis-ci.com/kelloggm/checkerframework-gradle-plugin)
 
 This plugin configures `JavaCompile` tasks to use the [Checker Framework](https://checkerframework.org) for pluggable type-checking.
+The plugin runs checkers by creating a custom manifest file containing the checkers you specify,
+and then allowing `javac`'s processor auto-discovery feature to find them.
 
 ## Download
 
@@ -12,7 +14,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.3.28'
+    id 'org.checkerframework' version '0.4.0'
 }
 
 apply plugin: 'org.checkerframework'
@@ -181,7 +183,7 @@ plugins {
   id "net.ltgt.errorprone-base" version "0.0.16" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.3.28' apply false
+  id 'org.checkerframework' version '0.4.0' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -245,6 +247,14 @@ the [Lombok Gradle Plugin](https://plugins.gradle.org/plugin/io.freefair.lombok)
 to delombok your source code before it is passed to the Checker Framework
 for typechecking. This plugin does not support any other use of Lombok.
 
+## Compatibility with other annotation processors
+
+The plugin should be compatible with other annotation processors, as long
+as they are run via `javac`'s auto-discovery mechanism. If you already provide
+a `-processor` option to `javac`, you **cannot** use this plugin: you
+must also provide the checkers you wish to use by hand, because the `-processor`
+flag to `javac` disables annotation processor auto-discovery.
+
 ## Using a locally-built plugin
 
 You can build the plugin locally rather than downloading it from Maven Central.
@@ -264,7 +274,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.28-SNAPSHOT'
+    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.4.0-SNAPSHOT'
   }
 }
 

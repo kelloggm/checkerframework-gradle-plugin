@@ -37,6 +37,11 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
   private final static Logger LOG = Logging.getLogger(CheckerFrameworkPlugin)
 
+  /**
+   * Which subfolder of /build/ to put the Checker Framework manifest in.
+   */
+  private final static def manifestLocation = "/checkerframework/"
+
   @Override void apply(Project project) {
     // Either get an existing CF config, or create a new one if none exists
     CheckerFrameworkExtension userConfig = project.extensions.findByType(CheckerFrameworkExtension.class)?:
@@ -126,6 +131,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
   }
 
   private static configureProject(Project project, CheckerFrameworkExtension userConfig) {
+
     // Create a map of the correct configurations with dependencies
     def dependencyMap = [
             [name: "${ANNOTATED_JDK_CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]: "org.checkerframework:${ANNOTATED_JDK_NAME_JDK8}:${LIBRARY_VERSION}",
@@ -193,6 +199,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
       boolean needErrorProneJavac = javaVersion.java8 && isJavac9CF
 
+      def createManifestTask = project.task('createCheckerFrameworkManifest', type: CreateManifestTask)
+      createManifestTask.checkers = userConfig.checkers
 
       project.tasks.withType(AbstractCompile).all { compile ->
         if (compile.hasProperty('options') && (!userConfig.excludeTests || !compile.name.toLowerCase().contains("test"))) {
@@ -200,17 +208,18 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
                   compile.options.annotationProcessorPath == null ?
                           project.configurations.checkerFramework :
                           project.configurations.checkerFramework.plus(compile.options.annotationProcessorPath)
-            // Check whether to use the Error Prone javac
-            if (needErrorProneJavac) {
+          // Check whether to use the Error Prone javac
+          if (needErrorProneJavac) {
             compile.options.forkOptions.jvmArgs += [
               "-Xbootclasspath/p:${project.configurations.errorProneJavac.asPath}".toString()
             ]
           }
-          compile.options.compilerArgs = [
+          compile.options.compilerArgs += [
             "-Xbootclasspath/p:${project.configurations.checkerFrameworkAnnotatedJDK.asPath}".toString()
           ]
           if (!userConfig.checkers.empty) {
-            compile.options.compilerArgs << "-processor" << userConfig.checkers.join(",")
+            compile.dependsOn(createManifestTask)
+            compile.options.annotationProcessorPath = compile.options.annotationProcessorPath.plus(project.files("${project.buildDir}" + manifestLocation))
           }
 
         userConfig.extraJavacArgs.forEach({option -> compile.options.compilerArgs << option})
