@@ -6,16 +6,20 @@ behavior of the plugin changes, a new release is cut.
 
 ### Making a pull request
 
-When you make a pull request, update the version string on your branch
-using these steps:
-0. Make the changes you wish to merge into the plugin.
-1. Choose a new version string. Please try to respect
+All pull requests should be made from a feature branch. Never push
+directly to `master`.
+
+When you make a pull request that will change any behavior
+of the plugin (including bug fixes and new features), update the version string on 
+your feature branch using these steps:
+1. Make the changes you wish to merge into the plugin.
+2. Choose a new version string. Please try to respect
 [semantic versioning](https://semver.org/). Do not augment the major
 version without explicit approval from all the maintainers.
-2. Change the version of the plugin. Search for the current plugin version
+3. Change the version of the plugin. Search for the current plugin version
 in the directory containing this file, and replace all instances of it
 with the new version string. Commit the result.
-3. Push your branch and make a pull request against the `master` branch.
+4. Push your feature branch and make a pull request against the `master` branch.
 
 ### Merging a pull request
 
@@ -28,19 +32,22 @@ To gain access to the credentials, contact one of the maintainers privately.
 
 #### Release process
 
-0. Review the pull request. If it is approved, proceed.
-1. Ensure that the
+1. Review the pull request. If it is approved, proceed.
+2. Ensure that the
 [Travis build](https://travis-ci.com/kelloggm/checkerframework-gradle-plugin/branches)
 is passing on the pull request branch.
-2. Squash and merge the pull request.
-3. On your local machine, check out the `master` branch and run `git pull origin master`.
-4. Run `./gradlew publishPlugins` from the top-level project directory
+3. Squash and merge the pull request.
+4. On your local machine, check out the `master` branch and run `git pull origin master`.
+5. Run `./gradlew publishPlugins` from the top-level project directory
 (which should also contain this file).
 
 ### Updating the Checker Framework version
 
 The default version of the Checker Framework used by the plugin
-should periodically be updated. To update the plugin to
+should be updated after every Checker Framework release. 
+The Checker Framework is typically released monthly.
+Updating the Checker Framework should
+be done like any other pull request. To update the plugin to
 use the [latest version](https://github.com/typetools/checker-framework/blob/master/changelog.txt)
 of the Checker Framework:
    * Run: `(cd src/test/resources/maven/org/checkerframework && update.sh NEW_CF_VERSION_NUMBER)`
