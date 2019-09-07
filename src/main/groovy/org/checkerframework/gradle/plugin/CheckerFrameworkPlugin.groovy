@@ -22,7 +22,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     "com.android.test"]
   // Checker Framework configurations and dependencies
 
-  // Whenever this line is changed, you need to change the corresponding text in README.md.
+  // Whenever this line is changed, you need to change all occurrences in README.md.
   private final static def LIBRARY_VERSION = "2.10.1"
 
   private final static def ANNOTATED_JDK_NAME_JDK8 = "jdk8"
@@ -64,7 +64,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         lombokPlugin.configureForJacoco()
         lombokPlugin.generateLombokConfig.get().generateLombokConfig()
 
-        project.gradle.projectsEvaluated {
+        project.afterEvaluate {
 
           def delombokTasks = project.getTasks().findAll { task ->
             task.name.contains("delombok")
@@ -120,7 +120,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       project.subprojects { subproject -> apply(subproject) }
     }
 
-    project.gradle.projectsEvaluated {
+    project.afterEvaluate {
       if (!applied) LOG.warn('No android or java plugins found in the project {}, checker compiler options will not be applied.', project.name)
     }
   }
@@ -166,7 +166,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     }
 
     // Apply checker to project
-    project.gradle.projectsEvaluated {
+    project.afterEvaluate {
 
       // Decide whether to use ErrorProne Javac once configurations have been populated.
       def actualCFDependencySet = project.configurations.checkerFramework.getAllDependencies()
@@ -189,9 +189,9 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       // The array accesses are safe because all CF version strings have at least two . in them.
       def majorVersion = versionString.tokenize(".")[0].toInteger()
       def minorVersion = versionString.tokenize(".")[1].toInteger()
-      def isCFThreePlus = majorVersion >= 3 || (majorVersion == 2 && minorVersion >= 11)
+      def isJavac9CF = majorVersion >= 3 || (majorVersion == 2 && minorVersion >= 11)
 
-      boolean needErrorProneJavac = javaVersion.java8 && isCFThreePlus
+      boolean needErrorProneJavac = javaVersion.java8 && isJavac9CF
 
 
       project.tasks.withType(AbstractCompile).all { compile ->
