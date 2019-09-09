@@ -219,6 +219,13 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           ]
           if (!userConfig.checkers.empty) {
             compile.dependsOn(createManifestTask)
+            // Add the manifest file to the annotation processor path, so that the javac
+            // annotation processor discovery mechanism finds the checkers to use and
+            // runs them alongside any other annotation processors on the processor path.
+            // Using the -processor flag to specify checkers would make the plugin incompatible
+            // with other annotation processors, which are typically auto-discovered by javac.
+            // Since that is the normal approach to annotation processing (used by Lombok and
+            // AutoValue, among others), this plugin should support it.
             compile.options.annotationProcessorPath = compile.options.annotationProcessorPath.plus(project.files("${project.buildDir}" + manifestLocation))
           }
 

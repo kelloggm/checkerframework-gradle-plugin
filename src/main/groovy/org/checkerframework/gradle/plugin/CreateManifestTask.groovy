@@ -5,6 +5,12 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
+/**
+ * This task generates a manifest file in the style of
+ * https://checkerframework.org/manual/#checker-auto-discovery
+ * Once the plugin places this directory containing it on the annotation processor path,
+ * javac can find the checkers via annotation processor discovery.
+ */
 class CreateManifestTask extends DefaultTask {
 
     @Input
