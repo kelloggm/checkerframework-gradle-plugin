@@ -9,7 +9,7 @@ behavior of the plugin changes, a new release is cut.
 All pull requests should be made from a feature branch. Never push
 directly to `master`.
 
-When you make a pull request that will change any behavior
+If your pull request will change any behavior
 of the plugin (including bug fixes and new features), you should
 update the version string. When changing only documentation
 (e.g. this file or the README), do not update the version string.
