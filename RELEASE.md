@@ -10,16 +10,23 @@ All pull requests should be made from a feature branch. Never push
 directly to `master`.
 
 When you make a pull request that will change any behavior
-of the plugin (including bug fixes and new features), update the version string on 
-your feature branch using these steps:
-1. Make the changes you wish to merge into the plugin.
-2. Choose a new version string. Please try to respect
+of the plugin (including bug fixes and new features), you should
+update the version string. When changing only documentation
+(e.g. this file or the README), do not update the version string.
+
+After you have made the changes you wish to merge into `master`,
+you should:
+1. Choose a new version string. Please try to respect
 [semantic versioning](https://semver.org/). Do not augment the major
 version without explicit approval from all the maintainers.
-3. Change the version of the plugin. Search for the current plugin version
+Try to avoid version numbers that will conflict with 
+[other active pull requests](https://github.com/kelloggm/checkerframework-gradle-plugin/pulls).
+2. Search for the current plugin version
 in the directory containing this file, and replace all instances of it
 with the new version string. Commit the result.
-4. Push your feature branch and make a pull request against the `master` branch.
+3. Push to your feature branch (if you have not yet created one, do so. All development
+should happen on feature branches - never on `master`).
+4. Make a pull request against the `master` branch.
 
 ### Merging a pull request
 
@@ -32,13 +39,20 @@ To gain access to the credentials, contact one of the maintainers privately.
 
 #### Release process
 
-1. Review the pull request. If it is approved, proceed.
+1. Review the pull request. If you approve it, proceed.
 2. Ensure that the
 [Travis build](https://travis-ci.com/kelloggm/checkerframework-gradle-plugin/branches)
-is passing on the pull request branch.
-3. Squash and merge the pull request.
-4. On your local machine, check out the `master` branch and run `git pull origin master`.
-5. Run `./gradlew publishPlugins` from the top-level project directory
+passes in the pull request.
+3. Ensure that the new version string in the pull request is reasonable - it may
+have conflicted with another pull request that has already been merged. Check 
+[the plugin's portal page](https://plugins.gradle.org/plugin/org.checkerframework)
+to see if this version has already been released.
+4. If the version string is already in use, change it yourself and push to the feature
+branch. If you do not have access (for instance, if the feature branch is in a contributor's
+fork), ask the author of the pull request to change the version string.
+5. Squash and merge the pull request.
+6. On your local machine, check out the `master` branch and run `git pull origin master`.
+7. Run `./gradlew publishPlugins` from the top-level project directory
 (which should also contain this file).
 
 ### Updating the Checker Framework version
