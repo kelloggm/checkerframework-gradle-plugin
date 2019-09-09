@@ -62,7 +62,11 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
         // Ensure that the lombok config is set to emit @Generated annotations
         lombokPlugin.configureForJacoco()
-        lombokPlugin.generateLombokConfig.get().generateLombokConfig()
+        // If config generation is enabled, automatically produce an appropriate config file.
+        def generateLombokConfig = lombokPlugin.generateLombokConfig.get()
+        if (generateLombokConfig.isEnabled()) {
+          generateLombokConfig.generateLombokConfig()
+        }
 
         project.afterEvaluate {
 
