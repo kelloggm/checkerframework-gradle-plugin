@@ -4,8 +4,6 @@
 [![Build Status](https://travis-ci.com/kelloggm/checkerframework-gradle-plugin.svg?branch=master)](https://travis-ci.com/kelloggm/checkerframework-gradle-plugin)
 
 This plugin configures `JavaCompile` tasks to use the [Checker Framework](https://checkerframework.org) for pluggable type-checking.
-The plugin runs checkers by creating a custom manifest file containing the checkers you specify,
-and then allowing `javac`'s processor auto-discovery feature to find them.
 
 ## Download
 
@@ -249,11 +247,13 @@ for typechecking. This plugin does not support any other use of Lombok.
 
 ## Compatibility with other annotation processors
 
-The plugin should be compatible with other annotation processors, as long
-as they are run via `javac`'s auto-discovery mechanism. If you already provide
+The plugin runs checkers by creating a custom manifest file containing the 
+checkers you specify, and then allowing `javac`'s processor auto-discovery 
+feature to find them. If you already provide
 a `-processor` option to `javac`, you **cannot** use this plugin: you
-must also provide the checkers you wish to use by hand, because the `-processor`
-flag to `javac` disables annotation processor auto-discovery.
+must also provide the checkers you wish to use explicitly in your
+`build.gradle` file as arguments to the `-processor` flag, because the `-processor`
+flag disables `javac`'s annotation processor auto-discovery.
 
 ## Using a locally-built plugin
 
