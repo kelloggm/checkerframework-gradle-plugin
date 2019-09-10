@@ -40,8 +40,8 @@ passes in the pull request.
 3. Ensure that the new version string in the pull request is not already in use. Check 
 [the plugin's portal page](https://plugins.gradle.org/plugin/org.checkerframework)
 to see if this version has already been released.
-4. If the version string is already in use, either change it yourself and push to the feature
-branch or ask the author of the pull request to change the version string.
+4. If the version string is already in use, change it or ask the author of the pull
+request to do so.
 5. Squash and merge the pull request.
 6. On your local machine, check out the `master` branch and run `git pull origin master`.
 7. Run `./gradlew publishPlugins` from the top-level project directory
