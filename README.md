@@ -18,6 +18,11 @@ plugins {
 apply plugin: 'org.checkerframework'
 ```
 
+The `org.checkerframework` plugin modifies existing Java
+compilation tasks. You should apply it *after*
+whatever plugins introduce your Java compilation tasks (usually the `java`
+or `java-library` plugin for non-Android builds).
+
 ## Configuration
 
 ### Configuring which checkers to use
