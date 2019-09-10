@@ -13,6 +13,9 @@ import org.gradle.api.tasks.TaskAction
  */
 class CreateManifestTask extends DefaultTask {
 
+    private final static String buildDirectory = "checkerframework/META-INF/services/"
+    private final static String manifestFileName = "javax.annotation.processing.Processor"
+
     @Input
     String[] checkers = []
 
@@ -21,8 +24,8 @@ class CreateManifestTask extends DefaultTask {
      */
     @TaskAction
     def generateManifest() {
-        def manifestDir = project.mkdir "${project.buildDir}/checkerframework/META-INF/services/"
-        def manifestFile = project.file(manifestDir.absolutePath + "/javax.annotation.processing.Processor")
+        def manifestDir = project.mkdir "${project.buildDir}/${buildDirectory}"
+        def manifestFile = project.file("${manifestDir.absolutePath}/${manifestFileName}")
         if (!manifestFile.createNewFile()) {
             manifestFile.delete()
             manifestFile.createNewFile()
@@ -36,7 +39,6 @@ class CreateManifestTask extends DefaultTask {
      */
     @OutputFile
     def getManifestLocation() {
-        return "${project.buildDir}/checkerframework/META-INF/services/javax.annotation.processing.Processor"
-
+        return "${project.buildDir}/${buildDirectory}/${manifestFileName}"
     }
 }
