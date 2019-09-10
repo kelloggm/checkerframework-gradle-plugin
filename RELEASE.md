@@ -9,23 +9,17 @@ behavior of the plugin changes, a new release is cut.
 All pull requests should be made from a feature branch. Never push
 directly to `master`.
 
-If your pull request will change any behavior
-of the plugin (including bug fixes and new features), you should
-update the version string. When changing only documentation
-(e.g. this file or the README), do not update the version string.
-
 After you have made the changes you wish to merge into `master`,
 you should:
-1. Choose a new version string. Please try to respect
+1. If your pull request will change any behavior
+of the plugin (including bug fixes and new features), you should choose
+a new version string. Please try to respect
 [semantic versioning](https://semver.org/). Do not augment the major
 version without explicit approval from all the maintainers.
-Try to avoid version numbers that will conflict with 
-[other active pull requests](https://github.com/kelloggm/checkerframework-gradle-plugin/pulls).
-2. Search for the current plugin version
+2. If you changed the version string, search for the current plugin version
 in the directory containing this file, and replace all instances of it
 with the new version string. Commit the result.
-3. Push to your feature branch (if you have not yet created one, do so. All development
-should happen on feature branches - never on `master`).
+3. Push to your feature branch.
 4. Make a pull request against the `master` branch.
 
 ### Merging a pull request
@@ -43,13 +37,11 @@ To gain access to the credentials, contact one of the maintainers privately.
 2. Ensure that the
 [Travis build](https://travis-ci.com/kelloggm/checkerframework-gradle-plugin/branches)
 passes in the pull request.
-3. Ensure that the new version string in the pull request is reasonable - it may
-have conflicted with another pull request that has already been merged. Check 
+3. Ensure that the new version string in the pull request is not already in use. Check 
 [the plugin's portal page](https://plugins.gradle.org/plugin/org.checkerframework)
 to see if this version has already been released.
-4. If the version string is already in use, change it yourself and push to the feature
-branch. If you do not have access (for instance, if the feature branch is in a contributor's
-fork), ask the author of the pull request to change the version string.
+4. If the version string is already in use, either change it yourself and push to the feature
+branch or ask the author of the pull request to change the version string.
 5. Squash and merge the pull request.
 6. On your local machine, check out the `master` branch and run `git pull origin master`.
 7. Run `./gradlew publishPlugins` from the top-level project directory
