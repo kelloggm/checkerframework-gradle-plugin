@@ -148,7 +148,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       }
     }
 
-    // Immediately before resolving dependencies, add the dependencies the the relevant
+    // Immediately before resolving dependencies, add the dependencies to the relevant
     // configurations.
     project.getGradle().addListener(new DependencyResolutionListener() {
       @Override
