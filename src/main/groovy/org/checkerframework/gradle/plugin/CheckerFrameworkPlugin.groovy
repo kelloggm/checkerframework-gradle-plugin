@@ -1,5 +1,8 @@
 package org.checkerframework.gradle.plugin
 
+import org.gradle.api.artifacts.DependencyResolutionListener
+import org.gradle.api.artifacts.ResolvableDependencies
+
 import java.util.jar.JarFile
 
 import org.gradle.api.Action
@@ -135,23 +138,39 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
             [name: "errorProneJavac", descripion: "the Error Prone Java compiler"]                            : "com.google.errorprone:javac:9+181-r4173-1"
     ]
 
-    // Now, apply the dependencies to project
+    // Add the configurations, if they don't exist, so that users can add to them.
     dependencyMap.each { configuration, dependency ->
-      // User could have an existing configuration, the plugin will add to it
-      if (project.configurations.find { it.name == "$configuration.name".toString() }) {
-        project.configurations."$configuration.name".dependencies.add(
-                project.dependencies.create(dependency))
-      } else {
-        // If the user does not have the configuration, the plugin will create it
+      if (!project.configurations.find { it.name == "$configuration.name".toString() }) {
         project.configurations.create(configuration.name) { files ->
           files.description = configuration.descripion
           files.visible = false
-          files.defaultDependencies { dependencies ->
-            dependencies.add(project.dependencies.create(dependency))
-          }
         }
       }
     }
+
+    // Immediately before resolving dependencies, add the dependencies to the relevant
+    // configurations.
+    project.getGradle().addListener(new DependencyResolutionListener() {
+      @Override
+      void beforeResolve(ResolvableDependencies resolvableDependencies) {
+        dependencyMap.each { configuration, dependency ->
+          def depGroup = dependency.tokenize(':')[0]
+          def depName = dependency.tokenize(':')[1]
+          // Only add the dependency if it isn't already present, to avoid overwriting user configuration.
+          if (project.configurations."$configuration.name".dependencies.matching({
+            it.name.equals(depName) && it.group.equals(depGroup)
+          }).isEmpty()) {
+            project.configurations."$configuration.name".dependencies.add(
+                    project.dependencies.create(dependency))
+          }
+        }
+        // Only attempt to add each dependency once.
+        project.getGradle().removeListener(this)
+      }
+
+      @Override
+      void afterResolve(ResolvableDependencies resolvableDependencies) {}
+    })
   }
 
   private static applyToProject(Project project, CheckerFrameworkExtension userConfig) {
