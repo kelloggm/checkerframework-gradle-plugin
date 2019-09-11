@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.3.31'
+    id 'org.checkerframework' version '0.4.0'
 }
 
 apply plugin: 'org.checkerframework'
@@ -186,7 +186,7 @@ plugins {
   id "net.ltgt.errorprone-base" version "0.0.16" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.3.31' apply false
+  id 'org.checkerframework' version '0.4.0' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -250,6 +250,16 @@ the [Lombok Gradle Plugin](https://plugins.gradle.org/plugin/io.freefair.lombok)
 to delombok your source code before it is passed to the Checker Framework
 for typechecking. This plugin does not support any other use of Lombok.
 
+## Incompatibility with explicitly-specified annotation processors
+
+If you provide a `-processor` option to `javac`,
+this plugin will have no effect, because it relies on
+`javac`'s annotation processor discovery mechanism. The
+`-processor` flag disables the discovery mechanism. You should
+either replace your `-processor` flag with a 
+[manifest file](https://checkerframework.org/manual/#checker-auto-discovery),
+or not use this plugin.
+
 ## Using a locally-built plugin
 
 You can build the plugin locally rather than downloading it from Maven Central.
@@ -269,7 +279,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.3.31-SNAPSHOT'
+    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.4.0-SNAPSHOT'
   }
 }
 
