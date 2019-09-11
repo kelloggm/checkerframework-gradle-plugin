@@ -256,8 +256,8 @@ If you provide a `-processor` option to `javac`,
 this plugin will have no effect, because it relies on
 `javac`'s annotation processor discovery mechanism. The
 `-processor` flag disables the discovery mechanism. You should
-either replace your `-processor` flag with a manifest file
-(as described [here](https://checkerframework.org/manual/#checker-auto-discovery)),
+either replace your `-processor` flag with a 
+[manifest file](https://checkerframework.org/manual/#checker-auto-discovery),
 or not use this plugin.
 
 ## Using a locally-built plugin

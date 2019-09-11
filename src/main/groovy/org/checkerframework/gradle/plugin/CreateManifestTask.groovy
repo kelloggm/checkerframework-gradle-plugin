@@ -7,13 +7,13 @@ import org.gradle.api.tasks.TaskAction
 
 /**
  * This task generates a manifest file in the style of
- * https://checkerframework.org/manual/#checker-auto-discovery
+ * https://checkerframework.org/manual/#checker-auto-discovery.
  * Once the plugin places this directory containing it on the annotation processor path,
  * javac can find the checkers via annotation processor discovery.
  */
 class CreateManifestTask extends DefaultTask {
 
-    private final static String buildDirectory = "checkerframework/META-INF/services/"
+    private final static String manifestDirectoryName = "checkerframework/META-INF/services/"
     private final static String manifestFileName = "javax.annotation.processing.Processor"
 
     @Input
@@ -24,7 +24,7 @@ class CreateManifestTask extends DefaultTask {
      */
     @TaskAction
     def generateManifest() {
-        def manifestDir = project.mkdir "${project.buildDir}/${buildDirectory}"
+        def manifestDir = project.mkdir "${project.buildDir}/${manifestDirectoryName}"
         def manifestFile = project.file("${manifestDir.absolutePath}/${manifestFileName}")
         if (!manifestFile.createNewFile()) {
             manifestFile.delete()
@@ -39,6 +39,6 @@ class CreateManifestTask extends DefaultTask {
      */
     @OutputFile
     def getManifestLocation() {
-        return "${project.buildDir}/${buildDirectory}/${manifestFileName}"
+        return "${project.buildDir}/${manifestDirectoryName}/${manifestFileName}"
     }
 }

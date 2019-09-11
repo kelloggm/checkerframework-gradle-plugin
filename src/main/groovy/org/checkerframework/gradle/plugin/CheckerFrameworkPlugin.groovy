@@ -242,7 +242,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
             // annotation processor discovery mechanism finds the checkers to use and
             // runs them alongside any other auto-discovered annotation processors.
             // Using the -processor flag to specify checkers would make the plugin incompatible
-            // with other auto-discovered annotation processors.
+            // with other auto-discovered annotation processors, because the plugin uses auto-discovery.
+            // We should warn about this: https://github.com/kelloggm/checkerframework-gradle-plugin/issues/50
             compile.options.annotationProcessorPath = compile.options.annotationProcessorPath.plus(project.files("${project.buildDir}" + manifestLocation))
           }
 
