@@ -79,12 +79,21 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     project.getPlugins().withType(io.freefair.gradle.plugins.lombok.LombokPlugin.class, new Action<LombokPlugin>() {
       void execute(LombokPlugin lombokPlugin) {
 
-        // Ensure that the lombok config is set to emit @Generated annotations
+        // Ensure that the lombok config is set to emit @Generated annotations.
         lombokPlugin.configureForJacoco()
         // If config generation is enabled, automatically produce an appropriate config file.
+        // The object construction checker (https://github.com/kelloggm/object-construction-checker),
+        // if run, will not issue warnings on incorrect Lombok builders if this check fails.
+        // As of 9/11/2019, that was the only known checker that relies on this behavior.
         def generateLombokConfig = lombokPlugin.generateLombokConfig.get()
         if (generateLombokConfig.isEnabled()) {
           generateLombokConfig.generateLombokConfig()
+        } else if (userConfig.checkers.contains(
+                'org.checkerframework.checker.objectconstruction.ObjectConstructionChecker')) {
+          LOG.warn("The Object Construction Checker was enabled, but Lombok config generation is disabled. " +
+                  "Ensure that your lombok.config file contains 'lombok.addLombokGeneratedAnnotation = true'," +
+                  "or all Object Construction Checker warnings related to misuse of Lombok builders will" +
+                  "be disabled.")
         }
 
         project.afterEvaluate {
