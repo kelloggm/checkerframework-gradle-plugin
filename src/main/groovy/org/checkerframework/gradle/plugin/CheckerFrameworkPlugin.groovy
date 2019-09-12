@@ -1,5 +1,8 @@
 package org.checkerframework.gradle.plugin
 
+import org.gradle.api.artifacts.DependencyResolutionListener
+import org.gradle.api.artifacts.ResolvableDependencies
+
 import java.util.jar.JarFile
 
 import org.gradle.api.Action
@@ -37,6 +40,11 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
   private final static Logger LOG = Logging.getLogger(CheckerFrameworkPlugin)
 
+  /**
+   * Which subfolder of /build/ to put the Checker Framework manifest in.
+   */
+  private final static def manifestLocation = "/checkerframework/"
+
   @Override void apply(Project project) {
     // Either get an existing CF config, or create a new one if none exists
     CheckerFrameworkExtension userConfig = project.extensions.findByType(CheckerFrameworkExtension.class)?:
@@ -57,6 +65,17 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       configureProject(project, userConfig)
     }
 
+    // Also apply the checker to all subprojects
+    if (userConfig.applyToSubprojects) {
+      project.subprojects { subproject -> apply(subproject) }
+    }
+
+    project.afterEvaluate {
+      if (!applied) LOG.warn('No android or java plugins found in the project {}, checker compiler options will not be applied.', project.name)
+    }
+  }
+
+  private static handleLombokPlugin(Project project, CheckerFrameworkExtension userConfig) {
     project.getPlugins().withType(io.freefair.gradle.plugins.lombok.LombokPlugin.class, new Action<LombokPlugin>() {
       void execute(LombokPlugin lombokPlugin) {
 
@@ -118,18 +137,10 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         userConfig.extraJavacArgs += "-AsuppressWarnings=type.anno.before.modifier"
       }
     })
-
-    // Also apply the checker to all subprojects
-    if (userConfig.applyToSubprojects) {
-      project.subprojects { subproject -> apply(subproject) }
-    }
-
-    project.afterEvaluate {
-      if (!applied) LOG.warn('No android or java plugins found in the project {}, checker compiler options will not be applied.', project.name)
-    }
   }
 
   private static configureProject(Project project, CheckerFrameworkExtension userConfig) {
+
     // Create a map of the correct configurations with dependencies
     def dependencyMap = [
             [name: "${ANNOTATED_JDK_CONFIGURATION}", descripion: "${ANNOTATED_JDK_CONFIGURATION_DESCRIPTION}"]: "org.checkerframework:${ANNOTATED_JDK_NAME_JDK8}:${LIBRARY_VERSION}",
@@ -139,23 +150,41 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
             [name: "errorProneJavac", descripion: "the Error Prone Java compiler"]                            : "com.google.errorprone:javac:9+181-r4173-1"
     ]
 
-    // Now, apply the dependencies to project
+    // Add the configurations, if they don't exist, so that users can add to them.
     dependencyMap.each { configuration, dependency ->
-      // User could have an existing configuration, the plugin will add to it
-      if (project.configurations.find { it.name == "$configuration.name".toString() }) {
-        project.configurations."$configuration.name".dependencies.add(
-                project.dependencies.create(dependency))
-      } else {
-        // If the user does not have the configuration, the plugin will create it
+      if (!project.configurations.find { it.name == "$configuration.name".toString() }) {
         project.configurations.create(configuration.name) { files ->
           files.description = configuration.descripion
           files.visible = false
-          files.defaultDependencies { dependencies ->
-            dependencies.add(project.dependencies.create(dependency))
-          }
         }
       }
     }
+
+    // Immediately before resolving dependencies, add the dependencies to the relevant
+    // configurations.
+    project.getGradle().addListener(new DependencyResolutionListener() {
+      @Override
+      void beforeResolve(ResolvableDependencies resolvableDependencies) {
+        dependencyMap.each { configuration, dependency ->
+          def depGroup = dependency.tokenize(':')[0]
+          def depName = dependency.tokenize(':')[1]
+          // Only add the dependency if it isn't already present, to avoid overwriting user configuration.
+          if (project.configurations."$configuration.name".dependencies.matching({
+            it.name.equals(depName) && it.group.equals(depGroup)
+          }).isEmpty()) {
+            project.configurations."$configuration.name".dependencies.add(
+                    project.dependencies.create(dependency))
+          }
+        }
+
+        handleLombokPlugin(project, userConfig)
+        // Only attempt to add each dependency once.
+        project.getGradle().removeListener(this)
+      }
+
+      @Override
+      void afterResolve(ResolvableDependencies resolvableDependencies) {}
+    })
   }
 
   private static applyToProject(Project project, CheckerFrameworkExtension userConfig) {
@@ -197,6 +226,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
       boolean needErrorProneJavac = javaVersion.java8 && isJavac9CF
 
+      def createManifestTask = project.task('createCheckerFrameworkManifest', type: CreateManifestTask)
+      createManifestTask.checkers = userConfig.checkers
 
       project.tasks.withType(AbstractCompile).all { compile ->
         if (compile.hasProperty('options') && (!userConfig.excludeTests || !compile.name.toLowerCase().contains("test"))) {
@@ -204,17 +235,24 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
                   compile.options.annotationProcessorPath == null ?
                           project.configurations.checkerFramework :
                           project.configurations.checkerFramework.plus(compile.options.annotationProcessorPath)
-            // Check whether to use the Error Prone javac
-            if (needErrorProneJavac) {
+          // Check whether to use the Error Prone javac
+          if (needErrorProneJavac) {
             compile.options.forkOptions.jvmArgs += [
               "-Xbootclasspath/p:${project.configurations.errorProneJavac.asPath}".toString()
             ]
           }
-          compile.options.compilerArgs = [
+          compile.options.compilerArgs += [
             "-Xbootclasspath/p:${project.configurations.checkerFrameworkAnnotatedJDK.asPath}".toString()
           ]
           if (!userConfig.checkers.empty) {
-            compile.options.compilerArgs << "-processor" << userConfig.checkers.join(",")
+            compile.dependsOn(createManifestTask)
+            // Add the manifest file to the annotation processor path, so that the javac
+            // annotation processor discovery mechanism finds the checkers to use and
+            // runs them alongside any other auto-discovered annotation processors.
+            // Using the -processor flag to specify checkers would make the plugin incompatible
+            // with other auto-discovered annotation processors, because the plugin uses auto-discovery.
+            // We should warn about this: https://github.com/kelloggm/checkerframework-gradle-plugin/issues/50
+            compile.options.annotationProcessorPath = compile.options.annotationProcessorPath.plus(project.files("${project.buildDir}" + manifestLocation))
           }
 
         userConfig.extraJavacArgs.forEach({option -> compile.options.compilerArgs << option})
