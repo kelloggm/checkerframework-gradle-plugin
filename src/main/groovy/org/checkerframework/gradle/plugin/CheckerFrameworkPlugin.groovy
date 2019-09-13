@@ -254,14 +254,34 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
             "-Xbootclasspath/p:${project.configurations.checkerFrameworkAnnotatedJDK.asPath}".toString()
           ]
           if (!userConfig.checkers.empty) {
-            compile.dependsOn(createManifestTask)
-            // Add the manifest file to the annotation processor path, so that the javac
-            // annotation processor discovery mechanism finds the checkers to use and
-            // runs them alongside any other auto-discovered annotation processors.
-            // Using the -processor flag to specify checkers would make the plugin incompatible
-            // with other auto-discovered annotation processors, because the plugin uses auto-discovery.
-            // We should warn about this: https://github.com/kelloggm/checkerframework-gradle-plugin/issues/50
-            compile.options.annotationProcessorPath = compile.options.annotationProcessorPath.plus(project.files("${project.buildDir}" + manifestLocation))
+
+            // If the user has already specified a processor manually, then
+            // auto-discovery won't work. Instead, augment the list of specified
+            // processors.
+            if (compile.options.compilerArgs.contains('-processor')) {
+              List<String> newCompilerArgs = []
+              for (int i = 0; i < compile.options.compilerArgs.size(); i++) {
+                if ('-processor'.equals(compile.options.compilerArgs.get(i))){
+                  newCompilerArgs.add('-processor')
+                  String oldProcessors = compile.options.compilerArgs.get(i + 1)
+                  String newProcessors = userConfig.checkers.join(",")
+                  newCompilerArgs.add(oldProcessors + ',' + newProcessors)
+                  i += 1
+                } else {
+                  newCompilerArgs.add(compile.options.compilerArgs.get(i))
+                }
+              }
+              compile.options.compilerArgs = newCompilerArgs
+            } else {
+              compile.dependsOn(createManifestTask)
+              // Add the manifest file to the annotation processor path, so that the javac
+              // annotation processor discovery mechanism finds the checkers to use and
+              // runs them alongside any other auto-discovered annotation processors.
+              // Using the -processor flag to specify checkers would make the plugin incompatible
+              // with other auto-discovered annotation processors, because the plugin uses auto-discovery.
+              // We should warn about this: https://github.com/kelloggm/checkerframework-gradle-plugin/issues/50
+              compile.options.annotationProcessorPath = compile.options.annotationProcessorPath.plus(project.files("${project.buildDir}" + manifestLocation))
+            }
           }
 
         userConfig.extraJavacArgs.forEach({option -> compile.options.compilerArgs << option})
