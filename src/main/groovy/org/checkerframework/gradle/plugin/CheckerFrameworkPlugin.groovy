@@ -65,12 +65,36 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       configureProject(project, userConfig)
     }
 
+    // Also apply the checker to all subprojects
+    if (userConfig.applyToSubprojects) {
+      project.subprojects { subproject -> apply(subproject) }
+    }
+
+    project.afterEvaluate {
+      if (!applied) LOG.warn('No android or java plugins found in the project {}, checker compiler options will not be applied.', project.name)
+    }
+  }
+
+  private static handleLombokPlugin(Project project, CheckerFrameworkExtension userConfig) {
     project.getPlugins().withType(io.freefair.gradle.plugins.lombok.LombokPlugin.class, new Action<LombokPlugin>() {
       void execute(LombokPlugin lombokPlugin) {
 
-        // Ensure that the lombok config is set to emit @Generated annotations
+        // Ensure that the lombok config is set to emit @Generated annotations.
         lombokPlugin.configureForJacoco()
-        lombokPlugin.generateLombokConfig.get().generateLombokConfig()
+        // If config generation is enabled, automatically produce an appropriate config file.
+        // The object construction checker (https://github.com/kelloggm/object-construction-checker),
+        // if run, will not issue warnings on incorrect Lombok builders if this check fails.
+        // As of 9/11/2019, that was the only known checker that relies on this behavior.
+        def generateLombokConfig = lombokPlugin.generateLombokConfig.get()
+        if (generateLombokConfig.isEnabled()) {
+          generateLombokConfig.generateLombokConfig()
+        } else if (userConfig.checkers.contains(
+                'org.checkerframework.checker.objectconstruction.ObjectConstructionChecker')) {
+          LOG.warn("The Object Construction Checker was enabled, but Lombok config generation is disabled. " +
+                  "Ensure that your lombok.config file contains 'lombok.addLombokGeneratedAnnotation = true'," +
+                  "or all Object Construction Checker warnings related to misuse of Lombok builders will" +
+                  "be disabled.")
+        }
 
         project.afterEvaluate {
 
@@ -122,15 +146,6 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         userConfig.extraJavacArgs += "-AsuppressWarnings=type.anno.before.modifier"
       }
     })
-
-    // Also apply the checker to all subprojects
-    if (userConfig.applyToSubprojects) {
-      project.subprojects { subproject -> apply(subproject) }
-    }
-
-    project.afterEvaluate {
-      if (!applied) LOG.warn('No android or java plugins found in the project {}, checker compiler options will not be applied.', project.name)
-    }
   }
 
   private static configureProject(Project project, CheckerFrameworkExtension userConfig) {
@@ -170,6 +185,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
                     project.dependencies.create(dependency))
           }
         }
+
+        handleLombokPlugin(project, userConfig)
         // Only attempt to add each dependency once.
         project.getGradle().removeListener(this)
       }
