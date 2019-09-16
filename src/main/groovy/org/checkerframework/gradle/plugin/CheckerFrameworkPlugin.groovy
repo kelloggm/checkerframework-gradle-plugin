@@ -40,6 +40,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
   private final static Logger LOG = Logging.getLogger(CheckerFrameworkPlugin)
 
+  private final static String checkerFrameworkManifestCreationTaskName = 'createCheckerFrameworkManifest'
+
   /**
    * Which subfolder of /build/ to put the Checker Framework manifest in.
    */
@@ -235,8 +237,12 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
       boolean needErrorProneJavac = javaVersion.java8 && isJavac9CF
 
-      def createManifestTask = project.task('createCheckerFrameworkManifest', type: CreateManifestTask)
-      createManifestTask.checkers = userConfig.checkers
+      // To keep the plugin idempotent, check if the task already exists.
+      def createManifestTask = project.tasks.findByName(checkerFrameworkManifestCreationTaskName)
+      if (createManifestTask == null) {
+        createManifestTask = project.task(checkerFrameworkManifestCreationTaskName, type: CreateManifestTask)
+        createManifestTask.checkers = userConfig.checkers
+      }
 
       project.tasks.withType(AbstractCompile).all { compile ->
         if (compile.hasProperty('options') && (!userConfig.excludeTests || !compile.name.toLowerCase().contains("test"))) {
