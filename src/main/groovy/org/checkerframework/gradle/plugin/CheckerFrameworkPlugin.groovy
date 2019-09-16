@@ -258,20 +258,11 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
             // If the user has already specified a processor manually, then
             // auto-discovery won't work. Instead, augment the list of specified
             // processors.
-            if (compile.options.compilerArgs.contains('-processor')) {
-              List<String> newCompilerArgs = []
-              for (int i = 0; i < compile.options.compilerArgs.size(); i++) {
-                if ('-processor'.equals(compile.options.compilerArgs.get(i))){
-                  newCompilerArgs.add('-processor')
-                  String oldProcessors = compile.options.compilerArgs.get(i + 1)
-                  String newProcessors = userConfig.checkers.join(",")
-                  newCompilerArgs.add(oldProcessors + ',' + newProcessors)
-                  i += 1
-                } else {
-                  newCompilerArgs.add(compile.options.compilerArgs.get(i))
-                }
-              }
-              compile.options.compilerArgs = newCompilerArgs
+            int processorArgLocation = compile.options.compilerArgs.indexOf('-processor')
+            if (processorArgLocation != -1) {
+              String oldProcessors = compile.options.compilerArgs.get(processorArgLocation + 1)
+              String newProcessors = userConfig.checkers.join(",")
+              compile.options.compilerArgs.set(processorArgLocation + 1, oldProcessors + ',' + newProcessors)
             } else {
               compile.dependsOn(createManifestTask)
               // Add the manifest file to the annotation processor path, so that the javac
