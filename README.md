@@ -250,16 +250,6 @@ the [Lombok Gradle Plugin](https://plugins.gradle.org/plugin/io.freefair.lombok)
 to delombok your source code before it is passed to the Checker Framework
 for typechecking. This plugin does not support any other use of Lombok.
 
-## Incompatibility with explicitly-specified annotation processors
-
-If you provide a `-processor` option to `javac`,
-this plugin will have no effect, because it relies on
-`javac`'s annotation processor discovery mechanism. The
-`-processor` flag disables the discovery mechanism. You should
-either replace your `-processor` flag with a 
-[manifest file](https://checkerframework.org/manual/#checker-auto-discovery),
-or not use this plugin.
-
 ## Using a locally-built plugin
 
 You can build the plugin locally rather than downloading it from Maven Central.
