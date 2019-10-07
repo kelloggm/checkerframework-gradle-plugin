@@ -256,6 +256,15 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
               "-Xbootclasspath/p:${project.configurations.errorProneJavac.asPath}".toString()
             ]
           }
+
+          // When running on Java 9+ code, the Checker Framework needs reflective access
+          // to some JDK classes. Pass the arguments that make that possible.
+          if (javaVersion.isJava9Compatible()) {
+            compile.options.forkOptions.jvmArgs += [
+                    "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED"
+            ]
+          }
+
           compile.options.compilerArgs += [
             "-Xbootclasspath/p:${project.configurations.checkerFrameworkAnnotatedJDK.asPath}".toString()
           ]
