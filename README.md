@@ -242,6 +242,22 @@ When using a Checker Framework version that uses the Java 9+ compiler API
    (in particular, the Error Prone Java compiler from
    [com.google.errorprone:javac](https://mvnrepository.com/artifact/com.google.errorprone/javac)).
 
+When running the plugin on a Java 9+ project that uses modules,
+you may need to add annotations to the module path. First add
+`requires org.checkerframework.checker.qual;` to your `module-info.java`.  The Checker
+Framework inserts inferred annotations into bytecode even if none appear in source code,
+so you must do this even if you write no annotations in your code.
+
+Then, add this line to the `checkerFramework` block to add the `checker-qual.jar`
+artifact (which only contains annotations) to the module path:
+
+```
+checkerFramework {
+  extraJavacArgs = [
+    '--module-path', compileOnly.asPath
+  ]
+}
+```
 
 ## Lombok compatibility
 
