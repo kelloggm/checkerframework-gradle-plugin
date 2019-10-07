@@ -205,8 +205,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
                     project.property('sourceCompatibility')
 
     // Check Java version.
-    if (javaVersion.java7) {
-      throw new IllegalStateException("The Checker Framework does not support Java 7.")
+    if (!javaVersion.isJava8Compatible()) {
+      throw new IllegalStateException("The Checker Framework does not support Java versions before 8.")
     }
 
     // Apply checker to project
