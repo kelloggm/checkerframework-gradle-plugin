@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.4.3'
+    id 'org.checkerframework' version '0.4.4'
 }
 
 apply plugin: 'org.checkerframework'
@@ -186,7 +186,7 @@ plugins {
   id "net.ltgt.errorprone-base" version "0.0.16" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.4.3' apply false
+  id 'org.checkerframework' version '0.4.4' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -242,6 +242,22 @@ When using a Checker Framework version that uses the Java 9+ compiler API
    (in particular, the Error Prone Java compiler from
    [com.google.errorprone:javac](https://mvnrepository.com/artifact/com.google.errorprone/javac)).
 
+When running the plugin on a Java 9+ project that uses modules,
+you may need to add annotations to the module path. First add
+`requires org.checkerframework.checker.qual;` to your `module-info.java`.  The Checker
+Framework inserts inferred annotations into bytecode even if none appear in source code,
+so you must do this even if you write no annotations in your code.
+
+Then, add this line to the `checkerFramework` block to add the `checker-qual.jar`
+artifact (which only contains annotations) to the module path:
+
+```
+checkerFramework {
+  extraJavacArgs = [
+    '--module-path', compileOnly.asPath
+  ]
+}
+```
 
 ## Lombok compatibility
 
@@ -269,7 +285,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.4.3-SNAPSHOT'
+    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.4.4-SNAPSHOT'
   }
 }
 
