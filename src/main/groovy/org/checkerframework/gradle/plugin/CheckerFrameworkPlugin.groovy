@@ -200,14 +200,16 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
   private static applyToProject(Project project, CheckerFrameworkExtension userConfig) {
 
-    JavaVersion javaVersion =
+    JavaVersion javaSourceVersion =
             project.extensions.findByName('android')?.compileOptions?.sourceCompatibility ?:
                     project.property('sourceCompatibility')
 
     // Check Java version.
-    if (!javaVersion.isJava8Compatible()) {
+    if (!javaSourceVersion.isJava8Compatible()) {
       throw new IllegalStateException("The Checker Framework does not support Java versions before 8.")
     }
+
+    JavaVersion jvmVersion = JavaVersion.current();
 
     // Apply checker to project
     project.afterEvaluate {
@@ -235,7 +237,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       def minorVersion = versionString.tokenize(".")[1].toInteger()
       def isJavac9CF = majorVersion >= 3 || (majorVersion == 2 && minorVersion >= 11)
 
-      boolean needErrorProneJavac = javaVersion.java8 && isJavac9CF
+      boolean needErrorProneJavac = javaSourceVersion.java8 && isJavac9CF && jvmVersion.isJava8()
 
       // To keep the plugin idempotent, check if the task already exists.
       def createManifestTask = project.tasks.findByName(checkerFrameworkManifestCreationTaskName)
@@ -252,6 +254,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
                           project.configurations.checkerFramework.plus(compile.options.annotationProcessorPath)
           // Check whether to use the Error Prone javac
           if (needErrorProneJavac) {
+            println("augmenting bootclasspath with EP Javac")
             compile.options.forkOptions.jvmArgs += [
               "-Xbootclasspath/p:${project.configurations.errorProneJavac.asPath}".toString()
             ]
@@ -259,15 +262,18 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
           // When running on Java 9+ code, the Checker Framework needs reflective access
           // to some JDK classes. Pass the arguments that make that possible.
-          if (javaVersion.isJava9Compatible()) {
+          if (javaSourceVersion.isJava9Compatible()) {
             compile.options.forkOptions.jvmArgs += [
                     "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED"
             ]
           }
-
-          compile.options.compilerArgs += [
-            "-Xbootclasspath/p:${project.configurations.checkerFrameworkAnnotatedJDK.asPath}".toString()
-          ]
+          if (jvmVersion.isJava8() && javaSourceVersion.isJava8()) {
+            // TODO: when the Checker Framework has support for later JDK versions, add something here.
+            println("augmenting bootclasspath with annotated JDK")
+            compile.options.compilerArgs += [
+                    "-Xbootclasspath/p:${project.configurations.checkerFrameworkAnnotatedJDK.asPath}".toString()
+            ]
+          }
           if (!userConfig.checkers.empty) {
 
             // If the user has already specified a processor manually, then
