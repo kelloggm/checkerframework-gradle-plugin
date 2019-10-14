@@ -254,7 +254,6 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
                           project.configurations.checkerFramework.plus(compile.options.annotationProcessorPath)
           // Check whether to use the Error Prone javac
           if (needErrorProneJavac) {
-            println("augmenting bootclasspath with EP Javac")
             compile.options.forkOptions.jvmArgs += [
               "-Xbootclasspath/p:${project.configurations.errorProneJavac.asPath}".toString()
             ]
@@ -269,7 +268,6 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           }
           if (jvmVersion.isJava8() && javaSourceVersion.isJava8()) {
             // TODO: when the Checker Framework has support for later JDK versions, add something here.
-            println("augmenting bootclasspath with annotated JDK")
             compile.options.compilerArgs += [
                     "-Xbootclasspath/p:${project.configurations.checkerFrameworkAnnotatedJDK.asPath}".toString()
             ]
