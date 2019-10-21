@@ -261,7 +261,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
           // When running on Java 9+ code, the Checker Framework needs reflective access
           // to some JDK classes. Pass the arguments that make that possible.
-          if (javaSourceVersion.isJava9Compatible()) {
+          if (jvmVersion.isJava9Compatible()) {
             compile.options.forkOptions.jvmArgs += [
                     "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED"
             ]
