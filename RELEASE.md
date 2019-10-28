@@ -11,14 +11,13 @@ directly to `master`.
 
 After you have made the changes you wish to merge into `master`,
 you should:
-1. If your pull request will change any behavior
-of the plugin (including bug fixes and new features), you should choose
-a new version string. Please try to respect
-[semantic versioning](https://semver.org/). Do not augment the major
-version without explicit approval from all the maintainers.
+1. If your pull request will change any behavior of the plugin (including
+   bug fixes and new features), you should choose a new version string. Please
+   try to respect [semantic versioning](https://semver.org/). Do not augment
+   the major version without explicit approval from all the maintainers.
 2. If you changed the version string, search for the current plugin version
-in the directory containing this file, and replace all instances of it
-with the new version string. Commit the result.
+   in the directory containing this file, and replace all instances of it with
+   the new version string. Commit the result.
 3. Push to your feature branch.
 4. Make a pull request against the `master` branch.
 
@@ -57,4 +56,6 @@ be done like any other pull request. To update the plugin to
 use the [latest version](https://github.com/typetools/checker-framework/blob/master/changelog.txt)
 of the Checker Framework:
    * Run: `(cd src/test/resources/maven/org/checkerframework && update.sh NEW_CF_VERSION_NUMBER)`
+     (If you don't do this, you may get an error such as
+     "Could not find org.checkerframework:checker:2.11.1.")
    * Replace the old version number anywhere it still appears in this repository.
