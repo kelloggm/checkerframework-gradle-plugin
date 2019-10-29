@@ -2,6 +2,8 @@ package org.checkerframework.gradle.plugin
 
 import org.gradle.api.artifacts.DependencyResolutionListener
 import org.gradle.api.artifacts.ResolvableDependencies
+import org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency
+import org.gradle.api.internal.artifacts.dependencies.DefaultSelfResolvingDependency
 
 import java.util.jar.JarFile
 
@@ -181,7 +183,16 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           def depName = dependency.tokenize(':')[1]
           // Only add the dependency if it isn't already present, to avoid overwriting user configuration.
           if (project.configurations."$configuration.name".dependencies.matching({
-            it.name.equals(depName) && it.group.equals(depGroup)
+            if (it instanceof DefaultExternalModuleDependency) {
+              it.name.equals(depName) && it.group.equals(depGroup)
+            } else if (it instanceof DefaultSelfResolvingDependency) {
+              it.getFiles().any { file ->
+                file.toString().endsWith(depName + ".jar")
+              }
+            } else {
+              // not sure what to do in the default case...
+              false
+            }
           }).isEmpty()) {
             project.configurations."$configuration.name".dependencies.add(
                     project.dependencies.create(dependency))
