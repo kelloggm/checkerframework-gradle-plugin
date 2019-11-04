@@ -36,7 +36,7 @@ To gain access to the credentials, contact one of the maintainers privately.
 2. Ensure that the
 [Travis build](https://travis-ci.com/kelloggm/checkerframework-gradle-plugin/branches)
 passes in the pull request.
-3. Ensure that the new version string in the pull request is not already in use. Check 
+3. Ensure that the new version string in the pull request is not already in use. Check
 [the plugin's portal page](https://plugins.gradle.org/plugin/org.checkerframework)
 to see if this version has already been released.
 4. If the version string is already in use, change it or ask the author of the pull
@@ -49,7 +49,7 @@ request to do so.
 ### Updating the Checker Framework version
 
 The default version of the Checker Framework used by the plugin
-should be updated after every Checker Framework release. 
+should be updated after every Checker Framework release.
 The Checker Framework is typically released monthly.
 Updating the Checker Framework should
 be done like any other pull request. To update the plugin to
@@ -59,3 +59,4 @@ of the Checker Framework:
      (If you don't do this, you may get an error such as
      "Could not find org.checkerframework:checker:2.11.1.")
    * Replace the old version number anywhere it still appears in this repository.
+Also, update the version of the plugin; see above for instructions.
