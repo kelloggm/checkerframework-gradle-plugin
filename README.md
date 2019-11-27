@@ -89,6 +89,7 @@ dependencies {
   compileOnly 'org.checkerframework:checker-qual:2.8.0'
   testCompileOnly 'org.checkerframework:checker-qual:2.8.0'
   checkerFramework 'org.checkerframework:checker:2.8.0'
+  // only needed for JDK 8
   checkerFrameworkAnnotatedJDK 'org.checkerframework:jdk8:2.8.0'
 }
 ```
@@ -103,10 +104,21 @@ if (project.hasProperty("cfLocal")) {
     compileOnly files(cfHome + "/checker/dist/checker-qual.jar")
     testCompileOnly files(cfHome + "/checker/dist/checker-qual.jar")
     checkerFramework files(cfHome + "/checker/dist/checker.jar")
+    // only needed for JDK 8
     checkerFrameworkAnnotatedJDK files(cfHome + "/checker/dist/jdk8.jar")
   }
 }
 ```
+
+### JDK 8 vs JDK 9+
+
+The plugin attempts to automatically configure the Checker Framework on both Java 8 and Java 9+ JVMs,
+following the [best practices in the Checker Framework manual](https://checkerframework.org/manual/#javac).
+In particular, it will:
+* only apply the Java 8 annotated JDK if both the JVM and target versions are 8
+* use the ErrorProne Javac compiler if the JVM version is 9+ and the target version is 8, if the Checker Framework
+version is >= 2.11.0
+* use the `--add-opens` option to `javac` if the JVM version is 9+
 
 ### Other options
 
