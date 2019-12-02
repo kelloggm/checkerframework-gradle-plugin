@@ -59,4 +59,4 @@ of the Checker Framework:
      (If you don't do this, you may get an error such as
      "Could not find org.checkerframework:checker:2.11.1.")
    * Replace the old version number anywhere it still appears in this repository.
-Also, update the version of the plugin; see above for instructions.
+   * Update the version of the plugin; see above for instructions.
