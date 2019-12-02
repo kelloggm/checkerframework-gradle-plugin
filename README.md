@@ -74,7 +74,7 @@ dependencies {
 
 ### Specifying a Checker Framework version
 
-Version 0.4.9 of this plugin uses Checker Framework version 3.0.0 by default.
+Version 0.4.9 of this plugin uses Checker Framework version 3.0.1 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -151,8 +151,8 @@ subprojects { subproject ->
     checkers = ['org.checkerframework.checker.index.IndexChecker']
   }
   dependencies {
-    checkerFramework 'org.checkerframework:checker:3.0.0'
-    implementation 'org.checkerframework:checker-qual:3.0.0'
+    checkerFramework 'org.checkerframework:checker:3.0.1'
+    implementation 'org.checkerframework:checker-qual:3.0.1'
   }
 }
 ```
@@ -201,7 +201,7 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 }
 
 
-def checkerFrameworkVersion = "3.0.0"
+def checkerFrameworkVersion = "3.0.1"
 
 dependencies {
   if ("true".equals(project.ext.useCheckerFramework)) {
