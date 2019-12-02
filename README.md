@@ -110,16 +110,6 @@ if (project.hasProperty("cfLocal")) {
 }
 ```
 
-### JDK 8 vs JDK 9+
-
-The plugin attempts to automatically configure the Checker Framework on both Java 8 and Java 9+ JVMs,
-following the [best practices in the Checker Framework manual](https://checkerframework.org/manual/#javac).
-In particular:
-* If both the JVM and target versions are 8, it applies the Java 8 annotated JDK.
-* If the JVM version is 9+ and the target version is 8 (and the Checker Framework
-version is >= 2.11.0), use the Error Prone javac compiler.
-* If the JVM version is 9+, use the `--add-opens` option to `javac`.
-
 ### Other options
 
 * By default, the plugin applies the selected checkers to all `JavaCompile` targets.
@@ -305,6 +295,16 @@ buildscript {
 
 apply plugin: 'org.checkerframework'
 ```
+
+### JDK 8 vs JDK 9+ implementation details
+
+The plugin attempts to automatically configure the Checker Framework on both Java 8 and Java 9+ JVMs,
+following the [best practices in the Checker Framework manual](https://checkerframework.org/manual/#javac).
+In particular:
+* If both the JVM and target versions are 8, it applies the Java 8 annotated JDK.
+* If the JVM version is 9+ and the target version is 8 (and the Checker Framework
+version is >= 2.11.0), use the Error Prone javac compiler.
+* If the JVM version is 9+, use the `--add-opens` option to `javac`.
 
 ## Credits
 
