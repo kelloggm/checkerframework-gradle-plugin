@@ -275,7 +275,7 @@ You can build the plugin locally rather than downloading it from Maven Central.
 To build the plugin from source, run `./gradlew build`.
 
 If you want to use a locally-built version of the plugin, you can publish the plugin to your
-local Maven repository by running `./gradlew publish`. In the `build.gradle` file for each
+local Maven repository by running `./gradlew publishToMavenLocal`. In the `build.gradle` file for each
 project for which you want to use the locally-built plugin, make sure that `mavenLocal()`
 is the first entry in the `repositories` block within the `buildscript` block. A full example
 will look like this:
@@ -284,10 +284,13 @@ will look like this:
 buildscript {
   repositories {
     mavenLocal()
+    maven {
+        url 'https://plugins.gradle.org/m2/'
+    }
   }
 
   dependencies {
-    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.4.9-SNAPSHOT'
+    classpath 'org.checkerframework:checkerframework-gradle-plugin:0.4.9'
   }
 }
 
