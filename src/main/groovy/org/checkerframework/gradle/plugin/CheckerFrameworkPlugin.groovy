@@ -309,7 +309,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
         ANDROID_IDS.each { id ->
           project.plugins.withId(id) {
-            options.bootClasspath = System.getProperty("sun.boot.class.path") + ":" + options.bootClasspath
+            options.bootstrapClasspath = project.files(System.getProperty("sun.boot.class.path")) + options.bootstrapClasspath
             }
           }
         options.fork = true
