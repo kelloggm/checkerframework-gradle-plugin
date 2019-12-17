@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.4.9'
+    id 'org.checkerframework' version '0.4.10'
 }
 
 apply plugin: 'org.checkerframework'
@@ -74,7 +74,7 @@ dependencies {
 
 ### Specifying a Checker Framework version
 
-Version 0.4.9 of this plugin uses Checker Framework version 3.0.0 by default.
+Version 0.4.10 of this plugin uses Checker Framework version 3.0.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -188,7 +188,7 @@ plugins {
   id "net.ltgt.errorprone-base" version "0.0.16" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.4.9' apply false
+  id 'org.checkerframework' version '0.4.10' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -275,7 +275,7 @@ You can build the plugin locally rather than downloading it from Maven Central.
 To build the plugin from source, run `./gradlew build`.
 
 If you want to use a locally-built version of the plugin, you can publish the plugin to your
-local Maven repository by running `./gradlew publish`. In the `build.gradle` file for each
+local Maven repository by running `./gradlew publishToMavenLocal`. In the `build.gradle` file for each
 project for which you want to use the locally-built plugin, make sure that `mavenLocal()`
 is the first entry in the `repositories` block within the `buildscript` block. A full example
 will look like this:
@@ -284,10 +284,13 @@ will look like this:
 buildscript {
   repositories {
     mavenLocal()
+    maven {
+        url 'https://plugins.gradle.org/m2/'
+    }
   }
 
   dependencies {
-    classpath 'gradle.plugin.org.checkerframework:checkerframework-gradle-plugin:0.4.9-SNAPSHOT'
+    classpath 'org.checkerframework:checkerframework-gradle-plugin:0.4.10'
   }
 }
 
