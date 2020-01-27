@@ -145,9 +145,14 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
             }
           }
         }
-        // lombok-generated code will always causes these warnings, because their default formatting is wrong
+        // lombok-generated code will always cause these warnings, because their default formatting is wrong
         // and can't be changed
-        userConfig.extraJavacArgs += "-AsuppressWarnings=type.anno.before.modifier"
+        def swKeys = userConfig.extraJavacArgs.find { option -> option.startsWith("-AsuppressWarnings")}
+        if (swKeys == null) {
+          userConfig.extraJavacArgs += "-AsuppressWarnings=type.anno.before.modifier"
+        } else {
+          userConfig.extraJavacArgs += swKeys + ",type.anno.before.modifier"
+        }
       }
     })
   }
