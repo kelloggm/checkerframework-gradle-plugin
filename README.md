@@ -200,7 +200,7 @@ if ("true".equals(project.ext.useCheckerFramework)) {
   apply plugin: 'net.ltgt.errorprone'
 }
 
-def errorProneVersion = "2.3.3"
+def errorProneVersion = "2.3.4"
 def checkerFrameworkVersion = "3.1.1"
 
 dependencies {
