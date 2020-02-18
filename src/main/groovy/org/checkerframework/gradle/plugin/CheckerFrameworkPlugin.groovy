@@ -28,7 +28,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
   // Checker Framework configurations and dependencies
 
   // Whenever this line is changed, you need to change all occurrences in README.md.
-  private final static def LIBRARY_VERSION = "3.0.0"
+  private final static def LIBRARY_VERSION = "3.1.1"
 
   private final static def ANNOTATED_JDK_NAME_JDK8 = "jdk8"
   private final static def ANNOTATED_JDK_CONFIGURATION = "checkerFrameworkAnnotatedJDK"
@@ -145,9 +145,14 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
             }
           }
         }
-        // lombok-generated code will always causes these warnings, because their default formatting is wrong
+        // lombok-generated code will always cause these warnings, because their default formatting is wrong
         // and can't be changed
-        userConfig.extraJavacArgs += "-AsuppressWarnings=type.anno.before.modifier"
+        def swKeys = userConfig.extraJavacArgs.find { option -> option.startsWith("-AsuppressWarnings")}
+        if (swKeys == null) {
+          userConfig.extraJavacArgs += "-AsuppressWarnings=type.anno.before.modifier"
+        } else {
+          userConfig.extraJavacArgs += swKeys + ",type.anno.before.modifier"
+        }
       }
     })
   }
@@ -309,7 +314,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
         ANDROID_IDS.each { id ->
           project.plugins.withId(id) {
-            options.bootClasspath = System.getProperty("sun.boot.class.path") + ":" + options.bootClasspath
+            options.bootstrapClasspath = project.files(System.getProperty("sun.boot.class.path")) + options.bootstrapClasspath
             }
           }
         options.fork = true
