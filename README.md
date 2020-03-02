@@ -317,7 +317,7 @@ This project started as a fork of [a plugin built by jaredsburrows](https://gith
 
 ## License
 
-    Copyright (C) 2017 Jared Burrows, 2019 Martin Kellogg
+    Copyright (C) 2017 Jared Burrows, 2018-2020 Martin Kellogg
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
