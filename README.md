@@ -81,16 +81,16 @@ it might use a different version of the Checker Framework.
 You can use a Checker Framework
 [version](https://github.com/typetools/checker-framework/releases) that is
 different than this plugin's default.  If you want to use Checker
-Framework version 2.8.0, then you should add the following text to
+Framework version 3.1.0, then you should add the following text to
 `build.gradle`, after `apply plugin: 'org.checkerframework'`:
 
 ```groovy
 dependencies {
-  compileOnly 'org.checkerframework:checker-qual:2.8.0'
-  testCompileOnly 'org.checkerframework:checker-qual:2.8.0'
-  checkerFramework 'org.checkerframework:checker:2.8.0'
+  compileOnly 'org.checkerframework:checker-qual:3.1.0'
+  testCompileOnly 'org.checkerframework:checker-qual:3.1.0'
+  checkerFramework 'org.checkerframework:checker:3.1.0'
   // only needed for JDK 8
-  checkerFrameworkAnnotatedJDK 'org.checkerframework:jdk8:2.8.0'
+  checkerFrameworkAnnotatedJDK 'org.checkerframework:jdk8:3.1.0'
 }
 ```
 
