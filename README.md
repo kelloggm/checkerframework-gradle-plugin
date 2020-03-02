@@ -81,15 +81,15 @@ it might use a different version of the Checker Framework.
 You can use a Checker Framework
 [version](https://github.com/typetools/checker-framework/releases) that is
 different than this plugin's default.  If you want to use Checker
-Framework version 2.8.0, then you should add the following text to
+Framework version 3.1.0, then you should add the following text to
 `build.gradle`, after `apply plugin: 'org.checkerframework'`:
 
 ```groovy
 dependencies {
-  compileOnly 'org.checkerframework:checker-qual:2.8.0'
-  testCompileOnly 'org.checkerframework:checker-qual:2.8.0'
-  checkerFramework 'org.checkerframework:checker:2.8.0'
-  checkerFrameworkAnnotatedJDK 'org.checkerframework:jdk8:2.8.0'
+  compileOnly 'org.checkerframework:checker-qual:3.1.0'
+  testCompileOnly 'org.checkerframework:checker-qual:3.1.0'
+  checkerFramework 'org.checkerframework:checker:3.1.0'
+  checkerFrameworkAnnotatedJDK 'org.checkerframework:jdk8:3.1.0'
 }
 ```
 
@@ -180,12 +180,12 @@ one depends on a different version of the library).
 
 You can resolve this via a switch that causes your build to use either
 Error Prone or the Checker Framework, but not both.
-Here is how to change the above instructions:
+Here is an example of a build that uses both:
 
 
 ```
 plugins {
-  id "net.ltgt.errorprone-base" version "0.0.16" apply false
+  id "net.ltgt.errorprone" version "1.1.1" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
   id 'org.checkerframework' version '0.4.12' apply false
@@ -197,10 +197,10 @@ if (!project.hasProperty("useCheckerFramework")) {
 if ("true".equals(project.ext.useCheckerFramework)) {
   apply plugin: 'org.checkerframework'
 } else {
-  apply plugin: 'net.ltgt.errorprone-base'
+  apply plugin: 'net.ltgt.errorprone'
 }
 
-
+def errorProneVersion = "2.3.4"
 def checkerFrameworkVersion = "3.1.1"
 
 dependencies {
@@ -209,7 +209,7 @@ dependencies {
     checkerFramework 'org.checkerframework:jdk8:' + checkerFrameworkVersion
     checkerFramework 'org.checkerframework:checker-qual:' + checkerFrameworkVersion
   } else {
-    errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: '2.3.3'
+    errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: errorProneVersion
   }
 }
 
@@ -297,7 +297,7 @@ This project started as a fork of [a plugin built by jaredsburrows](https://gith
 
 ## License
 
-    Copyright (C) 2017 Jared Burrows, 2019 Martin Kellogg
+    Copyright (C) 2017 Jared Burrows, 2018-2020 Martin Kellogg
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
