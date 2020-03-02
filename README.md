@@ -182,12 +182,12 @@ one depends on a different version of the library).
 
 You can resolve this via a switch that causes your build to use either
 Error Prone or the Checker Framework, but not both.
-Here is how to change the above instructions:
+Here is an example of a build that uses both:
 
 
 ```
 plugins {
-  id "net.ltgt.errorprone-base" version "0.0.16" apply false
+  id "net.ltgt.errorprone" version "1.1.1" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
   id 'org.checkerframework' version '0.4.12' apply false
@@ -199,10 +199,10 @@ if (!project.hasProperty("useCheckerFramework")) {
 if ("true".equals(project.ext.useCheckerFramework)) {
   apply plugin: 'org.checkerframework'
 } else {
-  apply plugin: 'net.ltgt.errorprone-base'
+  apply plugin: 'net.ltgt.errorprone'
 }
 
-
+def errorProneVersion = "2.3.4"
 def checkerFrameworkVersion = "3.1.1"
 
 dependencies {
@@ -211,7 +211,7 @@ dependencies {
     checkerFramework 'org.checkerframework:jdk8:' + checkerFrameworkVersion
     checkerFramework 'org.checkerframework:checker-qual:' + checkerFrameworkVersion
   } else {
-    errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: '2.3.3'
+    errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: errorProneVersion
   }
 }
 
