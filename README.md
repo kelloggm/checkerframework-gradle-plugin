@@ -238,14 +238,6 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 
 ## Java 9+ compatibility
 
-When using a Checker Framework version that uses the Java 9+ compiler API
-(version 2.11.0 and above), the plugin chooses an appropriate compiler.
-
- * When executing on a Java 9+ JVM, this plugin uses the host Java compiler.
- * When executing on a Java 8 JVM, this plugin uses a Java 9 compiler
-   (in particular, the Error Prone Java compiler from
-   [com.google.errorprone:javac](https://mvnrepository.com/artifact/com.google.errorprone/javac)).
-
 When running the plugin on a Java 9+ project that uses modules,
 you may need to add annotations to the module path. First add
 `requires org.checkerframework.checker.qual;` to your `module-info.java`.  The Checker
