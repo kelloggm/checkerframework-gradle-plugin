@@ -50,9 +50,6 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
   private final static def manifestLocation = "/checkerframework/"
 
   @Override void apply(Project project) {
-
-    println("applying to : "  + project)
-
     // Either get an existing CF config, or create a new one if none exists
     CheckerFrameworkExtension userConfig = project.extensions.findByType(CheckerFrameworkExtension.class)?:
             project.extensions.create("checkerFramework", CheckerFrameworkExtension)
