@@ -50,6 +50,9 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
   private final static def manifestLocation = "/checkerframework/"
 
   @Override void apply(Project project) {
+
+    println("applying to : "  + project)
+
     // Either get an existing CF config, or create a new one if none exists
     CheckerFrameworkExtension userConfig = project.extensions.findByType(CheckerFrameworkExtension.class)?:
             project.extensions.create("checkerFramework", CheckerFrameworkExtension)
@@ -67,11 +70,6 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       // Ensure that dependencies and configurations are available, even if no Java/Android plugins were found,
       // to support configuration in a super project with many Java/Android subprojects.
       configureProject(project, userConfig)
-    }
-
-    // Also apply the checker to all subprojects
-    if (userConfig.applyToSubprojects) {
-      project.subprojects { subproject -> apply(subproject) }
     }
 
     project.afterEvaluate {
