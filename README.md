@@ -74,7 +74,7 @@ dependencies {
 
 ### Specifying a Checker Framework version
 
-Version 0.4.14 of this plugin uses Checker Framework version 3.3.0 by default.
+Version 0.4.15 of this plugin uses Checker Framework version 3.3.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -261,6 +261,19 @@ This plugin automatically interacts with
 the [Lombok Gradle Plugin](https://plugins.gradle.org/plugin/io.freefair.lombok)
 to delombok your source code before it is passed to the Checker Framework
 for typechecking. This plugin does not support any other use of Lombok.
+
+By default, Lombok suppresses all warnings in the code it generates. If you
+want to typecheck the code that Lombok generates, use the `suppressLombokWarnings`
+configuration key:
+
+```
+checkerFramework {
+  suppressLombokWarnings = false
+}
+```
+
+Note that doing so will cause *all* tools (including Javac itself) to being issuing
+warnings in the code that Lombok generates.
 
 ## Using a locally-built plugin
 

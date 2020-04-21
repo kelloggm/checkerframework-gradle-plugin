@@ -20,4 +20,9 @@ class CheckerFrameworkExtension {
   // different typecheckers to different subprojects, add the checkers in
   // the subproject's build file rather than the parent's build file.
   Boolean applyToSubprojects = true
+
+  // If true, generate @SuppressWarnings("all") annotations on Lombok-generated code,
+  // which is Lombok's default but could permit unsoundness from the Checker Framework.
+  // For an example, see https://github.com/kelloggm/checkerframework-gradle-plugin/issues/85.
+  Boolean suppressLombokWarnings = true
 }
