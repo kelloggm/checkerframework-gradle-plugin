@@ -177,7 +177,7 @@ plugins {
   id "net.ltgt.errorprone" version "1.1.1" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.4.13' apply false
+  id 'org.checkerframework' version '0.4.14' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -249,6 +249,19 @@ the [Lombok Gradle Plugin](https://plugins.gradle.org/plugin/io.freefair.lombok)
 to delombok your source code before it is passed to the Checker Framework
 for typechecking. This plugin does not support any other use of Lombok.
 
+By default, Lombok suppresses all warnings in the code it generates. If you
+want to typecheck the code that Lombok generates, use the `suppressLombokWarnings`
+configuration key:
+
+```
+checkerFramework {
+  suppressLombokWarnings = false
+}
+```
+
+Note that doing so will cause *all* tools (including Javac itself) to begin issuing
+warnings in the code that Lombok generates.
+
 ## Using a locally-built plugin
 
 You can build the plugin locally rather than downloading it from Maven Central.
@@ -271,7 +284,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'org.checkerframework:checkerframework-gradle-plugin:0.4.13'
+    classpath 'org.checkerframework:checkerframework-gradle-plugin:0.4.14'
   }
 }
 

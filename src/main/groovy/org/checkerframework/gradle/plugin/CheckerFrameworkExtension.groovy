@@ -13,4 +13,9 @@ class CheckerFrameworkExtension {
   // If you encounter "zip file too large" errors, you can set this flag to avoid
   // the standard version check which unzips a jar to look at its manifest.
   Boolean skipVersionCheck = false
+
+  // If true, generate @SuppressWarnings("all") annotations on Lombok-generated code,
+  // which is Lombok's default but could permit unsoundness from the Checker Framework.
+  // For an example, see https://github.com/kelloggm/checkerframework-gradle-plugin/issues/85.
+  Boolean suppressLombokWarnings = true
 }
