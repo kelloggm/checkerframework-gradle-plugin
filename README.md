@@ -272,7 +272,7 @@ checkerFramework {
 }
 ```
 
-Note that doing so will cause *all* tools (including Javac itself) to being issuing
+Note that doing so will cause *all* tools (including Javac itself) to begin issuing
 warnings in the code that Lombok generates.
 
 ## Using a locally-built plugin
