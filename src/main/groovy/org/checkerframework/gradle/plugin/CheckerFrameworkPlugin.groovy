@@ -234,29 +234,40 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     project.afterEvaluate {
 
       // Decide whether to use ErrorProne Javac once configurations have been populated.
-      def actualCFDependencySet = project.configurations.checkerFramework.getAllDependencies()
-              .matching({dep ->
-        dep.getName().equals("checker") && dep.getGroup().equals("org.checkerframework")})
+      boolean needErrorProneJavac = false
+      if (javaSourceVersion.java8 && jvmVersion.isJava8()) {
+        try {
+          def actualCFDependencySet = project.configurations.checkerFramework.getAllDependencies()
+                  .matching({ dep ->
+                    dep.getName().equals("checker") && dep.getGroup().equals("org.checkerframework")
+                  })
 
-      def versionString
+          def versionString
 
-      if (actualCFDependencySet.size() == 0) {
-        if (userConfig.skipVersionCheck) {
-          versionString = LIBRARY_VERSION
-        } else {
-          versionString = new JarFile(project.configurations.checkerFramework.asPath).getManifest().getMainAttributes().getValue('Implementation-Version')
+          if (actualCFDependencySet.size() == 0) {
+            if (userConfig.skipVersionCheck) {
+              versionString = LIBRARY_VERSION
+            } else {
+              versionString = new JarFile(project.configurations.checkerFramework.asPath).getManifest().getMainAttributes().getValue('Implementation-Version')
+            }
+          } else {
+            // The call to iterator.next() is safe because we added this dependency above if it
+            // wasn't specified by the user.
+            versionString = actualCFDependencySet.iterator().next().getVersion()
+          }
+          // The array accesses are safe because all CF version strings have at least two . in them.
+          def majorVersion = versionString.tokenize(".")[0].toInteger()
+          def minorVersion = versionString.tokenize(".")[1].toInteger()
+          needErrorProneJavac = majorVersion >= 3 || (majorVersion == 2 && minorVersion >= 11)
+        } catch (Exception e) {
+          // if for any reason it's not possible to figure out the actual CF version, assume
+          // errorprone javac is required
+          needErrorProneJavac = true
+          LOG.warn("Defaulting to ErrorProne Javac, because on a Java 8 JVM and" +
+                  " cannot determine exact Checker Framework version.")
+          LOG.debug(e)
         }
-      } else {
-        // The call to iterator.next() is safe because we added this dependency above if it
-        // wasn't specified by the user.
-        versionString = actualCFDependencySet.iterator().next().getVersion()
       }
-      // The array accesses are safe because all CF version strings have at least two . in them.
-      def majorVersion = versionString.tokenize(".")[0].toInteger()
-      def minorVersion = versionString.tokenize(".")[1].toInteger()
-      def isJavac9CF = majorVersion >= 3 || (majorVersion == 2 && minorVersion >= 11)
-
-      boolean needErrorProneJavac = javaSourceVersion.java8 && isJavac9CF && jvmVersion.isJava8()
 
       // To keep the plugin idempotent, check if the task already exists.
       def createManifestTask = project.tasks.findByName(checkerFrameworkManifestCreationTaskName)
