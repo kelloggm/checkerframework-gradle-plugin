@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.4.14'
+    id 'org.checkerframework' version '0.5.0'
 }
 
 apply plugin: 'org.checkerframework'
@@ -74,7 +74,7 @@ dependencies {
 
 ### Specifying a Checker Framework version
 
-Version 0.4.16 of this plugin uses Checker Framework version 3.3.0 by default.
+Version 0.5.0 of this plugin uses Checker Framework version 3.3.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -139,9 +139,6 @@ using:
 
 ### Multi-project builds
 
-By default, checkers are run on all subprojects of the project to which the plugin
-is applied.
-
 In most projects with subprojects, the top-level project is not a Java
 project.  You should not configure such a non-Java project.  Instead, move
 all Checker Framework configuration (the `checkerFramework` block and any
@@ -159,18 +156,8 @@ subprojects { subproject ->
 }
 ```
 
-To not apply the plugin to all subprojects, set the `applyToSubprojects`
-flag to `false`:
-
-```groovy
-checkerFramework {
-  applyToSubprojects = false
-}
-```
-
-Then, apply the plugin to the `build.gradle` in each subproject where you
-do want to run the checker.
-
+Alternately, apply the plugin to the `build.gradle` in each subproject where you
+want to run a checker.
 
 ### Incompatibility with Error Prone
 

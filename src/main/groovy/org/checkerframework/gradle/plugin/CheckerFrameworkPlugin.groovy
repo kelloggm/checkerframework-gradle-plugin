@@ -69,11 +69,6 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       configureProject(project, userConfig)
     }
 
-    // Also apply the checker to all subprojects
-    if (userConfig.applyToSubprojects) {
-      project.subprojects { subproject -> apply(subproject) }
-    }
-
     project.afterEvaluate {
       if (!applied) LOG.warn('No android or java plugins found in the project {}, checker compiler options will not be applied.', project.name)
     }
