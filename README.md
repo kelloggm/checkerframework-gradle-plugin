@@ -140,12 +140,19 @@ using:
 ### Multi-project builds
 
 In most projects with subprojects, the top-level project is not a Java
-project.  You should not configure such a non-Java project.  Instead, move
+project.  You should not apply the plugin to such a non-Java project.  Instead, move
 all Checker Framework configuration (the `checkerFramework` block and any
-`dependencies`) into a `subprojects` block. For example:
+`dependencies`) into a `subprojects` block, and do not apply the
+plugin to the top-level project. For example:
 
 ```groovy
+plugins {
+  id 'org.checkerframework' version '0.5.0' apply false
+}
+
 subprojects { subproject ->
+  apply plugin: 'org.checkerframework'
+
   checkerFramework {
     checkers = ['org.checkerframework.checker.index.IndexChecker']
   }
@@ -156,8 +163,12 @@ subprojects { subproject ->
 }
 ```
 
-Alternately, apply the plugin to the `build.gradle` in each subproject where you
-want to run a checker.
+If the top-level project *is* a Java project that you wish to typecheck, follow these
+instructions but replace the 'subprojects' block with the 'allprojects' block.
+
+Alternately, apply the plugin in the `build.gradle` in each subproject as if it
+were a stand-alone project. You must do this if you require different configuration
+for different subprojects (for instance, if you want to run different checkers).
 
 ### Incompatibility with Error Prone
 
