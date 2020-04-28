@@ -72,8 +72,8 @@ dependencies {
 }
 ```
 
-You should also use a `checkerFramework` dependency for anything that a checker you
-are running needs at run-time. For example, if you are using the 
+You should also use a `checkerFramework` dependency for anything needed by a checker you
+are running. For example, if you are using the
 [Subtyping Checker](https://checkerframework.org/manual/#subtyping-checker) with
 custom type qualifiers, you should add a `checkerFramework` dependency referring to
 the definitions of the custom qualifiers.
