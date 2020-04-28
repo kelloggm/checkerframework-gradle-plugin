@@ -72,6 +72,12 @@ dependencies {
 }
 ```
 
+You should also use a `checkerFramework` dependency for anything needed by a checker you
+are running. For example, if you are using the
+[Subtyping Checker](https://checkerframework.org/manual/#subtyping-checker) with
+custom type qualifiers, you should add a `checkerFramework` dependency referring to
+the definitions of the custom qualifiers.
+
 ### Specifying a Checker Framework version
 
 Version 0.5.0 of this plugin uses Checker Framework version 3.3.0 by default.
