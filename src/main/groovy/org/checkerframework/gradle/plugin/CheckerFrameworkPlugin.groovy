@@ -230,6 +230,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
       // Decide whether to use ErrorProne Javac once configurations have been populated.
       boolean needErrorProneJavac = false
+      boolean needJdk8Jar = false
       if (javaSourceVersion.java8 && jvmVersion.isJava8()) {
         try {
           def actualCFDependencySet = project.configurations.checkerFramework.getAllDependencies()
@@ -254,6 +255,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           def majorVersion = versionString.tokenize(".")[0].toInteger()
           def minorVersion = versionString.tokenize(".")[1].toInteger()
           needErrorProneJavac = majorVersion >= 3 || (majorVersion == 2 && minorVersion >= 11)
+          needJdk8Jar = majorVersion < 3 || (majorVersion == 3 && minorVersion <= 3)
         } catch (Exception e) {
           // if for any reason it's not possible to figure out the actual CF version, assume
           // errorprone javac is required
@@ -291,8 +293,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
                     "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED"
             ]
           }
-          if (jvmVersion.isJava8() && javaSourceVersion.isJava8()) {
-            // TODO: when the Checker Framework has support for later JDK versions, add something here.
+          if (jvmVersion.isJava8() && javaSourceVersion.isJava8() && needJdk8Jar) {
             compile.options.compilerArgs += [
                     "-Xbootclasspath/p:${project.configurations.checkerFrameworkAnnotatedJDK.asPath}".toString()
             ]
