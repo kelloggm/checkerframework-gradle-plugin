@@ -80,7 +80,7 @@ the definitions of the custom qualifiers.
 
 ### Specifying a Checker Framework version
 
-Version 0.5.0 of this plugin uses Checker Framework version 3.3.0 by default.
+Version 0.5.0 of this plugin uses Checker Framework version 3.4.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -110,8 +110,6 @@ if (project.hasProperty("cfLocal")) {
     compileOnly files(cfHome + "/checker/dist/checker-qual.jar")
     testCompileOnly files(cfHome + "/checker/dist/checker-qual.jar")
     checkerFramework files(cfHome + "/checker/dist/checker.jar")
-    // only needed for JDK 8
-    checkerFrameworkAnnotatedJDK files(cfHome + "/checker/dist/jdk8.jar")
   }
 }
 ```
@@ -163,8 +161,8 @@ subprojects { subproject ->
     checkers = ['org.checkerframework.checker.index.IndexChecker']
   }
   dependencies {
-    checkerFramework 'org.checkerframework:checker:3.3.0'
-    implementation 'org.checkerframework:checker-qual:3.3.0'
+    checkerFramework 'org.checkerframework:checker:3.4.0'
+    implementation 'org.checkerframework:checker-qual:3.4.0'
   }
 }
 ```
@@ -194,7 +192,7 @@ plugins {
   id "net.ltgt.errorprone" version "1.1.1" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.4.14' apply false
+  id 'org.checkerframework' version '0.5.1' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -207,12 +205,11 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 }
 
 def errorProneVersion = "2.3.4"
-def checkerFrameworkVersion = "3.3.0"
+def checkerFrameworkVersion = "3.4.0"
 
 dependencies {
   if ("true".equals(project.ext.useCheckerFramework)) {
     checkerFramework 'org.checkerframework:checker:' + checkerFrameworkVersion
-    checkerFramework 'org.checkerframework:jdk8:' + checkerFrameworkVersion
     checkerFramework 'org.checkerframework:checker-qual:' + checkerFrameworkVersion
   } else {
     errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: errorProneVersion
@@ -301,7 +298,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'org.checkerframework:checkerframework-gradle-plugin:0.4.14'
+    classpath 'org.checkerframework:checkerframework-gradle-plugin:0.5.1'
   }
 }
 
