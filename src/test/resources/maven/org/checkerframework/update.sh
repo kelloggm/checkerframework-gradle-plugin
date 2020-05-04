@@ -11,7 +11,6 @@ rm -rf jdk8/*
 
 mkdir "checker/${NEW_CF_VERSION}"
 mkdir "checker-qual/${NEW_CF_VERSION}"
-mkdir "jdk8/${NEW_CF_VERSION}"
 
 cd "checker/${NEW_CF_VERSION}"
 wget -O "checker-${NEW_CF_VERSION}.jar" "https://search.maven.org/remotecontent?filepath=org/checkerframework/checker/${NEW_CF_VERSION}/checker-${NEW_CF_VERSION}.jar"
@@ -23,7 +22,3 @@ wget -O "checker-qual-${NEW_CF_VERSION}.jar" "https://search.maven.org/remotecon
 wget -O "checker-qual-${NEW_CF_VERSION}.pom" "https://search.maven.org/remotecontent?filepath=org/checkerframework/checker-qual/${NEW_CF_VERSION}/checker-qual-${NEW_CF_VERSION}.pom"
 cd ../../
 
-cd "jdk8/${NEW_CF_VERSION}"
-wget -O "jdk8-${NEW_CF_VERSION}.jar" "https://search.maven.org/remotecontent?filepath=org/checkerframework/jdk8/${NEW_CF_VERSION}/jdk8-${NEW_CF_VERSION}.jar"
-wget -O "jdk8-${NEW_CF_VERSION}.pom" "https://search.maven.org/remotecontent?filepath=org/checkerframework/jdk8/${NEW_CF_VERSION}/jdk8-${NEW_CF_VERSION}.pom"
-cd ../../
