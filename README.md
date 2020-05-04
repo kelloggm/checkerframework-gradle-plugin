@@ -95,8 +95,6 @@ dependencies {
   compileOnly 'org.checkerframework:checker-qual:3.1.0'
   testCompileOnly 'org.checkerframework:checker-qual:3.1.0'
   checkerFramework 'org.checkerframework:checker:3.1.0'
-  // only needed for JDK 8
-  checkerFrameworkAnnotatedJDK 'org.checkerframework:jdk8:3.1.0'
 }
 ```
 
