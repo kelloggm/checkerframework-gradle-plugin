@@ -80,7 +80,7 @@ the definitions of the custom qualifiers.
 
 ### Specifying a Checker Framework version
 
-Version 0.5.0 of this plugin uses Checker Framework version 3.4.0 by default.
+Version 0.5.1 of this plugin uses Checker Framework version 3.4.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -151,7 +151,7 @@ plugin to the top-level project. For example:
 
 ```groovy
 plugins {
-  id 'org.checkerframework' version '0.5.0' apply false
+  id 'org.checkerframework' version '0.5.1' apply false
 }
 
 subprojects { subproject ->
