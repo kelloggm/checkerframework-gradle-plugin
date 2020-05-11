@@ -231,26 +231,36 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       // Decide whether to use ErrorProne Javac once configurations have been populated.
       boolean needErrorProneJavac = false
       boolean needJdk8Jar = false
+
+      // The version string computation has side-effects that need to happen even for Java 11,
+      // so it can't be guarded by the isJava8 call below.
+      def versionString
+      try {
+        def actualCFDependencySet = project.configurations.checkerFramework.getAllDependencies()
+                .matching({ dep ->
+                  dep.getName().equals("checker") && dep.getGroup().equals("org.checkerframework")
+                })
+        if (actualCFDependencySet.size() == 0) {
+          if (userConfig.skipVersionCheck) {
+            versionString = LIBRARY_VERSION
+          } else {
+            // This line has a side-effect that's necessary for the checker to
+            // be invoked, sometimes? I don't really understand why.
+            versionString = new JarFile(project.configurations.checkerFramework.asPath).getManifest().getMainAttributes().getValue('Implementation-Version')
+          }
+        } else {
+          // The call to iterator.next() is safe because we added this dependency above if it
+          // wasn't specified by the user.
+          versionString = actualCFDependencySet.iterator().next().getVersion()
+        }
+      } catch (Exception e) {
+        versionString = LIBRARY_VERSION
+        LOG.warn("Unable to determine Checker Framework version. Assuming default is being used.")
+        LOG.debug(e)
+      }
+
       if (javaSourceVersion.java8 && jvmVersion.isJava8()) {
         try {
-          def actualCFDependencySet = project.configurations.checkerFramework.getAllDependencies()
-                  .matching({ dep ->
-                    dep.getName().equals("checker") && dep.getGroup().equals("org.checkerframework")
-                  })
-
-          def versionString
-
-          if (actualCFDependencySet.size() == 0) {
-            if (userConfig.skipVersionCheck) {
-              versionString = LIBRARY_VERSION
-            } else {
-              versionString = new JarFile(project.configurations.checkerFramework.asPath).getManifest().getMainAttributes().getValue('Implementation-Version')
-            }
-          } else {
-            // The call to iterator.next() is safe because we added this dependency above if it
-            // wasn't specified by the user.
-            versionString = actualCFDependencySet.iterator().next().getVersion()
-          }
           // The array accesses are safe because all CF version strings have at least two . in them.
           def majorVersion = versionString.tokenize(".")[0].toInteger()
           def minorVersion = versionString.tokenize(".")[1].toInteger()
