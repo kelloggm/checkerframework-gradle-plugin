@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.5.0'
+    id 'org.checkerframework' version '0.5.1'
 }
 
 apply plugin: 'org.checkerframework'
