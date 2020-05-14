@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.5.1'
+    id 'org.checkerframework' version '0.5.2'
 }
 
 apply plugin: 'org.checkerframework'
@@ -80,7 +80,7 @@ the definitions of the custom qualifiers.
 
 ### Specifying a Checker Framework version
 
-Version 0.5.1 of this plugin uses Checker Framework version 3.4.0 by default.
+Version 0.5.2 of this plugin uses Checker Framework version 3.4.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -149,7 +149,7 @@ plugin to the top-level project. For example:
 
 ```groovy
 plugins {
-  id 'org.checkerframework' version '0.5.1' apply false
+  id 'org.checkerframework' version '0.5.2' apply false
 }
 
 subprojects { subproject ->
@@ -190,7 +190,7 @@ plugins {
   id "net.ltgt.errorprone" version "1.1.1" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.5.1' apply false
+  id 'org.checkerframework' version '0.5.2' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -281,26 +281,16 @@ You can build the plugin locally rather than downloading it from Maven Central.
 To build the plugin from source, run `./gradlew build`.
 
 If you want to use a locally-built version of the plugin, you can publish the plugin to your
-local Maven repository by running `./gradlew publishToMavenLocal`. In the `build.gradle` file for each
-project for which you want to use the locally-built plugin, make sure that `mavenLocal()`
-is the first entry in the `repositories` block within the `buildscript` block. A full example
-will look like this:
+local Maven repository by running `./gradlew publishToMavenLocal`. Then, add the following to
+the `settings.gradle` file in the Gradle project that you want to use the plugin:
 
-```groovy
-buildscript {
-  repositories {
-    mavenLocal()
-    maven {
-        url 'https://plugins.gradle.org/m2/'
+```
+pluginManagement {
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
     }
-  }
-
-  dependencies {
-    classpath 'org.checkerframework:checkerframework-gradle-plugin:0.5.1'
-  }
 }
-
-apply plugin: 'org.checkerframework'
 ```
 
 ### JDK 8 vs JDK 9+ implementation details
