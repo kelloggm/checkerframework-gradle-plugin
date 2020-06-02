@@ -176,14 +176,16 @@ for different subprojects (for instance, if you want to run different checkers).
 
 [Error Prone](https://errorprone.info/)
 uses the Checker Framework's dataflow analysis library.
-Unfortunately, Error Prone uses an old version of the library, so you
+Unfortunately, Error Prone version 2.3.4 and earlier uses an old version of the library, so you
 cannot use both Error Prone and the current Checker Framework (because each
 one depends on a different version of the library).
 
-You can resolve this via a switch that causes your build to use either
-Error Prone or the Checker Framework, but not both.
-Here is an example of a build that uses both:
+You can resolve this by:
+ * upgrading to Error Prone version 2.4.0 or later, or
+ * using a switch that causes your build to use either
+   Error Prone or the Checker Framework, but not both.
 
+Here is an example of the latter approach:
 
 ```
 plugins {
