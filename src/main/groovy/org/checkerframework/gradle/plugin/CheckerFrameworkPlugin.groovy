@@ -97,6 +97,10 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
         project.afterEvaluate {
 
+          if (skipCheckerFramework(project, userConfig)) {
+            return
+          }
+
           def delombokTasks = project.getTasks().findAll { task ->
             task.name.contains("delombok")
           }
@@ -212,21 +216,38 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     })
   }
 
-  private static applyToProject(Project project, CheckerFrameworkExtension userConfig) {
-
-    JavaVersion javaSourceVersion =
-            project.extensions.findByName('android')?.compileOptions?.sourceCompatibility ?:
-                    project.property('sourceCompatibility')
-
-    // Check Java version.
-    if (!javaSourceVersion.isJava8Compatible()) {
-      throw new IllegalStateException("The Checker Framework does not support Java versions before 8.")
+  /**
+   * Always call this method rather than using the skipCheckerFramework property directly.
+   * Allows the user to set the property from the command line instead of in the build file,
+   * if desired.
+   */
+  private static boolean skipCheckerFramework(Project project, CheckerFrameworkExtension userConfig) {
+    if (project.hasProperty('skipCheckerFramework')) {
+      userConfig.skipCheckerFramework = project['skipCheckerFramework'] != "false"
     }
+    return userConfig.skipCheckerFramework
+  }
 
-    JavaVersion jvmVersion = JavaVersion.current();
+  private static applyToProject(Project project, CheckerFrameworkExtension userConfig) {
 
     // Apply checker to project
     project.afterEvaluate {
+
+      if (skipCheckerFramework(project, userConfig)) {
+        LOG.info("skipping the Checker Framework because skipCheckerFramework property is set")
+        return
+      }
+
+      JavaVersion javaSourceVersion =
+              project.extensions.findByName('android')?.compileOptions?.sourceCompatibility ?:
+                      project.property('sourceCompatibility')
+
+      // Check Java version.
+      if (!javaSourceVersion.isJava8Compatible()) {
+        throw new IllegalStateException("The Checker Framework does not support Java versions before 8.")
+      }
+
+      JavaVersion jvmVersion = JavaVersion.current();
 
       // Decide whether to use ErrorProne Javac once configurations have been populated.
       boolean needErrorProneJavac = false
