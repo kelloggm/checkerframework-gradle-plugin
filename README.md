@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.5.3'
+    id 'org.checkerframework' version '0.5.4'
 }
 
 apply plugin: 'org.checkerframework'
@@ -80,7 +80,7 @@ the definitions of the custom qualifiers.
 
 ### Specifying a Checker Framework version
 
-Version 0.5.3 of this plugin uses Checker Framework version 3.4.1 by default.
+Version 0.5.4 of this plugin uses Checker Framework version 3.4.1 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -113,6 +113,19 @@ if (project.hasProperty("cfLocal")) {
 ```
 
 ### Other options
+
+* You can disable the Checker Framework temporarily (e.g. when testing something unrelated)
+ either in your build file or from the command line. In your build file:
+ 
+  ```groovy
+  checkerFramework {
+    skipCheckerFramework = true
+  }
+  ```
+
+  From the command line, add `-PskipCheckerFramework` to your gradle invocation.
+  This property can also take an argument:
+  anything other than `false` results in the Checker Framework being skipped.
 
 * By default, the plugin applies the selected checkers to all `JavaCompile` targets.
 
@@ -149,7 +162,7 @@ plugin to the top-level project. For example:
 
 ```groovy
 plugins {
-  id 'org.checkerframework' version '0.5.3' apply false
+  id 'org.checkerframework' version '0.5.4' apply false
 }
 
 subprojects { subproject ->
@@ -190,7 +203,7 @@ plugins {
   id "net.ltgt.errorprone" version "1.1.1" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.5.3' apply false
+  id 'org.checkerframework' version '0.5.4' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {

@@ -18,4 +18,7 @@ class CheckerFrameworkExtension {
   // which is Lombok's default but could permit unsoundness from the Checker Framework.
   // For an example, see https://github.com/kelloggm/checkerframework-gradle-plugin/issues/85.
   Boolean suppressLombokWarnings = true
+
+  // Flag to disable the CF easily, from e.g. the command-line.
+  Boolean skipCheckerFramework = false
 }
