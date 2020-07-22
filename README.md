@@ -112,6 +112,25 @@ if (project.hasProperty("cfLocal")) {
 }
 ```
 
+### Per-Task Configuration
+
+You can also use a `checkerFramework` block to configure individual tasks. This
+can be useful for skipping the Checker Framework on generated code:
+
+```build.gradle
+tasks.withType(JavaCompile).configureEach {
+  // Don't run the checker on generated code.
+  if (name.equals("compileMainGeneratedDataTemplateJava")
+      || name.equals("compileMainGeneratedRestJava")) {
+    checkerFramework {
+      skipCheckerFramework = true
+    }
+  }
+}
+```
+
+Currently, the only supported option is `skipCheckerFramework`.
+
 ### Other options
 
 * You can disable the Checker Framework temporarily (e.g. when testing something unrelated)
