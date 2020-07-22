@@ -216,8 +216,13 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     })
 
     project.tasks.withType(AbstractCompile).all { AbstractCompile compile ->
-      CheckerFrameworkTaskExtension checkerExtension =
-          compile.extensions.create("checkerFramework", CheckerFrameworkTaskExtension)
+      LOG.debug('Adding checkerFramework configuration to task ' + compile.name)
+      try {
+        compile.extensions.create("checkerFramework", CheckerFrameworkTaskExtension)
+      } catch (IllegalArgumentException e) {
+        // Sometimes this happens in Gradle 6.4+; don't crash just in case.
+        LOG.info("Task " + compile.name + " already has the checkerFramework extension.")
+      }
     }
   }
 
@@ -310,9 +315,17 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       }
 
       project.tasks.withType(AbstractCompile).all { AbstractCompile compile ->
-        if (!compile.extensions.checkerFramework.skipCheckerFramework
-            && compile.hasProperty('options')
-            && !(userConfig.excludeTests && compile.name.toLowerCase().contains("test"))) {
+        if (compile.extensions.checkerFramework.skipCheckerFramework) {
+          LOG.info("skipping the Checker Framework for task " + compile.name +
+              " because skipCheckerFramework property is set")
+          return
+        }
+        if(userConfig.excludeTests && compile.name.toLowerCase().contains("test")) {
+          LOG.info("skipping the Checker Framework for task " + compile.name +
+              " because excludeTests property is set")
+          return
+        }
+        if (compile.hasProperty('options')) {
           compile.options.annotationProcessorPath = compile.options.annotationProcessorPath == null ?
               project.configurations.checkerFramework :
               project.configurations.checkerFramework.plus(compile.options.annotationProcessorPath)

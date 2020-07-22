@@ -21,6 +21,18 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
     '4.9',
     '4.10',
     '5.0',
+    '5.1',
+    '5.2',
+    '5.3',
+    '5.4',
+    '5.5',
+    '5.6',
+    '6.0',
+    '6.1',
+    '6.2',
+    '6.3',
+    '6.4',
+    '6.5',
   ]
 
   @Unroll def "java project running licenseReport using with gradle #gradleVersion"() {
@@ -175,6 +187,47 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
 
     then:
     result.output.contains('applying checker compiler options')
+
+    where:
+    gradleVersion << TESTED_GRADLE_VERSIONS
+  }
+
+  def 'skipCheckerFramework can be used to skip checking individual tasks'() {
+    given:
+    buildFile << """
+        plugins {
+          id 'org.checkerframework'
+          id 'java'
+          id 'application'
+        }
+
+        repositories {
+          maven {
+            url "${getClass().getResource("/maven/").toURI()}"
+          }
+        }
+
+        tasks.withType(JavaCompile).all {
+          configure {
+            checkerFramework {
+              skipCheckerFramework = true
+            }
+          }
+        }
+      """.stripIndent().trim()
+
+    when:
+    BuildResult result = GradleRunner.create()
+        .withGradleVersion(gradleVersion)
+        .withProjectDir(testProjectDir.root)
+        .withPluginClasspath()
+        .withArguments('--info')
+        .build()
+
+    then:
+    result.
+        output.
+        contains('skipping the Checker Framework for task compileJava because skipCheckerFramework property is set')
 
     where:
     gradleVersion << TESTED_GRADLE_VERSIONS
