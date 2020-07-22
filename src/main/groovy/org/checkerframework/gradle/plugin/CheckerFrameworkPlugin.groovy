@@ -214,6 +214,11 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       @Override
       void afterResolve(ResolvableDependencies resolvableDependencies) {}
     })
+
+    project.tasks.withType(AbstractCompile).all { AbstractCompile compile ->
+      CheckerFrameworkTaskExtension checkerExtension =
+          compile.extensions.create("checkerFramework", CheckerFrameworkTaskExtension)
+    }
   }
 
   /**
@@ -304,12 +309,13 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         createManifestTask.checkers = userConfig.checkers
       }
 
-      project.tasks.withType(AbstractCompile).all { compile ->
-        if (compile.hasProperty('options') && !(userConfig.excludeTests && compile.name.toLowerCase().contains("test"))) {
-          compile.options.annotationProcessorPath =
-                  compile.options.annotationProcessorPath == null ?
-                          project.configurations.checkerFramework :
-                          project.configurations.checkerFramework.plus(compile.options.annotationProcessorPath)
+      project.tasks.withType(AbstractCompile).all { AbstractCompile compile ->
+        if (!compile.extensions.checkerFramework.skipCheckerFramework
+            && compile.hasProperty('options')
+            && !(userConfig.excludeTests && compile.name.toLowerCase().contains("test"))) {
+          compile.options.annotationProcessorPath = compile.options.annotationProcessorPath == null ?
+              project.configurations.checkerFramework :
+              project.configurations.checkerFramework.plus(compile.options.annotationProcessorPath)
           // Check whether to use the Error Prone javac
           if (needErrorProneJavac) {
             compile.options.forkOptions.jvmArgs += [
