@@ -128,6 +128,7 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
     gradleVersion << TESTED_GRADLE_VERSIONS
   }
 
+  @Unroll
   def 'with relevant plugin loaded subsequently, compiler settings are applied with gradle #gradleVersion'() {
     given:
     buildFile <<
@@ -159,6 +160,7 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
     gradleVersion << TESTED_GRADLE_VERSIONS
   }
 
+  @Unroll
   def 'with resolved configuration dependencies, compilation settings are still applied with gradle #gradleVersion'() {
     given:
     buildFile <<
@@ -193,6 +195,7 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
     gradleVersion << TESTED_GRADLE_VERSIONS
   }
 
+  @Unroll
   def 'skipCheckerFramework can be used to skip checking individual tasks with gradle #gradleVersion'() {
     given:
     buildFile << """
@@ -234,6 +237,7 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
     gradleVersion << TESTED_GRADLE_VERSIONS
   }
 
+  @Unroll
   def 'plugin warns when applying org.checkerframework after java plugin with gradle #gradleVersion'() {
     given:
     buildFile << """
