@@ -31,8 +31,10 @@ tasks.withType(Test) {
     showCauses true
     showExceptions true
     showStackTraces true
-    events 'failed', 'skipped'
+    events 'failed', 'skipped', 'started', 'passed'
   }
+
+  maxParallelForks = 32
 }
 
 tasks.withType(Groovydoc) {

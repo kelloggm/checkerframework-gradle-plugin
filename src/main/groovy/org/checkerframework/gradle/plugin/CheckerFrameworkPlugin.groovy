@@ -1,11 +1,11 @@
 package org.checkerframework.gradle.plugin
 
-
 import org.gradle.api.Task
 import org.gradle.api.artifacts.DependencyResolutionListener
 import org.gradle.api.artifacts.ResolvableDependencies
 import org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency
 import org.gradle.api.internal.artifacts.dependencies.DefaultSelfResolvingDependency
+import org.gradle.util.GradleVersion
 
 import java.util.jar.JarFile
 
@@ -65,8 +65,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
    * Gradle documentation: Task Configuration Avoidance</a>
    */
   private static <S extends Task> void configureTasks(Project project, Class<S> taskType, Action<? super S> configure) {
-    def (major, minor) = project.gradle.gradleVersion.split('\\.').collect { Integer.parseInt(it) }
-    if (major < 4 || (major == 4 && minor < 9)) {
+    if (GradleVersion.current() < GradleVersion.version("4.9")) {
       project.tasks.withType(taskType).all configure
     } else {
       project.tasks.withType(taskType).configureEach configure
@@ -247,8 +246,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         LOG.info("Adding checkerFramework extension to task {}", compile.name)
         compile.extensions.create("checkerFramework", CheckerFrameworkTaskExtension)
       } else if (ext instanceof CheckerFrameworkTaskExtension) {
-        LOG.
-            warn("Task {} in project {} already has checkerFramework added to it;" +
+        LOG.debug("Task {} in project {} already has checkerFramework added to it;" +
                 " make sure you're applying the org.checkerframework plugin after the Java plugin", compile.name,
                 compile.project)
       } else {
@@ -318,8 +316,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         }
       } catch (Exception e) {
         versionString = LIBRARY_VERSION
-        LOG.warn("Unable to determine Checker Framework version. Assuming default is being used.")
-        LOG.debug('{}', e.toString())
+        LOG.warn("Unable to determine Checker Framework version. Assuming default is being used: {}", versionString, e.toString())
       }
 
       if (javaSourceVersion.java8 && jvmVersion.isJava8()) {
@@ -334,8 +331,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           // errorprone javac is required
           needErrorProneJavac = true
           LOG.warn("Defaulting to ErrorProne Javac, because on a Java 8 JVM and" +
-                  " cannot determine exact Checker Framework version.")
-          LOG.debug('{}', e.toString())
+                  " cannot determine exact Checker Framework version.", e)
         }
       }
 

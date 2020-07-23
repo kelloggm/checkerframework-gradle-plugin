@@ -2,7 +2,7 @@ language: java
 
 jdk: openjdk8
 
-install: true
+install: skip
 
 # https://guides.gradle.org/executing-gradle-builds-on-travisci/#enable_caching_of_downloaded_artifacts
 before_cache:
@@ -14,4 +14,4 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-script: ./gradlew clean build --info
+script: ./gradlew build --scan --stacktrace --parallel

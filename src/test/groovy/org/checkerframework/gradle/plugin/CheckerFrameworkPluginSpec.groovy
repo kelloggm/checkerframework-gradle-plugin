@@ -2,6 +2,7 @@ package org.checkerframework.gradle.plugin
 
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.util.GradleVersion
 import spock.lang.Unroll
 import test.BaseSpecification
 
@@ -263,9 +264,8 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
 
     where:
     // This particular behavior only shows up on Gradle 6.4+
-    gradleVersion << TESTED_GRADLE_VERSIONS.stream().filter({ version ->
-      def (major, minor) = version.split("\\.").collect { Integer.parseInt(it) }
-      major > 6 || (major == 6 && minor >= 4)
+    gradleVersion << TESTED_GRADLE_VERSIONS.stream().filter({
+      GradleVersion.version(it) >= GradleVersion.version("6.4")
     })
   }
 }
