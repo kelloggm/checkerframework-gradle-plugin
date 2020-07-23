@@ -242,7 +242,7 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
         .withGradleVersion(gradleVersion)
         .withProjectDir(testProjectDir.root)
         .withPluginClasspath()
-        .withArguments('--info')
+        .withArguments('--debug')
         .build()
 
     then:
