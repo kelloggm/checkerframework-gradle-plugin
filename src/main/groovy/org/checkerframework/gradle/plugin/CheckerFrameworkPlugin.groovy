@@ -65,9 +65,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
    * Gradle documentation: Task Configuration Avoidance</a>
    */
   private static <S extends Task> void configureTasks(Project project, Class<S> taskType, Action<? super S> configure) {
-    def ver = project.gradle.gradleVersion.split('\\.')
-    def major = Integer.parseInt(ver[0])
-    def minor = Integer.parseInt(ver[1])
+    def (major, minor) = project.gradle.gradleVersion.split('\\.').collect { Integer.parseInt(it) }
     if (major < 4 || (major == 4 && minor < 9)) {
       project.tasks.withType(taskType).all configure
     } else {
@@ -82,10 +80,12 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     boolean applied = false
     (ANDROID_IDS + "java").each { id ->
       project.pluginManager.withPlugin(id) {
-        LOG.info('Found plugin {}, applying checker compiler options.', id)
-        configureProject(project, userConfig)
-        applyToProject(project, userConfig)
-        if (!applied) applied = true
+        if (!applied) {
+          LOG.info('Found plugin {}, applying checker compiler options.', id)
+          configureProject(project, userConfig)
+          applyToProject(project, userConfig)
+          applied = true
+        }
       }
     }
 
@@ -242,12 +242,18 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     })
 
     configureTasks(project, AbstractCompile, { AbstractCompile compile ->
-      LOG.debug('Adding checkerFramework configuration to task ' + compile.name)
-      try {
+      def ext = compile.extensions.findByName("checkerFramework")
+      if (ext == null) {
+        LOG.info("Adding checkerFramework extension to task {}", compile.name)
         compile.extensions.create("checkerFramework", CheckerFrameworkTaskExtension)
-      } catch (IllegalArgumentException e) {
-        // Sometimes this happens in Gradle 6.4+; don't crash just in case.
-        LOG.info("Task " + compile.name + " already has the checkerFramework extension.")
+      } else if (ext instanceof CheckerFrameworkTaskExtension) {
+        LOG.
+            warn("Task {} in project {} already has checkerFramework added to it;" +
+                " make sure you're applying the org.checkerframework plugin after the Java plugin", compile.name,
+                compile.project)
+      } else {
+        throw new IllegalStateException("Task " + compile.name + " in project " + compile.project +
+            " already has a checkerFramework extension, but it's of an incorrect type " + ext.class)
       }
     })
   }
@@ -313,7 +319,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       } catch (Exception e) {
         versionString = LIBRARY_VERSION
         LOG.warn("Unable to determine Checker Framework version. Assuming default is being used.")
-        LOG.debug(e)
+        LOG.debug('{}', e.toString())
       }
 
       if (javaSourceVersion.java8 && jvmVersion.isJava8()) {
@@ -329,7 +335,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           needErrorProneJavac = true
           LOG.warn("Defaulting to ErrorProne Javac, because on a Java 8 JVM and" +
                   " cannot determine exact Checker Framework version.")
-          LOG.debug(e)
+          LOG.debug('{}', e.toString())
         }
       }
 
@@ -347,8 +353,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           return
         }
         if(userConfig.excludeTests && compile.name.toLowerCase().contains("test")) {
-          LOG.info("skipping the Checker Framework for task " + compile.name +
-              " because excludeTests property is set")
+          LOG.info("skipping the Checker Framework for task {} because excludeTests property is set", compile.name)
           return
         }
         if (compile.hasProperty('options')) {

@@ -56,7 +56,6 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
       .withGradleVersion(gradleVersion)
       .withProjectDir(testProjectDir.root)
       .withPluginClasspath()
-      .withArguments('--debug', '--stacktrace')
       .build()
 
     then:
@@ -164,8 +163,8 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
     buildFile <<
       """
         plugins {
-          id 'org.checkerframework'
           id 'java'
+          id 'org.checkerframework'
           id 'application'
         }
 
@@ -197,8 +196,8 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
     given:
     buildFile << """
         plugins {
-          id 'org.checkerframework'
           id 'java'
+          id 'org.checkerframework'
           id 'application'
         }
 
@@ -232,5 +231,41 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
 
     where:
     gradleVersion << TESTED_GRADLE_VERSIONS
+  }
+
+  def 'plugin warns when applying org.checkerframework after java plugin with gradle #gradleVersion'() {
+    given:
+    buildFile << """
+        plugins {
+          id 'org.checkerframework'
+          id 'java'
+        }
+
+        repositories {
+          maven {
+            url "${getClass().getResource("/maven/").toURI()}"
+          }
+        }
+      """.stripIndent().trim()
+
+    when:
+    BuildResult result = GradleRunner.create()
+        .withGradleVersion(gradleVersion)
+        .withProjectDir(testProjectDir.root)
+        .withPluginClasspath()
+        .withArguments('--info')
+        .build()
+
+    then:
+    result.
+        output.
+        contains("make sure you're applying the org.checkerframework plugin after the Java plugin")
+
+    where:
+    // This particular behavior only shows up on Gradle 6.4+
+    gradleVersion << TESTED_GRADLE_VERSIONS.stream().filter({ version ->
+      def (major, minor) = version.split("\\.").collect { Integer.parseInt(it) }
+      major > 6 || (major == 6 && minor >= 4)
+    })
   }
 }
