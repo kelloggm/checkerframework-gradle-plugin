@@ -56,6 +56,7 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
       .withGradleVersion(gradleVersion)
       .withProjectDir(testProjectDir.root)
       .withPluginClasspath()
+      .withArguments('--debug', '--stacktrace')
       .build()
 
     then:
@@ -127,7 +128,7 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
     gradleVersion << TESTED_GRADLE_VERSIONS
   }
 
-  def 'with relevant plugin loaded subsequently, compiler settings are applied'() {
+  def 'with relevant plugin loaded subsequently, compiler settings are applied with gradle #gradleVersion'() {
     given:
     buildFile <<
       """
@@ -158,7 +159,7 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
     gradleVersion << TESTED_GRADLE_VERSIONS
   }
 
-  def 'with resolved configuration dependencies, compilation settings are still applied'() {
+  def 'with resolved configuration dependencies, compilation settings are still applied with gradle #gradleVersion'() {
     given:
     buildFile <<
       """
@@ -192,7 +193,7 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
     gradleVersion << TESTED_GRADLE_VERSIONS
   }
 
-  def 'skipCheckerFramework can be used to skip checking individual tasks'() {
+  def 'skipCheckerFramework can be used to skip checking individual tasks with gradle #gradleVersion'() {
     given:
     buildFile << """
         plugins {

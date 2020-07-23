@@ -1,5 +1,7 @@
 package org.checkerframework.gradle.plugin
 
+
+import org.gradle.api.Task
 import org.gradle.api.artifacts.DependencyResolutionListener
 import org.gradle.api.artifacts.ResolvableDependencies
 import org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency
@@ -48,6 +50,30 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
    * Which subfolder of /build/ to put the Checker Framework manifest in.
    */
   private final static def manifestLocation = "/checkerframework/"
+
+  /**
+   * Configure each task in {@code project} with the given {@code taskType}.
+   * <p>
+   * We prefer to configure with {@link
+   * org.gradle.api.tasks.TaskCollection#configureEach(org.gradle.api.Action)}
+   * rather than {@link
+   * org.gradle.api.tasks.TaskCollection#all(org.gradle.api.Action)}, but {@code
+   * configureEach} is only available on Gradle 4.9 and newer, so this method
+   * dynamically picks the better candidate based on the current Gradle version.
+   * <p>
+   * See also: <a href="https://docs.gradle.org/current/userguide/task_configuration_avoidance.html">
+   * Gradle documentation: Task Configuration Avoidance</a>
+   */
+  private static <S extends Task> void configureTasks(Project project, Class<S> taskType, Action<? super S> configure) {
+    def ver = project.gradle.gradleVersion.split('\\.')
+    def major = Integer.parseInt(ver[0])
+    def minor = Integer.parseInt(ver[1])
+    if (major < 4 || (major == 4 && minor < 9)) {
+      project.tasks.withType(taskType).all configure
+    } else {
+      project.tasks.withType(taskType).configureEach configure
+    }
+  }
 
   @Override void apply(Project project) {
     // Either get an existing CF config, or create a new one if none exists
@@ -215,7 +241,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       void afterResolve(ResolvableDependencies resolvableDependencies) {}
     })
 
-    project.tasks.withType(AbstractCompile).all { AbstractCompile compile ->
+    configureTasks(project, AbstractCompile, { AbstractCompile compile ->
       LOG.debug('Adding checkerFramework configuration to task ' + compile.name)
       try {
         compile.extensions.create("checkerFramework", CheckerFrameworkTaskExtension)
@@ -223,7 +249,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         // Sometimes this happens in Gradle 6.4+; don't crash just in case.
         LOG.info("Task " + compile.name + " already has the checkerFramework extension.")
       }
-    }
+    })
   }
 
   /**
@@ -314,7 +340,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         createManifestTask.checkers = userConfig.checkers
       }
 
-      project.tasks.withType(AbstractCompile).all { AbstractCompile compile ->
+      configureTasks(project, AbstractCompile, { AbstractCompile compile ->
         if (compile.extensions.checkerFramework.skipCheckerFramework) {
           LOG.info("skipping the Checker Framework for task " + compile.name +
               " because skipCheckerFramework property is set")
@@ -379,7 +405,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           }
         options.fork = true
         }
-      }
+      })
     }
   }
 }
