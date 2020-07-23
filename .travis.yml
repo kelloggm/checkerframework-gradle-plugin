@@ -14,4 +14,4 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-script: ./gradlew build --scan --stacktrace --parallel
+script: ./gradlew build --info --stacktrace --parallel
