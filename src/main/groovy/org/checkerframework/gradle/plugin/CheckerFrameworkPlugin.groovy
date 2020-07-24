@@ -1,9 +1,11 @@
 package org.checkerframework.gradle.plugin
 
+import org.gradle.api.Task
 import org.gradle.api.artifacts.DependencyResolutionListener
 import org.gradle.api.artifacts.ResolvableDependencies
 import org.gradle.api.internal.artifacts.dependencies.DefaultExternalModuleDependency
 import org.gradle.api.internal.artifacts.dependencies.DefaultSelfResolvingDependency
+import org.gradle.util.GradleVersion
 
 import java.util.jar.JarFile
 
@@ -49,6 +51,27 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
    */
   private final static def manifestLocation = "/checkerframework/"
 
+  /**
+   * Configure each task in {@code project} with the given {@code taskType}.
+   * <p>
+   * We prefer to configure with {@link
+   * org.gradle.api.tasks.TaskCollection#configureEach(org.gradle.api.Action)}
+   * rather than {@link
+   * org.gradle.api.tasks.TaskCollection#all(org.gradle.api.Action)}, but {@code
+   * configureEach} is only available on Gradle 4.9 and newer, so this method
+   * dynamically picks the better candidate based on the current Gradle version.
+   * <p>
+   * See also: <a href="https://docs.gradle.org/current/userguide/task_configuration_avoidance.html">
+   * Gradle documentation: Task Configuration Avoidance</a>
+   */
+  private static <S extends Task> void configureTasks(Project project, Class<S> taskType, Action<? super S> configure) {
+    if (GradleVersion.current() < GradleVersion.version("4.9")) {
+      project.tasks.withType(taskType).all configure
+    } else {
+      project.tasks.withType(taskType).configureEach configure
+    }
+  }
+
   @Override void apply(Project project) {
     // Either get an existing CF config, or create a new one if none exists
     CheckerFrameworkExtension userConfig = project.extensions.findByType(CheckerFrameworkExtension.class)?:
@@ -56,10 +79,12 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     boolean applied = false
     (ANDROID_IDS + "java").each { id ->
       project.pluginManager.withPlugin(id) {
-        LOG.info('Found plugin {}, applying checker compiler options.', id)
-        configureProject(project, userConfig)
-        applyToProject(project, userConfig)
-        if (!applied) applied = true
+        if (!applied) {
+          LOG.info('Found plugin {}, applying checker compiler options.', id)
+          configureProject(project, userConfig)
+          applyToProject(project, userConfig)
+          applied = true
+        }
       }
     }
 
@@ -215,10 +240,20 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       void afterResolve(ResolvableDependencies resolvableDependencies) {}
     })
 
-    project.tasks.withType(AbstractCompile).all { AbstractCompile compile ->
-      CheckerFrameworkTaskExtension checkerExtension =
-          compile.extensions.create("checkerFramework", CheckerFrameworkTaskExtension)
-    }
+    configureTasks(project, AbstractCompile, { AbstractCompile compile ->
+      def ext = compile.extensions.findByName("checkerFramework")
+      if (ext == null) {
+        LOG.info("Adding checkerFramework extension to task {}", compile.name)
+        compile.extensions.create("checkerFramework", CheckerFrameworkTaskExtension)
+      } else if (ext instanceof CheckerFrameworkTaskExtension) {
+        LOG.debug("Task {} in project {} already has checkerFramework added to it;" +
+                " make sure you're applying the org.checkerframework plugin after the Java plugin", compile.name,
+                compile.project)
+      } else {
+        throw new IllegalStateException("Task " + compile.name + " in project " + compile.project +
+            " already has a checkerFramework extension, but it's of an incorrect type " + ext.class)
+      }
+    })
   }
 
   /**
@@ -281,8 +316,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         }
       } catch (Exception e) {
         versionString = LIBRARY_VERSION
-        LOG.warn("Unable to determine Checker Framework version. Assuming default is being used.")
-        LOG.debug(e)
+        LOG.warn("Unable to determine Checker Framework version. Assuming default is being used: {}", versionString, e.toString())
       }
 
       if (javaSourceVersion.java8 && jvmVersion.isJava8()) {
@@ -297,8 +331,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           // errorprone javac is required
           needErrorProneJavac = true
           LOG.warn("Defaulting to ErrorProne Javac, because on a Java 8 JVM and" +
-                  " cannot determine exact Checker Framework version.")
-          LOG.debug(e)
+                  " cannot determine exact Checker Framework version.", e)
         }
       }
 
@@ -309,10 +342,17 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         createManifestTask.checkers = userConfig.checkers
       }
 
-      project.tasks.withType(AbstractCompile).all { AbstractCompile compile ->
-        if (!compile.extensions.checkerFramework.skipCheckerFramework
-            && compile.hasProperty('options')
-            && !(userConfig.excludeTests && compile.name.toLowerCase().contains("test"))) {
+      configureTasks(project, AbstractCompile, { AbstractCompile compile ->
+        if (compile.extensions.checkerFramework.skipCheckerFramework) {
+          LOG.info("skipping the Checker Framework for task " + compile.name +
+              " because skipCheckerFramework property is set")
+          return
+        }
+        if(userConfig.excludeTests && compile.name.toLowerCase().contains("test")) {
+          LOG.info("skipping the Checker Framework for task {} because excludeTests property is set", compile.name)
+          return
+        }
+        if (compile.hasProperty('options')) {
           compile.options.annotationProcessorPath = compile.options.annotationProcessorPath == null ?
               project.configurations.checkerFramework :
               project.configurations.checkerFramework.plus(compile.options.annotationProcessorPath)
@@ -361,12 +401,12 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
         ANDROID_IDS.each { id ->
           project.plugins.withId(id) {
-            options.bootstrapClasspath = project.files(System.getProperty("sun.boot.class.path")) + options.bootstrapClasspath
+            compile.options.bootstrapClasspath = project.files(System.getProperty("sun.boot.class.path")) + compile.options.bootstrapClasspath
             }
           }
-        options.fork = true
+        compile.options.fork = true
         }
-      }
+      })
     }
   }
 }
