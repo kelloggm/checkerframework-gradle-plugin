@@ -65,7 +65,9 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
    * Gradle documentation: Task Configuration Avoidance</a>
    */
   private static <S extends Task> void configureTasks(Project project, Class<S> taskType, Action<? super S> configure) {
-    if (GradleVersion.current() < GradleVersion.version("4.9")) {
+    // TODO: why does lazy configuration fail on Java 8 JVMs? https://github.com/typetools/checker-framework/pull/3557
+    if (GradleVersion.current() < GradleVersion.version("4.9")
+            || !JavaVersion.current().isJava9Compatible()) {
       project.tasks.withType(taskType).all configure
     } else {
       project.tasks.withType(taskType).configureEach configure
