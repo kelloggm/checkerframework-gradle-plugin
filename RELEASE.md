@@ -53,8 +53,10 @@ Updating the Checker Framework should
 be done like any other pull request. To update the plugin to
 use the [latest version](https://github.com/typetools/checker-framework/blob/master/changelog.txt)
 of the Checker Framework:
-   * Run: `(cd src/test/resources/maven/org/checkerframework && update.sh NEW_CF_VERSION_NUMBER)`
+   * Create a feature branch.
+   * Update the .jar and .pom files.
+     Run: `(cd src/test/resources/maven/org/checkerframework && update.sh NEW_CF_VERSION_NUMBER)`
      (If you don't do this, you may get an error such as
      "Could not find org.checkerframework:checker:2.11.1.")
-   * Replace the old version number anywhere it still appears in this repository.
-Also, update the version of the plugin; see above for instructions.
+   * Replace the old version number anywhere it appears in this repository.
+   * Update the version of the plugin, as for any pull request; see above for instructions.
