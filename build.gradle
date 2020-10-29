@@ -25,7 +25,7 @@ dependencies {
     implementation localGroovy()
 
     // The Lombok Gradle plugin, so that we can delombok sources if lombok would be applied.
-    implementation 'io.freefair.gradle:lombok-plugin:5.2.1'
+    implementation 'io.freefair.gradle:lombok-plugin:5.3.0'
 
     testImplementation deps.android.tools.build.gradle
     testImplementation deps.spock, { exclude module: 'groovy-all' } // Use localGroovy()
