@@ -399,15 +399,17 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
             }
           }
 
-        userConfig.extraJavacArgs.forEach({option -> compile.options.compilerArgs << option})
+          userConfig.extraJavacArgs.forEach({option -> compile.options.compilerArgs << option})
 
-        ANDROID_IDS.each { id ->
-          project.plugins.withId(id) {
-            compile.options.bootstrapClasspath = project.files(System.getProperty("sun.boot.class.path")) + compile.options.bootstrapClasspath
-            }
-          }
-        compile.options.fork = true
-        }
+	  ANDROID_IDS.each { id ->
+	    project.plugins.withId(id) {
+	      compile.options.bootstrapClasspath = project.files(System.getProperty("sun.boot.class.path")) + compile.options.bootstrapClasspath
+	      }
+	    }
+	  compile.options.fork = true
+          compile.options.forkOptions.jvmArgs += [
+            "-Xmx1g"
+          ]
       })
     }
   }
