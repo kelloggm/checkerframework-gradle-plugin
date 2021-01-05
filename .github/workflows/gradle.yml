@@ -4,7 +4,6 @@ on: [push]
 
 jobs:
   gradle:
-    strategy:
     runs-on: ubuntu-latest
 
     steps:
