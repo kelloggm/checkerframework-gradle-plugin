@@ -146,7 +146,8 @@ Currently, the only supported option is `skipCheckerFramework`.
   This property can also take an argument:
   anything other than `false` results in the Checker Framework being skipped.
 
-* By default, the plugin applies the selected checkers to all `JavaCompile` targets.
+* By default, the plugin applies the selected checkers to all `JavaCompile` targets,
+  including test targets such as `testCompileJava`.
 
   Here is how to prevent checkers from being applied to test targets:
 
