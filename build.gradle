@@ -32,7 +32,7 @@ dependencies {
 }
 
 group 'org.checkerframework'
-version '0.5.14'
+version '0.5.15'
 
 gradlePlugin {
     plugins {
