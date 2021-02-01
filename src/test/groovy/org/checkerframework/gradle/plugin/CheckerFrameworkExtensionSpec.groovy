@@ -12,7 +12,7 @@ final class CheckerFrameworkExtensionSpec extends Specification {
   private class JavaCode {
     private static def FAILS_UNITS_CHECKER =
       """
-      import org.checkerframework.checker.units.UnitsTools;
+      import org.checkerframework.checker.units.util.UnitsTools;
       import org.checkerframework.checker.units.qual.A;
       import org.checkerframework.checker.units.qual.s;
 
