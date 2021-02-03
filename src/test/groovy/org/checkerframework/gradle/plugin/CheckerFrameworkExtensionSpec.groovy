@@ -10,17 +10,16 @@ final class CheckerFrameworkExtensionSpec extends Specification {
   @Rule TemporaryFolder testProjectDir = new TemporaryFolder()
   def buildFile
   private class JavaCode {
-    private static def FAILS_UNITS_CHECKER =
+    private static def FAILS_INDEX_CHECKER =
       """
-      import org.checkerframework.checker.units.UnitsTools;
-      import org.checkerframework.checker.units.qual.A;
-      import org.checkerframework.checker.units.qual.s;
+      import org.checkerframework.checker.index.qual.NonNegative;
+      import org.checkerframework.checker.index.qual.Positive;
 
-      public class FailsUnitsChecker {
+      public class FailsIndexChecker {
         public static void main(String[] args) {
-          @s int t = 2 * UnitsTools.s;
-          @A int i = 5 * UnitsTools.A;
-          @s int s = t + i; // not valid
+          @NonNegative int t = 0;
+          @NonNegative int i = 0;
+          @Positive int s = t + i; // not valid
           System.out.println("t + i = " + s);
         }
       }
@@ -43,12 +42,12 @@ final class CheckerFrameworkExtensionSpec extends Specification {
       """.stripIndent().trim()
   }
   private class JavaClassSuccessOutput {
-    private static def FAILS_UNITS_CHECKER = "t + i = 7"
+    private static def FAILS_INDEX_CHECKER = "t + i = 0"
     private static def FAILS_NULLNESS_CHECKER = "X = null"
   }
   private class JavaClassErrorOutput {
     private static def FAILS_NULLNESS_CHECKER = "FailsNullnessChecker.java:7: error: [argument.type.incompatible]"
-    private static def FAILS_UNITS_CHECKER = "FailsUnitsChecker.java:9: error: [assignment.type.incompatible]"
+    private static def FAILS_INDEX_CHECKER = "FailsIndexChecker.java:8: error: [assignment.type.incompatible]"
   }
 
   def "setup"() {
@@ -80,19 +79,19 @@ final class CheckerFrameworkExtensionSpec extends Specification {
     result.output.contains(JavaClassErrorOutput.FAILS_NULLNESS_CHECKER)
   }
 
-  def "Project configured to use the Nullness Checker does not use the Units Checker"() {
-    given: "a project that applies the plugin without any configuration and can run the FailsUnitsChecker class"
+  def "Project configured to use the Nullness Checker does not use the Index Checker"() {
+    given: "a project that applies the plugin without any configuration and can run the FailsIndexChecker class"
     buildFile << """
-      ${buildFileThatRunsClass("FailsUnitsChecker")}
+      ${buildFileThatRunsClass("FailsIndexChecker")}
 
       checkerFramework {
         checkers = ["org.checkerframework.checker.nullness.NullnessChecker"]
       }
     """.stripIndent()
 
-    and: "The source code contains a class that fails the Units Checker"
+    and: "The source code contains a class that fails the Index Checker"
     def javaSrcDir = testProjectDir.newFolder("src", "main", "java")
-    new File(javaSrcDir, "FailsUnitsChecker.java") << JavaCode.FAILS_UNITS_CHECKER
+    new File(javaSrcDir, "FailsIndexChecker.java") << JavaCode.FAILS_INDEX_CHECKER
 
     when: "the project is built, running the Java class"
     def result = GradleRunner.create()
@@ -105,22 +104,22 @@ final class CheckerFrameworkExtensionSpec extends Specification {
     result.task(":run").outcome == TaskOutcome.SUCCESS
 
     and: "the Java class actually ran"
-    result.output.contains(JavaClassSuccessOutput.FAILS_UNITS_CHECKER)
+    result.output.contains(JavaClassSuccessOutput.FAILS_INDEX_CHECKER)
   }
 
-  def "Project configured to use the Units Checker fails to compile FailsUnitsChecker"() {
-    given: "a project that applies the plugin configuring the Units Checker and can run the FailsUnitsChecker class"
+  def "Project configured to use the Index Checker fails to compile FailsIndexChecker"() {
+    given: "a project that applies the plugin configuring the Index Checker and can run the FailsIndexChecker class"
     buildFile << """
-      ${buildFileThatRunsClass("FailsUnitsChecker")}
+      ${buildFileThatRunsClass("FailsIndexChecker")}
 
       checkerFramework {
-        checkers = ["org.checkerframework.checker.units.UnitsChecker"]
+        checkers = ["org.checkerframework.checker.index.IndexChecker"]
       }
       """
 
-    and: "The source code contains a class that fails the UnitsChecker"
+    and: "The source code contains a class that fails the IndexChecker"
     def javaSrcDir = testProjectDir.newFolder("src", "main", "java")
-    new File(javaSrcDir, "FailsUnitsChecker.java") << JavaCode.FAILS_UNITS_CHECKER
+    new File(javaSrcDir, "FailsIndexChecker.java") << JavaCode.FAILS_INDEX_CHECKER
 
     when: "the project is built, trying to run the Java class but failing"
     def result = GradleRunner.create()
@@ -130,20 +129,20 @@ final class CheckerFrameworkExtensionSpec extends Specification {
       .buildAndFail()
 
     then: "the error message explains why the code did not compile"
-    result.output.contains(JavaClassErrorOutput.FAILS_UNITS_CHECKER)
+    result.output.contains(JavaClassErrorOutput.FAILS_INDEX_CHECKER)
   }
 
-  def "Project configured to use the Units Checker can compile and run FailsNullnessChecker"() {
-    given: "a project that applies the plugin configuring the Units Checker and can run the FailsNullnessChecker class"
+  def "Project configured to use the Index Checker can compile and run FailsNullnessChecker"() {
+    given: "a project that applies the plugin configuring the Index Checker and can run the FailsNullnessChecker class"
     buildFile << """
       ${buildFileThatRunsClass("FailsNullnessChecker")}
 
       checkerFramework {
-        checkers = ["org.checkerframework.checker.units.UnitsChecker"]
+        checkers = ["org.checkerframework.checker.index.IndexChecker"]
       }
     """
 
-    and: "The source code contains a class that fails the NullnessChecker but not the UnitsChecker"
+    and: "The source code contains a class that fails the NullnessChecker but not the IndexChecker"
     def javaSrcDir = testProjectDir.newFolder("src", "main", "java")
     new File(javaSrcDir, "FailsNullnessChecker.java") << JavaCode.FAILS_NULLNESS_CHECKER
 
@@ -154,20 +153,20 @@ final class CheckerFrameworkExtensionSpec extends Specification {
       .withPluginClasspath()
       .build()
 
-    then: "the build should succeed because only the Units Checker should be enabled"
+    then: "the build should succeed because only the Index Checker should be enabled"
     result.task(":run").outcome == TaskOutcome.SUCCESS
 
     and: "the Java class actually ran"
     result.output.contains(JavaClassSuccessOutput.FAILS_NULLNESS_CHECKER)
   }
 
-  def "Project configured to use both Units Checker and Nullness Checker rejects both kinds of errors"() {
-    given: "a project that applies the plugin configuring both nullness and Units Checker"
+  def "Project configured to use both Index Checker and Nullness Checker rejects both kinds of errors"() {
+    given: "a project that applies the plugin configuring both nullness and Index Checker"
     buildFile << """
       ${buildFileThatRunsClass("FailsNullnessChecker")}
 
       checkerFramework {
-        checkers = ["org.checkerframework.checker.units.UnitsChecker",
+        checkers = ["org.checkerframework.checker.index.IndexChecker",
                     "org.checkerframework.checker.nullness.NullnessChecker"]
       }
       """.stripIndent()
@@ -175,7 +174,7 @@ final class CheckerFrameworkExtensionSpec extends Specification {
     and: "The source code contains classes that fails both checkers"
     def javaSrcDir = testProjectDir.newFolder("src", "main", "java")
     new File(javaSrcDir, "FailsNullnessChecker.java") << JavaCode.FAILS_NULLNESS_CHECKER
-    new File(javaSrcDir, "FailsUnitsChecker.java") << JavaCode.FAILS_UNITS_CHECKER
+    new File(javaSrcDir, "FailsIndexChecker.java") << JavaCode.FAILS_INDEX_CHECKER
 
     when: "the project is built, trying to run the Java class but failing"
     def result = GradleRunner.create()
@@ -185,11 +184,11 @@ final class CheckerFrameworkExtensionSpec extends Specification {
       .buildAndFail()
 
     then: "the error message explains why the classes did not compile"
-    result.output.contains(JavaClassErrorOutput.FAILS_UNITS_CHECKER) ||
+    result.output.contains(JavaClassErrorOutput.FAILS_INDEX_CHECKER) ||
       result.output.contains(JavaClassErrorOutput.FAILS_NULLNESS_CHECKER)
   }
 
-  def "Project configured to use no checkers compiles source that would fail Nullness Checker and Units Checker"() {
+  def "Project configured to use no checkers compiles source that would fail Nullness Checker and Index Checker"() {
     given: "a project that applies the plugin configuring no checkers"
     buildFile << """
       ${buildFileThatRunsClass("FailsNullnessChecker")}
@@ -202,7 +201,7 @@ final class CheckerFrameworkExtensionSpec extends Specification {
     and: "The source code contains classes that fails both checkers"
     def javaSrcDir = testProjectDir.newFolder("src", "main", "java")
     new File(javaSrcDir, "FailsNullnessChecker.java") << JavaCode.FAILS_NULLNESS_CHECKER
-    new File(javaSrcDir, "FailsUnitsChecker.java") << JavaCode.FAILS_UNITS_CHECKER
+    new File(javaSrcDir, "FailsIndexChecker.java") << JavaCode.FAILS_INDEX_CHECKER
 
     when: "the project is built, running the Java class"
     def result = GradleRunner.create()
