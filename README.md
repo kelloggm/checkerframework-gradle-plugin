@@ -29,7 +29,7 @@ or `java-library` plugin for non-Android builds).
 
 The `checkerFramework.checkers` property lists which checkers will be run.
 
-For example:
+For example, using Groovy syntax in a `build.gradle` file:
 
 ```groovy
 checkerFramework {
@@ -37,6 +37,20 @@ checkerFramework {
     'org.checkerframework.checker.nullness.NullnessChecker',
     'org.checkerframework.checker.units.UnitsChecker'
   ]
+}
+```
+
+The same example, using Kotlin syntax in a `build.gradle.kts` file:
+
+```kotlin
+// In Kotlin, you need to import CheckerFrameworkExtension explicitly:
+import org.checkerframework.gradle.plugin.CheckerFrameworkExtension
+
+configure<CheckerFrameworkExtension> {
+    checkers = listOf(
+        "org.checkerframework.checker.nullness.NullnessChecker",
+        "org.checkerframework.checker.units.UnitsChecker"
+    )
 }
 ```
 
