@@ -43,6 +43,9 @@ checkerFramework {
 The same example, using Kotlin syntax in a `build.gradle.kts` file:
 
 ```kotlin
+// In Kotlin, you need to import CheckerFrameworkExtension explicitly:
+import org.checkerframework.gradle.plugin.CheckerFrameworkExtension
+
 configure<CheckerFrameworkExtension> {
     checkers = listOf(
         "org.checkerframework.checker.nullness.NullnessChecker",
