@@ -318,7 +318,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         }
       } catch (Exception e) {
         versionString = LIBRARY_VERSION
-        LOG.warn("An error occurred while trying to determine Checker Framework version. Assuming default is being used: {}. Error caused by: {}", versionString, e.toString())
+        LOG.debug("An error occurred while trying to determine Checker Framework version. Proceeding with default version. Error caused by: {}", e.toString())
+        LOG.warn("No explicit dependency on the Checker Framework found, using default version {}", LIBRARY_VERSION)
       }
 
       if (javaSourceVersion.java8 && jvmVersion.isJava8()) {
