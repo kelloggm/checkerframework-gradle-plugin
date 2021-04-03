@@ -292,14 +292,17 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       JavaVersion jvmVersion = JavaVersion.current();
 
       // toolchains are an incubating feature of Gradle as of 6.8.3: https://docs.gradle.org/current/userguide/toolchains.html
-      def toolchain = project.extensions.findByName("java")?.toolchain
-      if (toolchain != null && toolchain.isConfigured()) {
-        def toolchainVersion = toolchain.getLanguageVersion().get()
-        def toolchainVersionInt = Integer.parseInt(toolchainVersion.toString())
-        if (toolchainVersionInt < 8) {
-          throw new IllegalStateException("The Checker Framework does not support Java versions before 8.")
-        } else {
-          jvmVersion = JavaVersion.toVersion(toolchainVersionInt)
+      def javaExtension = project.extensions.findByName("java")
+      if (javaExtension != null && javaExtension.hasProperty("toolchain")) {
+        def toolchain = javaExtension.toolchain
+        if (toolchain != null && toolchain.isConfigured()) {
+          def toolchainVersion = toolchain.getLanguageVersion().get()
+          def toolchainVersionInt = Integer.parseInt(toolchainVersion.toString())
+          if (toolchainVersionInt < 8) {
+            throw new IllegalStateException("The Checker Framework does not support Java versions before 8.")
+          } else {
+            jvmVersion = JavaVersion.toVersion(toolchainVersionInt)
+          }
         }
       }
 
