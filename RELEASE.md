@@ -12,7 +12,7 @@ directly to `master`.
 After you have made the changes you wish to merge into `master`,
 you should:
 1. If your pull request will change any behavior of the plugin (including
-   bug fixes and new features), you should choose a new version string. Please
+   bug fixes, new features, or updated dependencies), you should choose a new version string. Please
    try to respect [semantic versioning](https://semver.org/). Do not augment
    the major version without explicit approval from all the maintainers.
 2. If you changed the version string, search for the current plugin version
