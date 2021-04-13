@@ -33,7 +33,7 @@ To gain access to the credentials, contact one of the maintainers privately.
 #### Release process
 
 1. Review the pull request. If you approve it, proceed.
-2. Ensure that the Travis CI build passes in the pull request.
+2. Ensure that the GitHub Actions CI build passes in the pull request.
 3. Ensure that the new version string in the pull request is not already in use. Check
 [the plugin's portal page](https://plugins.gradle.org/plugin/org.checkerframework)
 to see if this version has already been released.
