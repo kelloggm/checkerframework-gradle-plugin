@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.5.19'
+    id 'org.checkerframework' version '0.5.20'
 }
 
 apply plugin: 'org.checkerframework'
@@ -94,7 +94,7 @@ the definitions of the custom qualifiers.
 
 ### Specifying a Checker Framework version
 
-Version 0.5.19 of this plugin uses Checker Framework version 3.12.0 by default.
+Version 0.5.20 of this plugin uses Checker Framework version 3.13.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -196,7 +196,7 @@ plugin to the top-level project. For example:
 
 ```groovy
 plugins {
-  id 'org.checkerframework' version '0.5.19' apply false
+  id 'org.checkerframework' version '0.5.20' apply false
 }
 
 subprojects { subproject ->
@@ -206,8 +206,8 @@ subprojects { subproject ->
     checkers = ['org.checkerframework.checker.index.IndexChecker']
   }
   dependencies {
-    checkerFramework 'org.checkerframework:checker:3.12.0'
-    implementation 'org.checkerframework:checker-qual:3.12.0'
+    checkerFramework 'org.checkerframework:checker:3.13.0'
+    implementation 'org.checkerframework:checker-qual:3.13.0'
   }
 }
 ```
@@ -219,7 +219,7 @@ Alternately, apply the plugin in the `build.gradle` in each subproject as if it
 were a stand-alone project. You must do this if you require different configuration
 for different subprojects (for instance, if you want to run different checkers).
 
-### Incompatibility with Error Prone
+### Incompatibility with Error Prone 2.3.4 and earlier
 
 [Error Prone](https://errorprone.info/)
 uses the Checker Framework's dataflow analysis library.
@@ -239,7 +239,7 @@ plugins {
   id "net.ltgt.errorprone" version "1.1.1" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.5.19' apply false
+  id 'org.checkerframework' version '0.5.20' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -252,7 +252,7 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 }
 
 def errorProneVersion = "2.3.4"
-def checkerFrameworkVersion = "3.12.0"
+def checkerFrameworkVersion = "3.13.0"
 
 dependencies {
   if ("true".equals(project.ext.useCheckerFramework)) {
@@ -354,7 +354,7 @@ version is >= 2.11.0), use the Error Prone javac compiler.
 
 ## Credits
 
-This project started as a fork of [a plugin built by jaredsburrows](https://github.com/jaredsburrows/gradle-checker-framework-plugin).
+This project started as a fork of [an abandoned plugin built by jaredsburrows](https://github.com/jaredsburrows/gradle-checker-framework-plugin).
 [![Twitter Follow](https://img.shields.io/twitter/follow/jaredsburrows.svg?style=social)](https://twitter.com/jaredsburrows)
 
 
