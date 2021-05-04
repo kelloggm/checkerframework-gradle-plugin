@@ -46,8 +46,8 @@ final class CheckerFrameworkExtensionSpec extends Specification {
     private static def FAILS_NULLNESS_CHECKER = "X = null"
   }
   private class JavaClassErrorOutput {
-    private static def FAILS_NULLNESS_CHECKER = "FailsNullnessChecker.java:7: error: [argument.type.incompatible]"
-    private static def FAILS_INDEX_CHECKER = "FailsIndexChecker.java:8: error: [assignment.type.incompatible]"
+    private static def FAILS_NULLNESS_CHECKER = "FailsNullnessChecker.java:7: error: [argument]"
+    private static def FAILS_INDEX_CHECKER = "FailsIndexChecker.java:8: error: [assignment]"
   }
 
   def "setup"() {
