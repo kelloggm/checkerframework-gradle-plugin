@@ -30,7 +30,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
   // Checker Framework configurations and dependencies
 
   // Whenever this line is changed, you need to change all occurrences in README.md.
-  private final static def LIBRARY_VERSION = "3.17.0"
+  private final static def LIBRARY_VERSION = "3.18.0"
 
   private final static def ANNOTATED_JDK_NAME_JDK8 = "jdk8"
   private final static def ANNOTATED_JDK_CONFIGURATION = "checkerFrameworkAnnotatedJDK"
