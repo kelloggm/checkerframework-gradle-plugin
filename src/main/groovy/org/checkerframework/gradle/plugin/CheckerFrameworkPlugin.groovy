@@ -108,8 +108,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         def lombokPluginVersion = project.buildscript.configurations.classpath.resolvedConfiguration.resolvedArtifacts.collect {
           it.moduleVersion.id }.findAll { it.name == 'lombok-plugin' }.first().version
 
-        def warnAboutCMCLombokInteraction = (userConfig.checkers.contains(
-                'org.checkerframework.checker.objectconstruction.ObjectConstructionChecker')
+        def warnAboutCMCLombokInteraction =
+                (userConfig.checkers.contains('org.checkerframework.checker.objectconstruction.ObjectConstructionChecker')
                 || userConfig.checkers.contains("org.checkerframework.checker.calledmethods.CalledMethodsChecker"))
 
         def cmcLombokInteractionWarningMessage =
@@ -132,7 +132,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           }
         } else if (warnAboutCMCLombokInteraction) {
           // Because we don't know whether the user has done this or not, use the info logging level instead of warning,
-          // as above, where we no that no config was generated. And, we want to avoid nagging the user.
+          // as above, where we know that no config was generated. And, we want to avoid nagging the user.
           LOG.info(cmcLombokInteractionWarningMessage)
         }
 
