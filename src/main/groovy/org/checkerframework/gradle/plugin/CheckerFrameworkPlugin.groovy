@@ -399,6 +399,14 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           // to some JDK classes. Pass the arguments that make that possible.
           if (jvmVersion.isJava9Compatible()) {
             compile.options.forkOptions.jvmArgs += [
+                    "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+                    "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
+                    "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+                    "--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
+                    "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+                    "--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
+                    "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+                    "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
                     "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED"
             ]
           }
