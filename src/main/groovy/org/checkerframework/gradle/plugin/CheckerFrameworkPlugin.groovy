@@ -105,21 +105,35 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
     project.getPlugins().withType(io.freefair.gradle.plugins.lombok.LombokPlugin.class, new Action<LombokPlugin>() {
       void execute(LombokPlugin lombokPlugin) {
 
-        // Ensure that the lombok config is set to emit @Generated annotations.
-        lombokPlugin.configureForJacoco()
-        // If config generation is enabled, automatically produce an appropriate config file.
-        // The object construction checker (https://github.com/kelloggm/object-construction-checker),
-        // if run, will not issue warnings on incorrect Lombok builders if this check fails.
-        // As of 9/11/2019, that was the only known checker that relies on this behavior.
-        def generateLombokConfig = lombokPlugin.generateLombokConfig.get()
-        if (generateLombokConfig.isEnabled()) {
-          generateLombokConfig.generateLombokConfig()
-        } else if (userConfig.checkers.contains(
-                'org.checkerframework.checker.objectconstruction.ObjectConstructionChecker')) {
-          LOG.warn("The Object Construction Checker was enabled, but Lombok config generation is disabled. " +
-                  "Ensure that your lombok.config file contains 'lombok.addLombokGeneratedAnnotation = true'," +
-                  "or all Object Construction Checker warnings related to misuse of Lombok builders will" +
-                  "be disabled.")
+        def lombokPluginVersion = project.buildscript.configurations.classpath.resolvedConfiguration.resolvedArtifacts.collect {
+          it.moduleVersion.id }.findAll { it.name == 'lombok-plugin' }.first().version
+
+        def warnAboutCMCLombokInteraction =
+                (userConfig.checkers.contains('org.checkerframework.checker.objectconstruction.ObjectConstructionChecker')
+                || userConfig.checkers.contains("org.checkerframework.checker.calledmethods.CalledMethodsChecker"))
+
+        def cmcLombokInteractionWarningMessage =
+                "The Object Construction or Called Methods Checker was enabled, but Lombok config generation is disabled. " +
+                "Ensure that your lombok.config file contains 'lombok.addLombokGeneratedAnnotation = true', " +
+                "or all warnings related to misuse of Lombok builders will be disabled."
+
+        if (lombokPluginVersion.tokenize('.')[0].toInteger() <= 5) {
+          // Support for generating Lombok configs was removed from the Lombok plugin
+          // starting in version 6.0.0.
+
+          // Ensure that the lombok config is set to emit @Generated annotations.
+          lombokPlugin.configureForJacoco()
+          // If config generation is enabled, automatically produce an appropriate config file.
+          def generateLombokConfig = lombokPlugin.generateLombokConfig.get()
+          if (generateLombokConfig.isEnabled()) {
+            generateLombokConfig.generateLombokConfig()
+          } else if (warnAboutCMCLombokInteraction) {
+            LOG.warn(cmcLombokInteractionWarningMessage)
+          }
+        } else if (warnAboutCMCLombokInteraction) {
+          // Because we don't know whether the user has done this or not, use the info logging level instead of warning,
+          // as above, where we know that no config was generated. And, we want to avoid nagging the user.
+          LOG.info(cmcLombokInteractionWarningMessage)
         }
 
         project.afterEvaluate {
