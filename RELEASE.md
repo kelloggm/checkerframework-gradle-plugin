@@ -17,7 +17,8 @@ you should:
    the major version without explicit approval from all the maintainers.
 2. If you changed the version string, search for the current plugin version
    in the directory containing this file, and replace all instances of it with
-   the new version string. Commit the result.
+   the new version string (currently only in `README.md` and `build.gradle`).
+   Commit the result.
 3. Push to your feature branch.
 4. Make a pull request against the `master` branch.
 
