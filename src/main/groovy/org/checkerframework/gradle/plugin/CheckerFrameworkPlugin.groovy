@@ -437,7 +437,16 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
             }
           }
 
-        userConfig.extraJavacArgs.forEach({option -> compile.options.compilerArgs << option})
+        try {
+          userConfig.extraJavacArgs.forEach({option -> compile.options.compilerArgs << option})
+        } catch (UnsupportedOperationException e) {
+          LOG.error("The Checker Framework Plugin tried to add an extraJavacArgs element to the compilerArgs for " +
+                  "the compile task named \"" + compile.name + "\", but an UnsupportedOperationException was " +
+                  "thrown. Sometimes, this is caused by using Kotlin's `listOf` method to define a set of compiler " +
+                  "arguments; `listOf` produces an immutable list, which leads to the exception. Consider using " +
+                  "`mutableListOf` to set compiler arguments instead.")
+          throw e
+        }
 
         ANDROID_IDS.each { id ->
           project.plugins.withId(id) {
