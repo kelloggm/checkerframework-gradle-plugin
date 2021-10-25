@@ -22,13 +22,13 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    implementation localGroovy()
+    implementation 'org.codehaus.groovy:groovy-all:3.0.8'
 
     // The Lombok Gradle plugin, so that we can delombok sources if lombok would be applied.
     implementation 'io.freefair.gradle:lombok-plugin:5.3.3.3'
 
     testImplementation deps.android.tools.build.gradle
-    testImplementation deps.spock, { exclude module: 'groovy-all' } // Use localGroovy()
+    testImplementation deps.spock
 }
 
 group 'org.checkerframework'
@@ -53,3 +53,8 @@ pluginBundle {
 }
 
 apply from: 'gradle/compile.gradle'
+
+// Gradle 7+ requires a duplicates strategy whenever there might be duplication,
+// even if the cause is some other plugin (which I think is the case for us.)
+// This setting (INCLUDE) was the default for Gradle 6 and earlier.
+tasks.withType(Copy).all { duplicatesStrategy = DuplicatesStrategy.INCLUDE}
