@@ -55,6 +55,6 @@ pluginBundle {
 apply from: 'gradle/compile.gradle'
 
 // Gradle 7+ requires a duplicates strategy whenever there might be duplication,
-// even if the cause is some other plugin (which I think is the case for us.)
+// even if the cause is some other plugin (which I think is the case for us).
 // This setting (INCLUDE) was the default for Gradle 6 and earlier.
 tasks.withType(Copy).all { duplicatesStrategy = DuplicatesStrategy.INCLUDE}
