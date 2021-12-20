@@ -94,7 +94,7 @@ the definitions of the custom qualifiers.
 
 ### Specifying a Checker Framework version
 
-Version 0.6.5 of this plugin uses Checker Framework version 3.21.0by default.
+Version 0.6.5 of this plugin uses Checker Framework version 3.21.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
