@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.6.5'
+    id 'org.checkerframework' version '0.6.6'
 }
 
 apply plugin: 'org.checkerframework'
@@ -94,7 +94,7 @@ the definitions of the custom qualifiers.
 
 ### Specifying a Checker Framework version
 
-Version 0.6.5 of this plugin uses Checker Framework version 3.21.0 by default.
+Version 0.6.6 of this plugin uses Checker Framework version 3.21.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -124,6 +124,24 @@ if (project.hasProperty("cfLocal")) {
     checkerFramework files(cfHome + "/checker/dist/checker.jar")
   }
 }
+```
+
+### Incremental compilation
+
+By default, the plugin assumes that all checkers are "isolating incremental annotation processors"
+according to the Gradle terminology 
+[here](https://docs.gradle.org/current/userguide/java_plugin.html#sec:incremental_annotation_processing).
+This assumption speeds up builds by enabling incremental compilation, but is unsafe: Gradle's
+documentation warns that annotation processors that use internal Javac APIs may crash, because
+Gradle wraps some of those APIs. The Checker Framework does use internal Javac APIs, so you
+might encounter such a crash, which would appear as a `ClassCastException` referencing some
+internal Javac class. If you encounter such a crash, you can disable incremental
+compilation in your build using the following code in your `checkerFramework` configuration block:
+
+```groovy
+  checkerFramework {
+    incrementalize = false
+  }
 ```
 
 ### Per-Task Configuration
@@ -196,7 +214,7 @@ plugin to the top-level project. For example:
 
 ```groovy
 plugins {
-  id 'org.checkerframework' version '0.6.5' apply false
+  id 'org.checkerframework' version '0.6.6' apply false
 }
 
 subprojects { subproject ->
@@ -239,7 +257,7 @@ plugins {
   id "net.ltgt.errorprone" version "1.1.1" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.6.5' apply false
+  id 'org.checkerframework' version '0.6.6' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {

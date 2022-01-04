@@ -372,6 +372,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       if (createManifestTask == null) {
         createManifestTask = project.task(checkerFrameworkManifestCreationTaskName, type: CreateManifestTask)
         createManifestTask.checkers = userConfig.checkers
+        createManifestTask.incrementalize = userConfig.incrementalize
       }
 
       configureTasks(project, AbstractCompile, { AbstractCompile compile ->
