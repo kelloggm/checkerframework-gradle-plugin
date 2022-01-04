@@ -46,13 +46,15 @@ class CreateManifestTask extends DefaultTask {
                 gradleManifestFile.delete()
                 gradleManifestFile.createNewFile()
             }
-            // treat all checkers as aggregating annotation APs, since they might reason about more
-            // than just a single annotated type at once (in theory - I think most checkers are actually
-            // "isolating", but verifying that is TODO)
+            // The following code treats all checkers as isolating annotation processors.
+            // I think this is the right decision: checkers should be reasoning about
+            // each method in isolation. But, we provide a way to disable incremental
+            // compilation in the event that this decision is breaking for some particular
+            // checker.
             def gradleManifestFileContents = ""
-            // do a join, but add ",AGGREGATING" after each entry
+            // do a join, but add ",ISOLATING" after each entry
             for (int i = 0; i < this.checkers.length; i++) {
-                gradleManifestFileContents += checkers[i] + ",AGGREGATING"
+                gradleManifestFileContents += checkers[i] + ",ISOLATING"
                 if (i != checkers.length - 1) {
                     gradleManifestFileContents += "\n"
                 }
