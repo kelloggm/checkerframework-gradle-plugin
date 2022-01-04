@@ -128,7 +128,7 @@ if (project.hasProperty("cfLocal")) {
 
 ### Incremental compilation
 
-By default, the plugin assumes that all checkers are "aggregating incremental annotation processors"
+By default, the plugin assumes that all checkers are "isolating incremental annotation processors"
 according to the Gradle terminology 
 [here](https://docs.gradle.org/current/userguide/java_plugin.html#sec:incremental_annotation_processing).
 This assumption speeds up builds by enabling incremental compilation, but is unsafe: Gradle's

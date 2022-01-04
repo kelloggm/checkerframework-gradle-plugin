@@ -23,7 +23,7 @@ class CheckerFrameworkExtension {
   Boolean skipCheckerFramework = false
 
   // Flag to disable automatic incremental compilation. By default, the Checker Framework
-  // assumes that all checkers are incremental with type "aggregating". Gradle's documentation
+  // assumes that all checkers are incremental with type "isolating". Gradle's documentation
   // suggests that annotation processors that interact with Javac APIs might crash because
   // Gradle wraps some Javac APIs, so if you encounter such a crash you can disable incremental
   // compilation using this flag.
