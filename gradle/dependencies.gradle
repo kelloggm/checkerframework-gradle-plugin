@@ -10,5 +10,5 @@ ext.deps = [
       ]
     ]
   ],
-  'spock'  : 'org.spockframework:spock-core:2.0-groovy-3.0',
+  'spock'  : 'org.spockframework:spock-core:2.1-groovy-3.0',
 ]
