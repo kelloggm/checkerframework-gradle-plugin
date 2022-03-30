@@ -1,6 +1,6 @@
 plugins {
     id 'com.github.ben-manes.versions' version '0.40.0'
-    id 'com.gradle.plugin-publish' version '0.19.0'
+    id 'com.gradle.plugin-publish' version '0.21.0'
     id 'java-gradle-plugin'
     id 'groovy'
     id 'maven-publish'
