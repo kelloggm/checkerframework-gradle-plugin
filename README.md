@@ -224,8 +224,8 @@ subprojects { subproject ->
     checkers = ['org.checkerframework.checker.index.IndexChecker']
   }
   dependencies {
-    checkerFramework 'org.checkerframework:checker:3.21.4
-    implementation 'org.checkerframework:checker-qual:3.21.4
+    checkerFramework 'org.checkerframework:checker:3.21.4'
+    implementation 'org.checkerframework:checker-qual:3.21.4'
   }
 }
 ```
