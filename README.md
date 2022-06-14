@@ -94,7 +94,7 @@ the definitions of the custom qualifiers.
 
 ### Specifying a Checker Framework version
 
-Version 0.6.12 of this plugin uses Checker Framework version 3.22.1 by default.
+Version 0.6.12 of this plugin uses Checker Framework version 3.22.2 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -224,8 +224,8 @@ subprojects { subproject ->
     checkers = ['org.checkerframework.checker.index.IndexChecker']
   }
   dependencies {
-    checkerFramework 'org.checkerframework:checker:3.22.1'
-    implementation 'org.checkerframework:checker-qual:3.22.1'
+    checkerFramework 'org.checkerframework:checker:3.22.2'
+    implementation 'org.checkerframework:checker-qual:3.22.2'
   }
 }
 ```
@@ -270,7 +270,7 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 }
 
 def errorProneVersion = "2.3.4"
-def checkerFrameworkVersion = "3.22.1
+def checkerFrameworkVersion = "3.22.2
 
 dependencies {
   if ("true".equals(project.ext.useCheckerFramework)) {
