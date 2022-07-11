@@ -52,7 +52,7 @@ should be updated after every Checker Framework release.
 The Checker Framework is typically released monthly.
 Updating the Checker Framework should
 be done like any other pull request. To update the plugin to
-use the [latest version](https://github.com/typetools/checker-framework/blob/master/changelog.txt)
+use the [latest version](https://github.com/typetools/checker-framework/blob/master/docs/CHANGELOG.md)
 of the Checker Framework:
    * Create a feature branch.
    * Update the .jar and .pom files.
