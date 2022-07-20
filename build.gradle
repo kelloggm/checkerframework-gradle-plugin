@@ -22,7 +22,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    implementation 'org.codehaus.groovy:groovy-all:3.0.8'
+    implementation 'org.codehaus.groovy:groovy-all:3.0.11'
 
     // The Lombok Gradle plugin, so that we can delombok sources if lombok would be applied.
     implementation 'io.freefair.gradle:lombok-plugin:5.3.3.3'
