@@ -14,17 +14,17 @@ mkdir -p "checker-qual/${NEW_CF_VERSION}"
 mkdir -p "checker-util/${NEW_CF_VERSION}"
 
 cd "checker/${NEW_CF_VERSION}"
-wget -O "checker-${NEW_CF_VERSION}.jar" "https://search.maven.org/remotecontent?filepath=org/checkerframework/checker/${NEW_CF_VERSION}/checker-${NEW_CF_VERSION}.jar"
-wget -O "checker-${NEW_CF_VERSION}.pom" "https://search.maven.org/remotecontent?filepath=org/checkerframework/checker/${NEW_CF_VERSION}/checker-${NEW_CF_VERSION}.pom"
+wget -O "checker-${NEW_CF_VERSION}.jar" "https://repo1.maven.org/maven2/org/checkerframework/checker/${NEW_CF_VERSION}/checker-${NEW_CF_VERSION}.jar"
+wget -O "checker-${NEW_CF_VERSION}.pom" "https://repo1.maven.org/maven2/org/checkerframework/checker/${NEW_CF_VERSION}/checker-${NEW_CF_VERSION}.pom"
 cd ../../
 
 cd "checker-qual/${NEW_CF_VERSION}"
-wget -O "checker-qual-${NEW_CF_VERSION}.jar" "https://search.maven.org/remotecontent?filepath=org/checkerframework/checker-qual/${NEW_CF_VERSION}/checker-qual-${NEW_CF_VERSION}.jar"
-wget -O "checker-qual-${NEW_CF_VERSION}.pom" "https://search.maven.org/remotecontent?filepath=org/checkerframework/checker-qual/${NEW_CF_VERSION}/checker-qual-${NEW_CF_VERSION}.pom"
+wget -O "checker-qual-${NEW_CF_VERSION}.jar" "https://repo1.maven.org/maven2/org/checkerframework/checker-qual/${NEW_CF_VERSION}/checker-qual-${NEW_CF_VERSION}.jar"
+wget -O "checker-qual-${NEW_CF_VERSION}.pom" "https://repo1.maven.org/maven2/org/checkerframework/checker-qual/${NEW_CF_VERSION}/checker-qual-${NEW_CF_VERSION}.pom"
 cd ../../
 
 cd "checker-util/${NEW_CF_VERSION}"
-wget -O "checker-util-${NEW_CF_VERSION}.jar" "https://search.maven.org/remotecontent?filepath=org/checkerframework/checker-util/${NEW_CF_VERSION}/checker-util-${NEW_CF_VERSION}.jar"
-wget -O "checker-util-${NEW_CF_VERSION}.pom" "https://search.maven.org/remotecontent?filepath=org/checkerframework/checker-util/${NEW_CF_VERSION}/checker-util-${NEW_CF_VERSION}.pom"
+wget -O "checker-util-${NEW_CF_VERSION}.jar" "https://repo1.maven.org/maven2/org/checkerframework/checker-util/${NEW_CF_VERSION}/checker-util-${NEW_CF_VERSION}.jar"
+wget -O "checker-util-${NEW_CF_VERSION}.pom" "https://repo1.maven.org/maven2/org/checkerframework/checker-util/${NEW_CF_VERSION}/checker-util-${NEW_CF_VERSION}.pom"
 cd ../../
 
