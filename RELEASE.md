@@ -56,8 +56,10 @@ use the [latest version](https://github.com/typetools/checker-framework/blob/mas
 of the Checker Framework:
    * Create a feature branch.
    * Update the .jar and .pom files.
-     Run: `(cd src/test/resources/maven/org/checkerframework && update.sh NEW_CF_VERSION_NUMBER)`
+     Run:
+     ```(cd src/test/resources/maven/org/checkerframework && update.sh NEW_CF_VERSION_NUMBER)```
      (If you don't do this, you may get an error such as
      "Could not find org.checkerframework:checker:2.11.1.")
+     You might need to wait for Maven Central to make the new `.jar` and `.pom` files available.
    * Replace the old version number anywhere it appears in this repository.
    * Update the version of the plugin, as for any pull request; see above for instructions.
