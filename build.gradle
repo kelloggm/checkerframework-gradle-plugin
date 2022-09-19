@@ -21,8 +21,14 @@ apply from: 'gradle/dependencies.gradle'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+// This version can only be (and might need to be) updated with the Gradle Wrapper.
+// After you run ./gradlew wrapper --gradle-version SOME_NEW_VERSION, you
+// can (and possibly must) also update this to match the version of Groovy
+// displayed when you run `./gradlew -v`.
+def groovyVersion = "3.0.10"
+
 dependencies {
-    implementation 'org.codehaus.groovy:groovy-all:3.0.8'
+    implementation "org.codehaus.groovy:groovy-all:${groovyVersion}"
 
     // The Lombok Gradle plugin, so that we can delombok sources if lombok would be applied.
     implementation 'io.freefair.gradle:lombok-plugin:5.3.3.3'
