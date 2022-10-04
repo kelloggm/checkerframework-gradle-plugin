@@ -1,4 +1,4 @@
-e Gradle Checker Framework Plugin
+# Gradle Checker Framework Plugin
 
 [![License](https://img.shields.io/badge/license-apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 ![Build Status](https://github.com/kelloggm/checkerframework-gradle-plugin/actions/workflows/gradle.yml/badge.svg)
