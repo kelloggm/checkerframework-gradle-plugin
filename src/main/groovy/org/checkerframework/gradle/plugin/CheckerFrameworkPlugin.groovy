@@ -136,55 +136,52 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           LOG.info(cmcLombokInteractionWarningMessage)
         }
 
-        project.afterEvaluate {
+        if (skipCheckerFramework(project, userConfig)) {
+          return
+        }
 
-          if (skipCheckerFramework(project, userConfig)) {
-            return
-          }
+        def delombokTasks = project.getTasks().findAll { task ->
+          task.name.contains("delombok")
+        }
 
-          def delombokTasks = project.getTasks().findAll { task ->
-            task.name.contains("delombok")
-          }
+        if (delombokTasks.size() != 0) {
 
-          if (delombokTasks.size() != 0) {
+          // change every compile task so that it:
+          // 1. depends on delombok, and
+          // 2. uses the delombok'd source code as its source set
 
-            // change every compile task so that it:
-            // 1. depends on delombok, and
-            // 2. uses the delombok'd source code as its source set
+          project.tasks.withType(AbstractCompile).all { compile ->
 
-            project.tasks.withType(AbstractCompile).all { compile ->
+            // find the right delombok task
+            def delombokTask = delombokTasks.find { task ->
 
-              // find the right delombok task
-              def delombokTask = delombokTasks.find { task ->
+              if (task.name.endsWith("delombok")) {
+                // special-case the main compile task because it's just named "compileJava"
+                // without anything else
+                compile.name.equals("compileJava")
+              } else {
+                // "delombok" is 8 characters.
+                compile.name.contains(task.name.substring(8))
+              }
+            }
 
-                if (task.name.endsWith("delombok")) {
-                  // special-case the main compile task because its just named "compileJava"
-                  // without anything else
-                  compile.name.equals("compileJava")
-                } else {
-                  // "delombok" is 8 characters.
-                  compile.name.contains(task.name.substring(8))
-                }
+            // delombokTask can still be null; for example, if the code contains a compileScala task
+            // Also, if we're skipping test tasks, don't bother delombok'ing them.
+            if (delombokTask != null && !compile.getSource().isEmpty()
+                    && !(userConfig.excludeTests && delombokTask.name.toLowerCase().contains("test"))) {
+
+              // The lombok plugin's default formatting is pretty-printing, without the @Generated annotations
+              // that we need to recognize lombok'd code.
+              delombokTask.format.put('generated', 'generate')
+
+              if (userConfig.suppressLombokWarnings) {
+                // Also re-add suppress warnings annotations so that we don't get warnings from generated
+                // code.
+                delombokTask.format.put('suppressWarnings', 'generate')
               }
 
-              // delombokTask can still be null; for example, if the code contains a compileScala task
-              // Also, if we're skipping test tasks, don't bother delombok'ing them.
-              if (delombokTask != null && !compile.getSource().isEmpty()
-                      && !(userConfig.excludeTests && delombokTask.name.toLowerCase().contains("test"))) {
-
-                // The lombok plugin's default formatting is pretty-printing, without the @Generated annotations
-                // that we need to recognize lombok'd code.
-                delombokTask.format.put('generated', 'generate')
-
-                if (userConfig.suppressLombokWarnings) {
-                  // Also re-add suppress warnings annotations so that we don't get warnings from generated
-                  // code.
-                  delombokTask.format.put('suppressWarnings', 'generate')
-                }
-
-                compile.dependsOn(delombokTask)
-                compile.setSource(delombokTask.target.getAsFile().get())
-              }
+              compile.setSource(delombokTask.target.getAsFile().get())
+              compile.dependsOn(delombokTask)
             }
           }
         }
@@ -247,7 +244,6 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           }
         }
 
-        handleLombokPlugin(project, userConfig)
         // Only attempt to add each dependency once.
         project.getGradle().removeListener(this)
       }
@@ -256,6 +252,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       void afterResolve(ResolvableDependencies resolvableDependencies) {}
     })
 
+    handleLombokPlugin(project, userConfig)
     configureTasks(project, AbstractCompile, { AbstractCompile compile ->
       def ext = compile.extensions.findByName("checkerFramework")
       if (ext == null) {
