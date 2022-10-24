@@ -328,6 +328,13 @@ the [Lombok Gradle Plugin](https://plugins.gradle.org/plugin/io.freefair.lombok)
 to delombok your source code before it is passed to the Checker Framework
 for typechecking. This plugin does not support any other use of Lombok.
 
+For the Checker Framework to work properly on delombok'd source code,
+you must include the following key in your project's `lombok.config` file:
+
+```
+lombok.addLombokGeneratedAnnotation = true
+```
+
 By default, Lombok suppresses all warnings in the code it generates. If you
 want to typecheck the code that Lombok generates, use the `suppressLombokWarnings`
 configuration key:
