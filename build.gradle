@@ -7,7 +7,6 @@ plugins {
 }
 
 repositories {
-    jcenter()
     google()
 
     // The gradle plugin portal, so that we can depend on other plugins.
