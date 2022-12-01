@@ -24,7 +24,7 @@ targetCompatibility = 1.8
 // After you run ./gradlew wrapper --gradle-version SOME_NEW_VERSION, you
 // can (and possibly must) also update this to match the version of Groovy
 // displayed when you run `./gradlew -v`.
-def groovyVersion = "3.0.10"
+def groovyVersion = "3.0.13"
 
 dependencies {
     implementation "org.codehaus.groovy:groovy-all:${groovyVersion}"
