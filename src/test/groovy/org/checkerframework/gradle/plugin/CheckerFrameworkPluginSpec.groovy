@@ -20,7 +20,7 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
     '6.5',
   ]
 
-  @Unroll def "java project running licenseReport using with gradle #gradleVersion"() {
+  @Unroll def "java project running licenseReport with gradle #gradleVersion"() {
     given:
     buildFile <<
       """
@@ -51,7 +51,7 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
   }
 
   @Unroll
-  def 'without relevant plugin, compiler settings are not applied using version #gradleVersion'() {
+  def 'without relevant plugin, compiler settings are not applied with version #gradleVersion'() {
     given:
     buildFile <<
       """
@@ -81,7 +81,7 @@ final class CheckerFrameworkPluginSpec extends BaseSpecification {
   }
 
   @Unroll
-  def 'with relevant plugin, compiler settings are applied using version #gradleVersion'() {
+  def 'with relevant plugin, compiler settings are applied with version #gradleVersion'() {
     given:
     buildFile <<
       """
