@@ -207,14 +207,14 @@ using:
 ### Multi-project builds
 
 In a project with subprojects, you should apply the project to each Java
-subproject (and to the top-level project, if it is a Java project).  Here are
-two approaches.
+subproject (and to the top-level project, in the unlikely case that it is a Java
+project).  Here are two approaches.
 
 **Approach 1:**
 All Checker Framework configuration (the `checkerFramework` block and any
 `dependencies`) remains in the top-level `build.gradle` file.  Put it in a
-`subprojects` block (or an `allprojects` block if the top-level project is a
-Java project).  For example:
+`subprojects` block (or an `allprojects` block in the unlikely case that the
+top-level project is a Java project).  For example:
 
 ```groovy
 plugins {
