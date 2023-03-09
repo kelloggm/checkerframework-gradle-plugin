@@ -206,11 +206,15 @@ using:
 
 ### Multi-project builds
 
-In most projects with subprojects, the top-level project is not a Java
-project.  You should not apply the plugin to such a non-Java project.  Instead, move
-all Checker Framework configuration (the `checkerFramework` block and any
-`dependencies`) into a `subprojects` block, and do not apply the
-plugin to the top-level project. For example:
+In a project with subprojects, you should apply the project to each Java
+subproject (and to the top-level project, in the unlikely case that it is a Java
+project).  Here are two approaches.
+
+**Approach 1:**
+All Checker Framework configuration (the `checkerFramework` block and any
+`dependencies`) remains in the top-level `build.gradle` file.  Put it in a
+`subprojects` block (or an `allprojects` block in the unlikely case that the
+top-level project is a Java project).  For example:
 
 ```groovy
 plugins {
@@ -230,10 +234,8 @@ subprojects { subproject ->
 }
 ```
 
-If the top-level project *is* a Java project that you wish to typecheck, follow these
-instructions but replace the 'subprojects' block with the 'allprojects' block.
-
-Alternately, apply the plugin in the `build.gradle` in each subproject as if it
+**Approach 2:**
+Apply the plugin in the `build.gradle` in each subproject as if it
 were a stand-alone project. You must do this if you require different configuration
 for different subprojects (for instance, if you want to run different checkers).
 
