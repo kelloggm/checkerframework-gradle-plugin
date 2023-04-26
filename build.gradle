@@ -21,13 +21,14 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    implementation "org.codehaus.groovy:groovy-all:${GroovySystem.version}"
+    implementation localGroovy()
 
     // The Lombok Gradle plugin, so that we can delombok sources if lombok would be applied.
     implementation 'io.freefair.gradle:lombok-plugin:5.3.3.3'
 
     testImplementation deps.android.tools.build.gradle
     testImplementation deps.spock
+    testCompileOnly 'junit:junit:4.12'
 }
 
 group 'org.checkerframework'
