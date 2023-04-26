@@ -28,6 +28,7 @@ dependencies {
 
     testImplementation deps.android.tools.build.gradle
     testImplementation deps.spock
+    testCompileOnly 'junit:junit:4.12'
 }
 
 group 'org.checkerframework'
