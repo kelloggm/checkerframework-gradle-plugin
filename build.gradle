@@ -35,7 +35,7 @@ group 'org.checkerframework'
 version '0.6.28'
 
 gradlePlugin {
-    website = 'https://checkerframework.org'
+    website = 'https://github.com/kelloggm/checkerframework-gradle-plugin/blob/master/README.md'
     vcsUrl = 'https://github.com/kelloggm/checkerframework-gradle-plugin'
     plugins {
         checkerframeworkPlugin {
@@ -45,7 +45,6 @@ gradlePlugin {
                     ' for Gradle builds'
             implementationClass = 'org.checkerframework.gradle.plugin.CheckerFrameworkPlugin'
             tags.set(['checkerframework', 'checker', 'typechecker', 'pluggable types', 'formal verification'])
-
         }
     }
 }
