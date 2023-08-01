@@ -112,6 +112,16 @@ dependencies {
 }
 ```
 
+You can use the Checker Framework from the local Maven repository by first deploying it
+(run `./gradlew PublishToMavenLocal` in `.../checker-framework/`), then editing your
+project's buildfile to set the version number and to add
+
+```groovy
+repositories {
+  mavenLocal()
+}
+```
+
 You can also use a locally-built version of the Checker Framework:
 
 ```groovy
