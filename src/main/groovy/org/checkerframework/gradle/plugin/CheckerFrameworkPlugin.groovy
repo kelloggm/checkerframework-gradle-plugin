@@ -275,9 +275,10 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         return
       }
 
-      JavaVersion javaSourceVersion =
-              project.extensions.findByName('android')?.compileOptions?.sourceCompatibility ?:
-                      project.property('sourceCompatibility')
+      JavaVersion javaSourceVersion = project.plugins.hasPlugin('com.android.application')
+             || project.plugins.hasPlugin('com.android.library') ?
+             project.android.compileOptions.sourceCompatibility :
+             project.java.getSourceCompatibility()
 
       // Check Java version.
       if (!javaSourceVersion.isJava8Compatible()) {
