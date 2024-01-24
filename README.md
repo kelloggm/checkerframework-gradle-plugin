@@ -136,6 +136,19 @@ if (project.hasProperty("cfLocal")) {
 }
 ```
 
+The same example, using Kotlin syntax in a `build.gradle.kts` file:
+
+```kotlin
+if (project.hasProperty("cfLocal")) {
+  val cfHome = System.getenv("CHECKERFRAMEWORK")
+  dependencies {
+    compileOnly(files(cfHome + "/checker/dist/checker-qual.jar"))
+    testCompileOnly(files(cfHome + "/checker/dist/checker-qual.jar"))
+    checkerFramework(files(cfHome + "/checker/dist/checker.jar"))
+  }
+}
+```
+
 ### Incremental compilation
 
 By default, the plugin assumes that all checkers are "isolating incremental annotation processors"
