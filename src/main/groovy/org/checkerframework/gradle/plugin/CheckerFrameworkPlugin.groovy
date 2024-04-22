@@ -211,10 +211,13 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           def depGroup = dependency.tokenize(':')[0]
           def depName = dependency.tokenize(':')[1]
           // Only add the dependency if it isn't already present, to avoid overwriting user configuration.
+          // The check for the current Gradle version was added because DefaultSelfResolvingDependency
+          // was removed in Gradle 8.7, but we still want to support not overwriting Checker Framework
+          // dependencies defined that way for earlier Gradle versions.
           if (project.configurations."$configuration.name".dependencies.matching({
             if (it instanceof DefaultExternalModuleDependency) {
               it.name.equals(depName) && it.group.equals(depGroup)
-            } else if (it instanceof DefaultSelfResolvingDependency) {
+            } else if (GradleVersion.current().compareTo(GradleVersion.version("8.7")) < 0  && it instanceof DefaultSelfResolvingDependency) {
               it.getFiles().any { file ->
                 file.toString().endsWith(depName + ".jar")
               }
