@@ -329,19 +329,27 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 
 ## Java 9+ compatibility
 
+The Checker Framework inserts inferred annotations into bytecode even if none appear in source code,
+so you must make them known to the compiler even if you write no annotations in your code.
 When running the plugin on a Java 9+ project that uses modules,
-you may need to add annotations to the module path. First add
-`requires org.checkerframework.checker.qual;` to your `module-info.java`.  The Checker
-Framework inserts inferred annotations into bytecode even if none appear in source code,
-so you must do this even if you write no annotations in your code.
+you need to add annotations to the module path.
 
-Then, add this line to the `checkerFramework` block to add the `checker-qual.jar`
+Add following to your `module-info.java`:
+
+```java
+requires org.checkerframework.checker.qual;
+```
+
+The addition of `requires` is typcially enough.
+
+If it does not fix your compilation issues, you can additionally add the `checker-qual.jar`
 artifact (which only contains annotations) to the module path:
 
-```
+```groovy
 checkerFramework {
+  configurations.compileOnly.setCanBeResolved(true)
   extraJavacArgs = [
-    '--module-path', compileOnly.asPath
+    '--module-path', configurations.compileOnly.asPath
   ]
 }
 ```
