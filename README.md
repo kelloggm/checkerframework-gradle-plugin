@@ -149,7 +149,7 @@ if (project.hasProperty("cfLocal")) {
 }
 ```
 
-The "EISOP Framework" is a fork of the Checker Framework.  To use it:
+You can also use a Checker Framework fork. For example, the "EISOP Framework" is a fork of the Checker Framework.  To use it:
 
 ```groovy
 ext {
