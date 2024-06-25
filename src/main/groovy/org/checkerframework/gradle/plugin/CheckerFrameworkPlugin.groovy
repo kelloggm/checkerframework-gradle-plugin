@@ -311,8 +311,8 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       def versionString
       try {
         def actualCFDependencySet = project.configurations.checkerFramework.getAllDependencies()
-                // Only check the name of the dependency, to support forks of the CF that
-                // use the same version scheme, such as the EISOP fork.
+                // Only check the name of the dependency (not the group), to support forks
+                // of the CF that use the same version scheme, such as the EISOP fork.
                 .matching({ dep -> dep.getName().equals("checker")})
         if (actualCFDependencySet.size() == 0) {
           if (userConfig.skipVersionCheck) {
