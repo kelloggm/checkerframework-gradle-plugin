@@ -149,6 +149,23 @@ if (project.hasProperty("cfLocal")) {
 }
 ```
 
+You can also use a Checker Framework fork. For example, the "EISOP Framework" is a fork of the Checker Framework.  To use it:
+
+```groovy
+ext {
+    versions = [
+        eisopVersion: '3.42.0-eisop1',
+    ]
+}
+
+dependencies {
+    compileOnly "io.github.eisop:checker-qual:${versions.eisopVersion}"
+    testCompileOnly "io.github.eisop:checker-qual:${versions.eisopVersion}"
+    checkerFramework "io.github.eisop:checker:${versions.eisopVersion}"
+}
+```
+
+
 ### Incremental compilation
 
 By default, the plugin assumes that all checkers are "isolating incremental annotation processors"
