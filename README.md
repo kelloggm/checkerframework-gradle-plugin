@@ -435,8 +435,6 @@ This project started as a fork of [an abandoned plugin built by jaredsburrows](h
 
 ## License
 
-    Copyright (C) 2017 Jared Burrows, 2018-2020 Martin Kellogg
-
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
