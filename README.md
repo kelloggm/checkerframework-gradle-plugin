@@ -161,6 +161,7 @@ ext {
 dependencies {
     compileOnly "io.github.eisop:checker-qual:${versions.eisopVersion}"
     testCompileOnly "io.github.eisop:checker-qual:${versions.eisopVersion}"
+    checkerFramework "io.github.eisop:checker-qual:${versions.eisopVersion}"
     checkerFramework "io.github.eisop:checker:${versions.eisopVersion}"
 }
 ```
