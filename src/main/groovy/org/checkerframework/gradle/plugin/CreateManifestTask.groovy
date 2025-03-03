@@ -26,13 +26,17 @@ class CreateManifestTask extends DefaultTask {
     @Input
     boolean incrementalize = true
 
+    @Input
+    final String buildDirLocation = project.layout.getBuildDirectory().toString()
+
     /**
      * Creates a manifest file listing all the checkers to run.
      */
     @TaskAction
     def generateManifest() {
-        def manifestDir = project.mkdir "${project.buildDir}/${manifestDirectoryName}"
-        def manifestFile = project.file("${manifestDir.absolutePath}/${manifestFileName}")
+        def manifestDir = new File(buildDirLocation + File.separator + "${manifestDirectoryName}")
+        manifestDir.mkdirs()
+        def manifestFile = new File("${manifestDir.absolutePath}" + File.separator + "${manifestFileName}")
         if (!manifestFile.createNewFile()) {
             manifestFile.delete()
             manifestFile.createNewFile()
@@ -40,8 +44,10 @@ class CreateManifestTask extends DefaultTask {
         manifestFile << this.checkers.join('\n')
 
         if (incrementalize) {
-            def gradleManifestDir = project.mkdir "${project.buildDir}/${gradleManifestDirectoryName}"
-            def gradleManifestFile = project.file("${gradleManifestDir.absolutePath}/${gradleManifestFileName}")
+            def gradleManifestDir = new File(buildDirLocation + File.separator + "${gradleManifestDirectoryName}")
+            gradleManifestDir.mkdirs()
+            def gradleManifestFile =
+                    new File("${gradleManifestDir.absolutePath}" + File.separator + "${gradleManifestFileName}")
             if (!gradleManifestFile.createNewFile()) {
                 gradleManifestFile.delete()
                 gradleManifestFile.createNewFile()
@@ -70,7 +76,7 @@ class CreateManifestTask extends DefaultTask {
      */
     @OutputFile
     def getManifestLocation() {
-        return "${project.buildDir}/${manifestDirectoryName}/${manifestFileName}"
+        return "${buildDirLocation}" + File.separator + "${manifestDirectoryName}" + File.separator + "${manifestFileName}"
     }
 
     /**
@@ -79,6 +85,6 @@ class CreateManifestTask extends DefaultTask {
      */
     @OutputFile
     def getGradleManifestLocation() {
-        return "${project.buildDir}/${gradleManifestDirectoryName}/${gradleManifestFileName}"
+        return "${buildDirLocation}" + File.separator + "${gradleManifestDirectoryName}" + File.separator + "${gradleManifestFileName}"
     }
 }
