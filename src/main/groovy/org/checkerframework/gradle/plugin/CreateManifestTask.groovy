@@ -27,7 +27,7 @@ class CreateManifestTask extends DefaultTask {
     boolean incrementalize = true
 
     @Input
-    final String buildDirLocation = project.layout.getBuildDirectory().toString()
+    final String buildDirLocation = project.layout.getBuildDirectory().get().toString()
 
     /**
      * Creates a manifest file listing all the checkers to run.
