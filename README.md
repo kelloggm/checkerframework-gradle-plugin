@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.6.55'
+    id 'org.checkerframework' version '0.6.56'
 }
 
 apply plugin: 'org.checkerframework'
@@ -94,7 +94,7 @@ the definitions of the custom qualifiers.
 
 ### Specifying a Checker Framework version
 
-Version 0.6.55 of this plugin uses Checker Framework version 3.49.4 by default.
+Version 0.6.56 of this plugin uses Checker Framework version 3.49.5 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -259,7 +259,7 @@ top-level project is a Java project).  For example:
 
 ```groovy
 plugins {
-  id 'org.checkerframework' version '0.6.55' apply false
+  id 'org.checkerframework' version '0.6.56' apply false
 }
 
 subprojects { subproject ->
@@ -269,8 +269,8 @@ subprojects { subproject ->
     checkers = ['org.checkerframework.checker.index.IndexChecker']
   }
   dependencies {
-    checkerFramework 'org.checkerframework:checker:3.49.4'
-    implementation 'org.checkerframework:checker-qual:3.49.4'
+    checkerFramework 'org.checkerframework:checker:3.49.5'
+    implementation 'org.checkerframework:checker-qual:3.49.5'
   }
 }
 ```
@@ -300,7 +300,7 @@ plugins {
   id "net.ltgt.errorprone" version "1.1.1" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.6.55' apply false
+  id 'org.checkerframework' version '0.6.56' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -313,7 +313,7 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 }
 
 def errorProneVersion = "2.3.4"
-def checkerFrameworkVersion = "3.49.4"
+def checkerFrameworkVersion = "3.49.5"
 
 dependencies {
   if ("true".equals(project.ext.useCheckerFramework)) {
