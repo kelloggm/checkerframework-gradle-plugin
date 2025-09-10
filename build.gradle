@@ -32,7 +32,7 @@ dependencies {
 }
 
 group 'org.checkerframework'
-version '0.6.58'
+version '0.6.59'
 
 gradlePlugin {
     website = 'https://github.com/kelloggm/checkerframework-gradle-plugin/blob/master/README.md'
