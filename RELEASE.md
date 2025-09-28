@@ -1,3 +1,5 @@
+# Releasing the Checker Framework Gradle Plugin
+
 ## Making and merging pull requests
 
 The Checker Framework Gradle plugin (which this repository contains)
@@ -11,10 +13,12 @@ directly to `master`.
 
 After you have made the changes you wish to merge into `master`,
 you should:
-1. If your pull request will change any behavior of the plugin (including
-   bug fixes, new features, or updated dependencies), you should choose a new version string. Please
-   try to respect [semantic versioning](https://semver.org/). Do not augment
-   the major version without explicit approval from all the maintainers.
+
+1. If your pull request will change any behavior of the plugin (including bug
+   fixes, new features, or updated dependencies), you should choose a new
+   version string. Please try to respect [semantic
+   versioning](https://semver.org/). Do not augment the major version without
+   explicit approval from all the maintainers.
 2. If you changed the version string, search for the current plugin version
    in the directory containing this file, and replace all instances of it with
    the new version string (currently only in `README.md` and `build.gradle`).
@@ -35,31 +39,38 @@ To gain access to the credentials, contact one of the maintainers privately.
 
 1. Review the pull request. If you approve it, proceed.
 2. Ensure that the GitHub Actions CI build passes in the pull request.
-3. Ensure that the new version string in the pull request is not already in use. Check
-[the plugin's portal page](https://plugins.gradle.org/plugin/org.checkerframework)
-to see if this version has already been released.
+3. Ensure that the new version string in the pull request is not already in
+use. Check [the plugin's portal
+page](https://plugins.gradle.org/plugin/org.checkerframework) to see if this
+version has already been released.
 4. If the version string is already in use, change it or ask the author of the pull
 request to do so.
 5. Squash and merge the pull request.
-6. On your local machine, check out the `master` branch and run `git pull origin master`.
+6. On your local machine, check out the `master` branch
+and run `git pull origin master`.
 7. Run `./gradlew publishPlugins` from the top-level project directory
 (which should also contain this file).
 
 ### Updating the Checker Framework version
 
-The default version of the Checker Framework used by the plugin
-should be updated after every Checker Framework release.
-The Checker Framework is typically released monthly.
-Updating the Checker Framework should
-be done like any other pull request. To update the plugin to
-use the [latest version](https://github.com/typetools/checker-framework/blob/master/docs/CHANGELOG.md)
+The default version of the Checker Framework used by the plugin should be
+updated after every Checker Framework release.  Updating the Checker Framework
+should be done like any other pull request. To update the plugin to use the
+[latest
+version](https://github.com/typetools/checker-framework/blob/master/docs/CHANGELOG.md)
 of the Checker Framework:
-   * Create a feature branch.
-   * Update the .jar and .pom files.
-     Run:
-     ```(cd src/test/resources/maven/org/checkerframework && update.sh NEW_CF_VERSION_NUMBER)```
-     (If you don't do this, you may get an error such as
-     "Could not find org.checkerframework:checker:2.11.1.")
-     You might need to wait for Maven Central to make the new `.jar` and `.pom` files available.
-   * Replace the old version number anywhere it appears in this repository.
-   * Update the version of the plugin, as for any pull request; see above for instructions.
+
+* Create a feature branch.
+* Update the .jar and .pom files.
+  Run:
+
+  ```sh
+  (cd src/test/resources/maven/org/checkerframework && update.sh NEW_CF_VERSION_NUMBER)
+  ```
+
+  (If you don't do this, you may get an error such as
+  "Could not find org.checkerframework:checker:2.11.1.")
+  You might need to wait for Maven Central to make the new `.jar` and `.pom`
+  files available.
+* Replace the old version number anywhere it appears in this repository.
+* Update the version of the plugin, as for any pull request; see above for instructions.
