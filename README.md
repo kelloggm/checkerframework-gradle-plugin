@@ -12,7 +12,7 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.6.25'
+    id 'org.checkerframework' version '0.6.59'
 }
 
 apply plugin: 'org.checkerframework'
@@ -94,7 +94,7 @@ the definitions of the custom qualifiers.
 
 ### Specifying a Checker Framework version
 
-Version 0.6.25 of this plugin uses Checker Framework version 3.32.0 by default.
+Version 0.6.59 of this plugin uses Checker Framework version 3.51.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
 
@@ -112,6 +112,16 @@ dependencies {
 }
 ```
 
+You can use the Checker Framework from the local Maven repository by first deploying it
+(run `./gradlew PublishToMavenLocal` in `.../checker-framework/`), then editing your
+project's buildfile to set the version number and to add
+
+```groovy
+repositories {
+  mavenLocal()
+}
+```
+
 You can also use a locally-built version of the Checker Framework:
 
 ```groovy
@@ -125,6 +135,37 @@ if (project.hasProperty("cfLocal")) {
   }
 }
 ```
+
+The same example, using Kotlin syntax in a `build.gradle.kts` file:
+
+```kotlin
+if (project.hasProperty("cfLocal")) {
+  val cfHome = System.getenv("CHECKERFRAMEWORK")
+  dependencies {
+    compileOnly(files(cfHome + "/checker/dist/checker-qual.jar"))
+    testCompileOnly(files(cfHome + "/checker/dist/checker-qual.jar"))
+    checkerFramework(files(cfHome + "/checker/dist/checker.jar"))
+  }
+}
+```
+
+You can also use a Checker Framework fork. For example, the "EISOP Framework" is a fork of the Checker Framework.  To use it:
+
+```groovy
+ext {
+    versions = [
+        eisopVersion: '3.42.0-eisop1',
+    ]
+}
+
+dependencies {
+    compileOnly "io.github.eisop:checker-qual:${versions.eisopVersion}"
+    testCompileOnly "io.github.eisop:checker-qual:${versions.eisopVersion}"
+    checkerFramework "io.github.eisop:checker-qual:${versions.eisopVersion}"
+    checkerFramework "io.github.eisop:checker:${versions.eisopVersion}"
+}
+```
+
 
 ### Incremental compilation
 
@@ -206,15 +247,19 @@ using:
 
 ### Multi-project builds
 
-In most projects with subprojects, the top-level project is not a Java
-project.  You should not apply the plugin to such a non-Java project.  Instead, move
-all Checker Framework configuration (the `checkerFramework` block and any
-`dependencies`) into a `subprojects` block, and do not apply the
-plugin to the top-level project. For example:
+In a project with subprojects, you should apply the project to each Java
+subproject (and to the top-level project, in the unlikely case that it is a Java
+project).  Here are two approaches.
+
+**Approach 1:**
+All Checker Framework configuration (the `checkerFramework` block and any
+`dependencies`) remains in the top-level `build.gradle` file.  Put it in a
+`subprojects` block (or an `allprojects` block in the unlikely case that the
+top-level project is a Java project).  For example:
 
 ```groovy
 plugins {
-  id 'org.checkerframework' version '0.6.25' apply false
+  id 'org.checkerframework' version '0.6.59' apply false
 }
 
 subprojects { subproject ->
@@ -224,16 +269,14 @@ subprojects { subproject ->
     checkers = ['org.checkerframework.checker.index.IndexChecker']
   }
   dependencies {
-    checkerFramework 'org.checkerframework:checker:3.32.0'
-    implementation 'org.checkerframework:checker-qual:3.32.0'
+    checkerFramework 'org.checkerframework:checker:3.51.0'
+    implementation 'org.checkerframework:checker-qual:3.51.0'
   }
 }
 ```
 
-If the top-level project *is* a Java project that you wish to typecheck, follow these
-instructions but replace the 'subprojects' block with the 'allprojects' block.
-
-Alternately, apply the plugin in the `build.gradle` in each subproject as if it
+**Approach 2:**
+Apply the plugin in the `build.gradle` in each subproject as if it
 were a stand-alone project. You must do this if you require different configuration
 for different subprojects (for instance, if you want to run different checkers).
 
@@ -257,7 +300,7 @@ plugins {
   id "net.ltgt.errorprone" version "1.1.1" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.6.25' apply false
+  id 'org.checkerframework' version '0.6.59' apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
@@ -270,7 +313,7 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 }
 
 def errorProneVersion = "2.3.4"
-def checkerFrameworkVersion = "3.32.0"
+def checkerFrameworkVersion = "3.51.0"
 
 dependencies {
   if ("true".equals(project.ext.useCheckerFramework)) {
@@ -304,19 +347,27 @@ if ("true".equals(project.ext.useCheckerFramework)) {
 
 ## Java 9+ compatibility
 
+The Checker Framework inserts inferred annotations into bytecode even if none appear in source code,
+so you must make them known to the compiler even if you write no annotations in your code.
 When running the plugin on a Java 9+ project that uses modules,
-you may need to add annotations to the module path. First add
-`requires org.checkerframework.checker.qual;` to your `module-info.java`.  The Checker
-Framework inserts inferred annotations into bytecode even if none appear in source code,
-so you must do this even if you write no annotations in your code.
+you need to add annotations to the module path.
 
-Then, add this line to the `checkerFramework` block to add the `checker-qual.jar`
+Add following to your `module-info.java`:
+
+```java
+requires org.checkerframework.checker.qual;
+```
+
+The addition of `requires` is typcially enough.
+
+If it does not fix your compilation issues, you can additionally add the `checker-qual.jar`
 artifact (which only contains annotations) to the module path:
 
-```
+```groovy
 checkerFramework {
+  configurations.compileOnly.setCanBeResolved(true)
   extraJavacArgs = [
-    '--module-path', compileOnly.asPath
+    '--module-path', configurations.compileOnly.asPath
   ]
 }
 ```
@@ -384,8 +435,6 @@ This project started as a fork of [an abandoned plugin built by jaredsburrows](h
 
 
 ## License
-
-    Copyright (C) 2017 Jared Burrows, 2018-2020 Martin Kellogg
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

@@ -30,7 +30,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
   // Checker Framework configurations and dependencies
 
   // Whenever this line is changed, you need to change all occurrences in README.md.
-  private final static def LIBRARY_VERSION = "3.32.0"
+  private final static def LIBRARY_VERSION = "3.51.0"
 
   private final static def ANNOTATED_JDK_NAME_JDK8 = "jdk8"
   private final static def ANNOTATED_JDK_CONFIGURATION = "checkerFrameworkAnnotatedJDK"
@@ -211,10 +211,13 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           def depGroup = dependency.tokenize(':')[0]
           def depName = dependency.tokenize(':')[1]
           // Only add the dependency if it isn't already present, to avoid overwriting user configuration.
+          // The check for the current Gradle version was added because DefaultSelfResolvingDependency
+          // was removed in Gradle 8.7, but we still want to support not overwriting Checker Framework
+          // dependencies defined that way for earlier Gradle versions.
           if (project.configurations."$configuration.name".dependencies.matching({
             if (it instanceof DefaultExternalModuleDependency) {
               it.name.equals(depName) && it.group.equals(depGroup)
-            } else if (it instanceof DefaultSelfResolvingDependency) {
+            } else if (GradleVersion.current().compareTo(GradleVersion.version("8.7")) < 0  && it instanceof DefaultSelfResolvingDependency) {
               it.getFiles().any { file ->
                 file.toString().endsWith(depName + ".jar")
               }
@@ -275,9 +278,10 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
         return
       }
 
-      JavaVersion javaSourceVersion =
-              project.extensions.findByName('android')?.compileOptions?.sourceCompatibility ?:
-                      project.property('sourceCompatibility')
+      JavaVersion javaSourceVersion = project.plugins.hasPlugin('com.android.application')
+             || project.plugins.hasPlugin('com.android.library') ?
+             project.android.compileOptions.sourceCompatibility :
+             project.java.getSourceCompatibility()
 
       // Check Java version.
       if (!javaSourceVersion.isJava8Compatible()) {
@@ -286,18 +290,15 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
 
       JavaVersion jvmVersion = JavaVersion.current();
 
-      // toolchains are an incubating feature of Gradle as of 6.8.3: https://docs.gradle.org/current/userguide/toolchains.html
-      def javaExtension = project.extensions.findByName("java")
-      if (javaExtension != null && javaExtension.hasProperty("toolchain")) {
-        def toolchain = javaExtension.toolchain
-        if (toolchain != null && toolchain.isConfigured()) {
-          def toolchainVersion = toolchain.getLanguageVersion().get()
-          def toolchainVersionInt = Integer.parseInt(toolchainVersion.toString())
-          if (toolchainVersionInt < 8) {
-            throw new IllegalStateException("The Checker Framework does not support Java versions before 8.")
-          } else {
-            jvmVersion = JavaVersion.toVersion(toolchainVersionInt)
-          }
+      // https://docs.gradle.org/current/userguide/toolchains.html
+      def toolchain = project.java?.toolchain
+      if (toolchain != null && toolchain.isConfigured()) {
+        def toolchainVersion = toolchain.getLanguageVersion().get()
+        def toolchainVersionInt = Integer.parseInt(toolchainVersion.toString())
+        if (toolchainVersionInt < 8) {
+          throw new IllegalStateException("The Checker Framework does not support Java versions before 8.")
+        } else {
+          jvmVersion = JavaVersion.toVersion(toolchainVersionInt)
         }
       }
 
@@ -310,9 +311,9 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
       def versionString
       try {
         def actualCFDependencySet = project.configurations.checkerFramework.getAllDependencies()
-                .matching({ dep ->
-                  dep.getName().equals("checker") && dep.getGroup().equals("org.checkerframework")
-                })
+                // Only check the name of the dependency (not the group), to support forks
+                // of the CF that use the same version scheme, such as the EISOP fork.
+                .matching({ dep -> dep.getName().equals("checker")})
         if (actualCFDependencySet.size() == 0) {
           if (userConfig.skipVersionCheck) {
             versionString = LIBRARY_VERSION
@@ -386,6 +387,7 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
                     "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
                     "--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
                     "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+                    "--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
                     "--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
                     "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
                     "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",

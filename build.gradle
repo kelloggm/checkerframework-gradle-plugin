@@ -21,19 +21,22 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    implementation "org.codehaus.groovy:groovy-all:${GroovySystem.version}"
+    implementation localGroovy()
 
     // The Lombok Gradle plugin, so that we can delombok sources if lombok would be applied.
     implementation 'io.freefair.gradle:lombok-plugin:5.3.3.3'
 
     testImplementation deps.android.tools.build.gradle
     testImplementation deps.spock
+    testCompileOnly 'junit:junit:4.12'
 }
 
 group 'org.checkerframework'
-version '0.6.25'
+version '0.6.59'
 
 gradlePlugin {
+    website = 'https://github.com/kelloggm/checkerframework-gradle-plugin/blob/master/README.md'
+    vcsUrl = 'https://github.com/kelloggm/checkerframework-gradle-plugin'
     plugins {
         checkerframeworkPlugin {
             id = 'org.checkerframework'
@@ -41,14 +44,9 @@ gradlePlugin {
             description = 'Re-usable build logic for extending the Java type system via the Checker Framework,' +
                     ' for Gradle builds'
             implementationClass = 'org.checkerframework.gradle.plugin.CheckerFrameworkPlugin'
+            tags.set(['checkerframework', 'checker', 'typechecker', 'pluggable types', 'formal verification'])
         }
     }
-}
-
-pluginBundle {
-    website = 'https://checkerframework.org'
-    vcsUrl = 'https://github.com/kelloggm/checkerframework-gradle-plugin'
-    tags = ['checkerframework', 'checker', 'typechecker', 'pluggable types', 'formal verification']
 }
 
 apply from: 'gradle/compile.gradle'
