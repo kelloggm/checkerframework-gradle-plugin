@@ -3,7 +3,8 @@
 [![License](https://img.shields.io/badge/license-apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 ![Build Status](https://github.com/kelloggm/checkerframework-gradle-plugin/actions/workflows/gradle.yml/badge.svg)
 
-This plugin configures `JavaCompile` tasks to use the [Checker Framework](https://checkerframework.org) for pluggable type-checking.
+This plugin configures `JavaCompile` tasks to use the [Checker
+Framework](https://checkerframework.org) for pluggable type-checking.
 
 ## Download
 
@@ -58,8 +59,8 @@ For a list of checkers, see the [Checker Framework Manual](https://checkerframew
 
 ### Providing checker-specific options to the compiler
 
-You can set the `checkerFramework.extraJavacArgs` property in order to pass additional options to the compiler when running
-a typechecker.
+You can set the `checkerFramework.extraJavacArgs` property in order to pass
+additional options to the compiler when running a typechecker.
 
 For example, to use a stub file:
 
@@ -74,10 +75,12 @@ checkerFramework {
 
 ### Configuring third-party checkers
 
-To use a third-party typechecker (i.e. one that is not distributed with the Checker Framework),
-add a dependency to the `checkerFramework` dependency configuration.
+To use a third-party typechecker (i.e. one that is not distributed with the
+Checker Framework), add a dependency to the `checkerFramework` dependency
+configuration.
 
-For example, to use the [Glacier](http://mcoblenz.github.io/Glacier/) immutability checker:
+For example, to use the [Glacier](http://mcoblenz.github.io/Glacier/)
+immutability checker:
 
 ```groovy
 dependencies {
@@ -86,11 +89,11 @@ dependencies {
 }
 ```
 
-You should also use a `checkerFramework` dependency for anything needed by a checker you
-are running. For example, if you are using the
-[Subtyping Checker](https://checkerframework.org/manual/#subtyping-checker) with
-custom type qualifiers, you should add a `checkerFramework` dependency referring to
-the definitions of the custom qualifiers.
+You should also use a `checkerFramework` dependency for anything needed by a
+checker you are running. For example, if you are using the [Subtyping
+Checker](https://checkerframework.org/manual/#subtyping-checker) with custom
+type qualifiers, you should add a `checkerFramework` dependency referring to the
+definitions of the custom qualifiers.
 
 ### Specifying a Checker Framework version
 
@@ -112,9 +115,9 @@ dependencies {
 }
 ```
 
-You can use the Checker Framework from the local Maven repository by first deploying it
-(run `./gradlew PublishToMavenLocal` in `.../checker-framework/`), then editing your
-project's buildfile to set the version number and to add
+You can use the Checker Framework from the local Maven repository by first
+deploying it (run `./gradlew PublishToMavenLocal` in `.../checker-framework/`),
+then editing your project's buildfile to set the version number and to add
 
 ```groovy
 repositories {
@@ -149,7 +152,8 @@ if (project.hasProperty("cfLocal")) {
 }
 ```
 
-You can also use a Checker Framework fork. For example, the "EISOP Framework" is a fork of the Checker Framework.  To use it:
+You can also use a Checker Framework fork. For example, the "EISOP Framework" is
+a fork of the Checker Framework.  To use it:
 
 ```groovy
 ext {
@@ -166,18 +170,19 @@ dependencies {
 }
 ```
 
-
 ### Incremental compilation
 
-By default, the plugin assumes that all checkers are "isolating incremental annotation processors"
-according to the Gradle terminology
-[here](https://docs.gradle.org/current/userguide/java_plugin.html#sec:incremental_annotation_processing).
-This assumption speeds up builds by enabling incremental compilation, but is unsafe: Gradle's
-documentation warns that annotation processors that use internal Javac APIs may crash, because
-Gradle wraps some of those APIs. The Checker Framework does use internal Javac APIs, so you
-might encounter such a crash, which would appear as a `ClassCastException` referencing some
-internal Javac class. If you encounter such a crash, you can disable incremental
-compilation in your build using the following code in your `checkerFramework` configuration block:
+By default, the plugin assumes that all checkers are "isolating incremental
+annotation processors" according to the [Gradle
+terminology](https://docs.gradle.org/current/userguide/java_plugin.html#sec:incremental_annotation_processing).
+This assumption speeds up builds by enabling incremental compilation, but is
+unsafe: Gradle's documentation warns that annotation processors that use
+internal Javac APIs may crash, because Gradle wraps some of those APIs. The
+Checker Framework does use internal Javac APIs, so you might encounter such a
+crash, which would appear as a `ClassCastException` referencing some internal
+Javac class. If you encounter such a crash, you can disable incremental
+compilation in your build using the following code in your `checkerFramework`
+configuration block:
 
 ```groovy
   checkerFramework {
@@ -206,8 +211,9 @@ Currently, the only supported option is `skipCheckerFramework`.
 
 ### Other options
 
-* You can disable the Checker Framework temporarily (e.g. when testing something unrelated)
- either in your build file or from the command line. In your build file:
+* You can disable the Checker Framework temporarily (e.g. when testing something
+  unrelated) either in your build file or from the command line. In your build
+  file:
 
   ```groovy
   checkerFramework {
@@ -230,8 +236,8 @@ Currently, the only supported option is `skipCheckerFramework`.
   }
   ```
 
-  The check for test targets is entirely syntactic: this option will not apply the checkers
-  to any task whose name includes "test", ignoring case.
+  The check for test targets is entirely syntactic: this option will not apply
+  the checkers to any task whose name includes "test", ignoring case.
 
 * If you encounter errors of the form `zip file name too long` when configuring your
 Gradle project, you can use the following code to skip this plugin's version check,
@@ -243,7 +249,6 @@ using:
     skipVersionCheck = true
   }
   ```
-
 
 ### Multi-project builds
 
@@ -282,20 +287,22 @@ for different subprojects (for instance, if you want to run different checkers).
 
 ### Incompatibility with Error Prone 2.3.4 and earlier
 
-[Error Prone](https://errorprone.info/)
-uses the Checker Framework's dataflow analysis library.
-Unfortunately, Error Prone version 2.3.4 and earlier uses an old version of the library, so you
-cannot use both Error Prone and the current Checker Framework (because each
-one depends on a different version of the library).
+[Error Prone](https://errorprone.info/) uses the Checker Framework's dataflow
+analysis library.  Unfortunately, Error Prone version 2.3.4 and earlier uses an
+old version of the library, so you cannot use both Error Prone and the current
+Checker Framework (because each one depends on a different version of the
+library).
 
 You can resolve this by:
- * upgrading to Error Prone version 2.4.0 or later, or
- * using a switch that causes your build to use either
+
+* upgrading to Error Prone version 2.4.0 or later, or
+* using a switch that causes your build to use either
    Error Prone or the Checker Framework, but not both.
 
 Here is an example of the latter approach:
 
-```
+<!-- markdownlint-disable line-length -->
+```gradle
 plugins {
   id "net.ltgt.errorprone" version "1.1.1" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
@@ -320,7 +327,7 @@ dependencies {
     checkerFramework 'org.checkerframework:checker:' + checkerFrameworkVersion
     checkerFramework 'org.checkerframework:checker-qual:' + checkerFrameworkVersion
   } else {
-    errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: errorProneVersion
+    errorprone "com.google.errorprone:error_prone_core:${errorProneVersion}
   }
 }
 
@@ -344,13 +351,14 @@ if ("true".equals(project.ext.useCheckerFramework)) {
   }
 }
 ```
+<!-- markdownlint-enable line-length -->
 
 ## Java 9+ compatibility
 
-The Checker Framework inserts inferred annotations into bytecode even if none appear in source code,
-so you must make them known to the compiler even if you write no annotations in your code.
-When running the plugin on a Java 9+ project that uses modules,
-you need to add annotations to the module path.
+The Checker Framework inserts inferred annotations into bytecode even if none
+appear in source code, so you must make them known to the compiler even if you
+write no annotations in your code.  When running the plugin on a Java 9+ project
+that uses modules, you need to add annotations to the module path.
 
 Add following to your `module-info.java`:
 
@@ -382,7 +390,7 @@ for typechecking. This plugin does not support any other use of Lombok.
 For the Checker Framework to work properly on delombok'd source code,
 you must include the following key in your project's `lombok.config` file:
 
-```
+```config
 lombok.addLombokGeneratedAnnotation = true
 ```
 
@@ -390,7 +398,7 @@ By default, Lombok suppresses all warnings in the code it generates. If you
 want to typecheck the code that Lombok generates, use the `suppressLombokWarnings`
 configuration key:
 
-```
+```gradle
 checkerFramework {
   suppressLombokWarnings = false
 }
@@ -405,11 +413,12 @@ You can build the plugin locally rather than downloading it from Maven Central.
 
 To build the plugin from source, run `./gradlew build`.
 
-If you want to use a locally-built version of the plugin, you can publish the plugin to your
-local Maven repository by running `./gradlew publishToMavenLocal`. Then, add the following to
-the `settings.gradle` file in the Gradle project that you want to use the plugin:
+If you want to use a locally-built version of the plugin, you can publish the
+plugin to your local Maven repository by running `./gradlew
+publishToMavenLocal`. Then, add the following to the `settings.gradle` file in
+the Gradle project that you want to use the plugin:
 
-```
+```gradle
 pluginManagement {
     repositories {
         mavenLocal()
@@ -420,9 +429,10 @@ pluginManagement {
 
 ### JDK 8 vs JDK 9+ implementation details
 
-The plugin attempts to automatically configure the Checker Framework on both Java 8 and Java 9+ JVMs,
-following the [best practices in the Checker Framework manual](https://checkerframework.org/manual/#javac).
-In particular:
+The plugin attempts to automatically configure the Checker Framework on both
+Java 8 and Java 9+ JVMs, following the [best practices in the Checker Framework
+manual](https://checkerframework.org/manual/#javac).  In particular:
+
 * If both the JVM and target versions are 8, it applies the Java 8 annotated JDK.
 * If the JVM version is 9+ and the target version is 8 (and the Checker Framework
 version is >= 2.11.0), use the Error Prone javac compiler.
@@ -433,17 +443,16 @@ version is >= 2.11.0), use the Error Prone javac compiler.
 This project started as a fork of [an abandoned plugin built by jaredsburrows](https://github.com/jaredsburrows/gradle-checker-framework-plugin).
 [![Twitter Follow](https://img.shields.io/twitter/follow/jaredsburrows.svg?style=social)](https://twitter.com/jaredsburrows)
 
-
 ## License
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+   <http://www.apache.org/licenses/LICENSE-2.0>
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
