@@ -4,9 +4,9 @@ tasks.withType(JavaCompile) {
 
   // Show all warnings except boot classpath
   configure(options) {
-    compilerArgs << '-Xlint:all'            // Turn on all warnings
-    compilerArgs << '-Werror'               // Turn warnings into errors
-    encoding = 'utf-8'
+    compilerArgs << "-Xlint:all"            // Turn on all warnings
+    compilerArgs << "-Werror"               // Turn warnings into errors
+    encoding = "utf-8"
   }
 }
 
@@ -16,22 +16,22 @@ tasks.withType(GroovyCompile) {
 
   // Show all warnings except boot classpath
   configure(options) {
-    compilerArgs << '-Xlint:all'            // Turn on all warnings
-    compilerArgs << '-Werror'               // Turn warnings into errors
-    compilerArgs << '-proc:none'            // Google AutoValue APs are leaking onto compile classpath, causing warning
+    compilerArgs << "-Xlint:all"            // Turn on all warnings
+    compilerArgs << "-Werror"               // Turn warnings into errors
+    compilerArgs << "-proc:none"            // Google AutoValue APs are leaking onto compile classpath, causing warning
                                             // from Gradle
-    encoding = 'utf-8'
+    encoding = "utf-8"
   }
 }
 
 tasks.withType(Test) {
   // Turn on logging for all tests, filter to show failures/skips only
   testLogging {
-    exceptionFormat 'full'
+    exceptionFormat "full"
     showCauses true
     showExceptions true
     showStackTraces true
-    events 'failed', 'skipped', 'started', 'passed'
+    events "failed", "skipped", "started", "passed"
   }
 
   maxParallelForks = 32
@@ -40,8 +40,8 @@ tasks.withType(Test) {
 tasks.withType(Groovydoc) {
   docTitle = "${project.name} ${project.version}"
   header = project.name
-  link('http://docs.oracle.com/javase/8/docs/api/',
-          'http://docs.oracle.com/javaee/7/api/',
-          'http://groovy.codehaus.org/gapi/')
-  exclude '**/*Spec.java'
+  link("http://docs.oracle.com/javase/8/docs/api/",
+          "http://docs.oracle.com/javaee/7/api/",
+          "http://groovy.codehaus.org/gapi/")
+  exclude "**/*Spec.java"
 }
