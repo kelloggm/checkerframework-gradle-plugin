@@ -1,9 +1,9 @@
 plugins {
-    id 'com.github.ben-manes.versions' version '0.42.0'
-    id 'com.gradle.plugin-publish' version '2.0.0'
-    id 'java-gradle-plugin'
-    id 'groovy'
-    id 'maven-publish'
+    id "com.github.ben-manes.versions" version "0.42.0"
+    id "com.gradle.plugin-publish" version "2.0.0"
+    id "java-gradle-plugin"
+    id "groovy"
+    id "maven-publish"
 }
 
 repositories {
@@ -15,7 +15,7 @@ repositories {
     }
 }
 
-apply from: 'gradle/dependencies.gradle'
+apply from: "gradle/dependencies.gradle"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -24,32 +24,32 @@ dependencies {
     implementation localGroovy()
 
     // The Lombok Gradle plugin, so that we can delombok sources if lombok would be applied.
-    implementation 'io.freefair.gradle:lombok-plugin:5.3.3.3'
+    implementation "io.freefair.gradle:lombok-plugin:5.3.3.3"
 
     testImplementation deps.android.tools.build.gradle
     testImplementation deps.spock
-    testCompileOnly 'junit:junit:4.13.2'
+    testCompileOnly "junit:junit:4.13.2"
 }
 
-group 'org.checkerframework'
-version '0.6.60'
+group "org.checkerframework"
+version "0.6.60"
 
 gradlePlugin {
-    website = 'https://github.com/kelloggm/checkerframework-gradle-plugin/blob/master/README.md'
-    vcsUrl = 'https://github.com/kelloggm/checkerframework-gradle-plugin'
+    website = "https://github.com/kelloggm/checkerframework-gradle-plugin/blob/master/README.md"
+    vcsUrl = "https://github.com/kelloggm/checkerframework-gradle-plugin"
     plugins {
         checkerframeworkPlugin {
-            id = 'org.checkerframework'
-            displayName = 'Checker Framework Gradle Plugin'
-            description = 'Re-usable build logic for extending the Java type system via the Checker Framework,' +
-                    ' for Gradle builds'
-            implementationClass = 'org.checkerframework.gradle.plugin.CheckerFrameworkPlugin'
-            tags.set(['checkerframework', 'checker', 'typechecker', 'pluggable types', 'formal verification'])
+            id = "org.checkerframework"
+            displayName = "Checker Framework Gradle Plugin"
+            description = "Re-usable build logic for extending the Java type system via the Checker Framework," +
+                    " for Gradle builds"
+            implementationClass = "org.checkerframework.gradle.plugin.CheckerFrameworkPlugin"
+            tags.set(["checkerframework", "checker", "typechecker", "pluggable types", "formal verification"])
         }
     }
 }
 
-apply from: 'gradle/compile.gradle'
+apply from: "gradle/compile.gradle"
 
 // Gradle 7+ requires a duplicates strategy whenever there might be duplication,
 // even if the cause is some other plugin (which I think is the case for us).
