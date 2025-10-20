@@ -27,11 +27,11 @@ tasks.withType(GroovyCompile) {
 tasks.withType(Test) {
   // Turn on logging for all tests, filter to show failures/skips only
   testLogging {
-    exceptionFormat "full"
-    showCauses true
-    showExceptions true
-    showStackTraces true
-    events "failed", "skipped", "started", "passed"
+    exceptionFormat = "full"
+    showCauses = true
+    showExceptions = true
+    showStackTraces = true
+    events("failed", "skipped", "started", "passed")
   }
 
   maxParallelForks = 32
@@ -43,5 +43,5 @@ tasks.withType(Groovydoc) {
   link("http://docs.oracle.com/javase/8/docs/api/",
           "http://docs.oracle.com/javaee/7/api/",
           "http://groovy.codehaus.org/gapi/")
-  exclude "**/*Spec.java"
+  exclude("**/*Spec.java")
 }
