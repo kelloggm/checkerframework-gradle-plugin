@@ -13,10 +13,10 @@ Add the following to your `build.gradle` file:
 ```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    id 'org.checkerframework' version '0.6.60'
+    id("org.checkerframework").version("0.6.60")
 }
 
-apply plugin: 'org.checkerframework'
+apply plugin: "org.checkerframework"
 ```
 
 The `org.checkerframework` plugin modifies existing Java
@@ -35,8 +35,8 @@ For example, using Groovy syntax in a `build.gradle` file:
 ```groovy
 checkerFramework {
   checkers = [
-    'org.checkerframework.checker.nullness.NullnessChecker',
-    'org.checkerframework.checker.units.UnitsChecker'
+    "org.checkerframework.checker.nullness.NullnessChecker",
+    "org.checkerframework.checker.units.UnitsChecker"
   ]
 }
 ```
@@ -67,8 +67,8 @@ For example, to use a stub file:
 ```groovy
 checkerFramework {
   extraJavacArgs = [
-    '-Werror',
-    '-Astubs=/path/to/my/stub/file.astub'
+    "-Werror",
+    "-Astubs=/path/to/my/stub/file.astub"
   ]
 }
 ```
@@ -85,7 +85,7 @@ immutability checker:
 ```groovy
 dependencies {
   ...
-  checkerFramework 'edu.cmu.cs.glacier:glacier:0.1'
+  checkerFramework("edu.cmu.cs.glacier:glacier:0.1")
 }
 ```
 
@@ -105,13 +105,13 @@ You can use a Checker Framework
 [version](https://github.com/typetools/checker-framework/releases) that is
 different than this plugin's default.  For example, if you want to use Checker
 Framework version 3.4.0, then you should add the following text to
-`build.gradle`, after `apply plugin: 'org.checkerframework'`:
+`build.gradle`, after `apply plugin: "org.checkerframework"`:
 
 ```groovy
 dependencies {
-  compileOnly 'org.checkerframework:checker-qual:3.4.0'
-  testCompileOnly 'org.checkerframework:checker-qual:3.4.0'
-  checkerFramework 'org.checkerframework:checker:3.4.0'
+  compileOnly("org.checkerframework:checker-qual:3.4.0")
+  testCompileOnly("org.checkerframework:checker-qual:3.4.0")
+  checkerFramework("org.checkerframework:checker:3.4.0")
 }
 ```
 
@@ -132,9 +132,9 @@ You can also use a locally-built version of the Checker Framework:
 if (project.hasProperty("cfLocal")) {
   def cfHome = String.valueOf(System.getenv("CHECKERFRAMEWORK"))
   dependencies {
-    compileOnly files(cfHome + "/checker/dist/checker-qual.jar")
-    testCompileOnly files(cfHome + "/checker/dist/checker-qual.jar")
-    checkerFramework files(cfHome + "/checker/dist/checker.jar")
+    compileOnly(files(cfHome + "/checker/dist/checker-qual.jar"))
+    testCompileOnly(files(cfHome + "/checker/dist/checker-qual.jar"))
+    checkerFramework(files(cfHome + "/checker/dist/checker.jar"))
   }
 }
 ```
@@ -158,15 +158,15 @@ a fork of the Checker Framework.  To use it:
 ```groovy
 ext {
     versions = [
-        eisopVersion: '3.42.0-eisop1',
+        eisopVersion: "3.42.0-eisop1",
     ]
 }
 
 dependencies {
-    compileOnly "io.github.eisop:checker-qual:${versions.eisopVersion}"
-    testCompileOnly "io.github.eisop:checker-qual:${versions.eisopVersion}"
-    checkerFramework "io.github.eisop:checker-qual:${versions.eisopVersion}"
-    checkerFramework "io.github.eisop:checker:${versions.eisopVersion}"
+    compileOnly("io.github.eisop:checker-qual:${versions.eisopVersion}")
+    testCompileOnly("io.github.eisop:checker-qual:${versions.eisopVersion}")
+    checkerFramework("io.github.eisop:checker-qual:${versions.eisopVersion}")
+    checkerFramework("io.github.eisop:checker:${versions.eisopVersion}")
 }
 ```
 
@@ -264,18 +264,18 @@ top-level project is a Java project).  For example:
 
 ```groovy
 plugins {
-  id 'org.checkerframework' version '0.6.60' apply false
+  id "org.checkerframework" version "0.6.60" apply false
 }
 
 subprojects { subproject ->
-  apply plugin: 'org.checkerframework'
+  apply plugin: "org.checkerframework"
 
   checkerFramework {
-    checkers = ['org.checkerframework.checker.index.IndexChecker']
+    checkers = ["org.checkerframework.checker.index.IndexChecker"]
   }
   dependencies {
-    checkerFramework 'org.checkerframework:checker:3.51.1'
-    implementation 'org.checkerframework:checker-qual:3.51.1'
+    checkerFramework "org.checkerframework:checker:3.51.1"
+    implementation "org.checkerframework:checker-qual:3.51.1"
   }
 }
 ```
@@ -307,16 +307,16 @@ plugins {
   id "net.ltgt.errorprone" version "1.1.1" apply false
   // To do Checker Framework pluggable type-checking (and disable Error Prone), run:
   // ./gradlew compileJava -PuseCheckerFramework=true
-  id 'org.checkerframework' version '0.6.60' apply false
+  id "org.checkerframework" version "0.6.60" apply false
 }
 
 if (!project.hasProperty("useCheckerFramework")) {
     ext.useCheckerFramework = "false"
 }
 if ("true".equals(project.ext.useCheckerFramework)) {
-  apply plugin: 'org.checkerframework'
+  apply plugin: "org.checkerframework"
 } else {
-  apply plugin: 'net.ltgt.errorprone'
+  apply plugin: "net.ltgt.errorprone"
 }
 
 def errorProneVersion = "2.3.4"
@@ -324,28 +324,28 @@ def checkerFrameworkVersion = "3.51.1"
 
 dependencies {
   if ("true".equals(project.ext.useCheckerFramework)) {
-    checkerFramework 'org.checkerframework:checker:' + checkerFrameworkVersion
-    checkerFramework 'org.checkerframework:checker-qual:' + checkerFrameworkVersion
+    checkerFramework("org.checkerframework:checker:" + checkerFrameworkVersion)
+    checkerFramework("org.checkerframework:checker-qual:" + checkerFrameworkVersion)
   } else {
-    errorprone "com.google.errorprone:error_prone_core:${errorProneVersion}
+    errorprone("com.google.errorprone:error_prone_core:${errorProneVersion})
   }
 }
 
 if ("true".equals(project.ext.useCheckerFramework)) {
   checkerFramework {
     checkers = [
-      'org.checkerframework.checker.interning.InterningChecker',
-      'org.checkerframework.checker.signature.SignatureChecker'
+      "org.checkerframework.checker.interning.InterningChecker",
+      "org.checkerframework.checker.signature.SignatureChecker"
     ]
   }
 } else {
   // Configuration for the Error Prone linter.
   tasks.withType(JavaCompile).each { t ->
     if (!t.name.equals("compileTestInputJava") && !t.name.startsWith("checkTypes")) {
-      t.toolChain ErrorProneToolChain.create(project)
+      t.toolChain(ErrorProneToolChain.create(project))
       t.options.compilerArgs += [
-        '-Xep:StringSplitter:OFF',
-        '-Xep:ReferenceEquality:OFF' // use Interning Checker instead
+        "-Xep:StringSplitter:OFF",
+        "-Xep:ReferenceEquality:OFF" // use Interning Checker instead
       ]
     }
   }
@@ -375,7 +375,7 @@ artifact (which only contains annotations) to the module path:
 checkerFramework {
   configurations.compileOnly.setCanBeResolved(true)
   extraJavacArgs = [
-    '--module-path', configurations.compileOnly.asPath
+    "--module-path", configurations.compileOnly.asPath
   ]
 }
 ```
