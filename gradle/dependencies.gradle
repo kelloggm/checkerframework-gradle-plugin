@@ -1,14 +1,14 @@
 ext.versions = [
-  'java': '1.8'
+  "java": "1.8"
 ]
 
 ext.deps = [
-  'android': [
-    'tools': [
-      'build': [
-        'gradle': 'com.android.tools.build:gradle:3.2.1',
+  "android": [
+    "tools": [
+      "build": [
+        "gradle": "com.android.tools.build:gradle:3.2.1",
       ]
     ]
   ],
-  'spock'  : 'org.spockframework:spock-core:2.1-groovy-3.0',
+  "spock"  : "org.spockframework:spock-core:2.1-groovy-3.0",
 ]
