@@ -216,10 +216,10 @@ final class CheckerFrameworkPlugin implements Plugin<Project> {
           // dependencies defined that way for earlier Gradle versions.
           if (project.configurations."$configuration.name".dependencies.matching({
             if (it instanceof DefaultExternalModuleDependency) {
-              it.name.equals(depName) && it.group.equals(depGroup)
+              it.group.equals(depGroup) && (it.name.equals(depName) || depName.equals('checker-qual') && it.name.equals('checker-qual-android'))
             } else if (GradleVersion.current().compareTo(GradleVersion.version("8.7")) < 0  && it instanceof DefaultSelfResolvingDependency) {
               it.getFiles().any { file ->
-                file.toString().endsWith(depName + ".jar")
+                file.toString().endsWith(depName + ".jar") || depName.equals('checker-qual') && file.toString().endsWith("checker-qual-android.jar")
               }
             } else {
               // not sure what to do in the default case...
