@@ -1,7 +1,7 @@
 > [!CAUTION]
 > This repository is obsolete.  The source code for the [Gradle Checker Framework Plugin](https://github.com/typetools/checker-framework-gradle-plugin) has moved.
 >
-> You still use the plugin in the same way; for example, in a `build.gradle` file, write:
+> You still use the plugin in the same way.  For example, in a `build.gradle` file, write:
 >
 > ```gradle
 > plugins {
@@ -11,7 +11,7 @@
 >
 > However, there are a few changes.  See the [documentation about
 > migrating](https://github.com/typetools/checker-framework-gradle-plugin#migrating-from-0x-to-1x)
-> from version 0.x to version 1.x.
+> from version 0.x to version 1.x of the plugin.
 
 # Gradle Checker Framework Plugin
 
@@ -24,7 +24,7 @@ Framework](https://checkerframework.org) for pluggable type-checking.
 ## Download
 
 Add the following to your `build.gradle` file
-(but note that [version 1.x is available](https://github.com/typetools/checker-framework-gradle-plugin):
+(but note that [version 1.x is available](https://github.com/typetools/checker-framework-gradle-plugin#apply-the-plugin)):
 
 ```groovy
 plugins {
