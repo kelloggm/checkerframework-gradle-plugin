@@ -116,7 +116,7 @@ definitions of the custom qualifiers.
 Version 0.6.61 of this plugin uses Checker Framework version 3.52.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
-[Version 1.0.0 and later](https://github.com/typetools/checker-framework-gradle-plugin)
+[Version 1.0.0 and later](https://github.com/typetools/checker-framework-gradle-plugin#the-checker-framework-version)
 of this plugin has no default Checker Framework version;
 you *must* specify a version number.
 
