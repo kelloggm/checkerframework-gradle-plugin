@@ -23,17 +23,17 @@ Framework](https://checkerframework.org) for pluggable type-checking.
 
 ## Download
 
-Add the following to your `build.gradle` file:
+Add the following to your `build.gradle` file
+(but note that [version 1.x is available](https://github.com/typetools/checker-framework-gradle-plugin):
 
-<pre>
+```groovy
 plugins {
     // Checker Framework pluggable type-checking
-    // NOTE: <a href="https://github.com/typetools/checker-framework-gradle-plugin">version 1.x is available</a>
     id("org.checkerframework").version("0.6.61")
 }
 
 apply plugin: "org.checkerframework"
-</pre>
+```
 
 The `org.checkerframework` plugin modifies existing Java
 compilation tasks. You should apply it *after*
