@@ -1,5 +1,5 @@
 > [!CAUTION]
-> This repository is obsolete.  The source code for the [https://github.com/typetools/checker-framework-gradle-plugin](Gradle Checker Framework Plugin) has moved.
+> This repository is obsolete.  The source code for the [Gradle Checker Framework Plugin](https://github.com/typetools/checker-framework-gradle-plugin) has moved.
 >
 > You still use the plugin in the same way; for example, in a `build.gradle` file, write:
 >
@@ -9,8 +9,9 @@
 > }
 > ```
 >
-> However, there are a few changes.
-> See the [https://github.com/typetools/checker-framework-gradle-plugin#migrating-from-0x-to-1x](documentation about migrating] from version 0.x (in this repository) to version 1.x.
+> However, there are a few changes.  See the [documentation about
+> migrating](https://github.com/typetools/checker-framework-gradle-plugin#migrating-from-0x-to-1x)
+> from version 0.x to version 1.x.
 
 # Gradle Checker Framework Plugin
 
