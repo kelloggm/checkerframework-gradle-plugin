@@ -146,7 +146,7 @@ repositories {
 
 You can also use a locally-built version of the Checker Framework (this is
 easier to do in [version
-1.x](https://github.com/typetools/checker-framework-gradle-plugin#apply-the-plugin)):
+1.x](https://github.com/typetools/checker-framework-gradle-plugin#the-checker-framework-version)):
 
 ```groovy
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".
