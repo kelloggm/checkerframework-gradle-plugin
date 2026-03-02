@@ -1,3 +1,18 @@
+> [!CAUTION]
+> This repository is obsolete.  The source code for the [Gradle Checker Framework Plugin](https://github.com/typetools/checker-framework-gradle-plugin) has moved.
+>
+> You still use the plugin in the same way.  For example, in a `build.gradle` file, write:
+>
+> ```gradle
+> plugins {
+>   id("org.checkerframework").version("1.0.2")
+> }
+> ```
+>
+> However, there are a few changes.  See the [documentation about
+> migrating](https://github.com/typetools/checker-framework-gradle-plugin#migrating-from-0x-to-1x)
+> from version 0.x to version 1.x of the plugin.
+
 # Gradle Checker Framework Plugin
 
 [![License](https://img.shields.io/badge/license-apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
@@ -8,7 +23,8 @@ Framework](https://checkerframework.org) for pluggable type-checking.
 
 ## Download
 
-Add the following to your `build.gradle` file:
+Add the following to your `build.gradle` file
+(but note that [version 1.x is available](https://github.com/typetools/checker-framework-gradle-plugin#apply-the-plugin)):
 
 ```groovy
 plugins {
@@ -100,6 +116,9 @@ definitions of the custom qualifiers.
 Version 0.6.61 of this plugin uses Checker Framework version 3.52.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
+[Version 1.0.0 and later](https://github.com/typetools/checker-framework-gradle-plugin#the-checker-framework-version)
+of this plugin has no default Checker Framework version;
+you *must* specify a version number.
 
 You can use a Checker Framework
 [version](https://github.com/typetools/checker-framework/releases) that is
@@ -125,7 +144,9 @@ repositories {
 }
 ```
 
-You can also use a locally-built version of the Checker Framework:
+You can also use a locally-built version of the Checker Framework (this is
+easier to do in [version
+1.x](https://github.com/typetools/checker-framework-gradle-plugin#the-checker-framework-version)):
 
 ```groovy
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".
