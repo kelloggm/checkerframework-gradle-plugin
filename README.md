@@ -25,14 +25,15 @@ Framework](https://checkerframework.org) for pluggable type-checking.
 
 Add the following to your `build.gradle` file:
 
-```groovy
+<pre>
 plugins {
     // Checker Framework pluggable type-checking
+    // NOTE: <a href="https://github.com/typetools/checker-framework-gradle-plugin">version 1.x is available</a>
     id("org.checkerframework").version("0.6.61")
 }
 
 apply plugin: "org.checkerframework"
-```
+</pre>
 
 The `org.checkerframework` plugin modifies existing Java
 compilation tasks. You should apply it *after*
@@ -115,6 +116,9 @@ definitions of the custom qualifiers.
 Version 0.6.61 of this plugin uses Checker Framework version 3.52.0 by default.
 Anytime you upgrade to a newer version of this plugin,
 it might use a different version of the Checker Framework.
+[Version 1.0.0 and later](https://github.com/typetools/checker-framework-gradle-plugin)
+of this plugin has no default Checker Framework version;
+you *must* specify a version number.
 
 You can use a Checker Framework
 [version](https://github.com/typetools/checker-framework/releases) that is
@@ -140,7 +144,8 @@ repositories {
 }
 ```
 
-You can also use a locally-built version of the Checker Framework:
+You can also use a locally-built version of the Checker Framework
+(this is easier to do in [version 1.x](https://github.com/typetools/checker-framework-gradle-plugin)):
 
 ```groovy
 // To use a locally-built Checker Framework, run gradle with "-PcfLocal".
