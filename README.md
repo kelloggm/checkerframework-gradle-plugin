@@ -1,3 +1,17 @@
+> [!CAUTION]
+> This repository is obsolete.  The source code for the [https://github.com/typetools/checker-framework-gradle-plugin](Gradle Checker Framework Plugin) has moved.
+>
+> You still use the plugin in the same way; for example, in a `build.gradle` file, write:
+>
+> ```gradle
+> plugins {
+>   id("org.checkerframework").version("1.0.2")
+> }
+> ```
+>
+> However, there are a few changes.
+> See the [https://github.com/typetools/checker-framework-gradle-plugin#migrating-from-0x-to-1x](documentation about migrating] from version 0.x (in this repository) to version 1.x.
+
 # Gradle Checker Framework Plugin
 
 [![License](https://img.shields.io/badge/license-apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
